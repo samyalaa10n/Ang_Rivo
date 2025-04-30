@@ -1,0 +1,36 @@
+.openNave {
+    position: fixed;
+    top: 49%;
+    right: 10px;
+    z-index: 10ew400;
+}
+
+
+::ng-deep .p-drawer-title {
+    text-align: center;
+    width: 100%;
+}
+
+::ng-deep .p-drawer-right {
+    background: #212529 !important;
+    border: 0px !important;
+    color: white !important;
+}
+
+::ng-deep .p-panelmenu-panel{
+    background-color: transparent !important;
+    border: 0.5 solid blue !important;
+}
+::ng-deep .p-panelmenu-panel .p-iconwrapper{
+    transform: rotateY(180deg) !important;
+}
+::ng-deep .p-panelmenu-header-link,::ng-deep  .p-panelmenu-item-link{
+    color: white !important;
+}
+
+::ng-deep .p-panelmenu-header-link:hover,::ng-deep  .p-panelmenu-item-link:hover{
+    color: black !important;
+}
+::ng-deep .p-panelmenu-header:not(.p-panelmenu-header-active) .p-panelmenu-header-content .p-panelmenu-submenu-icon:dir(rtl){
+    transform:unset !important;
+}

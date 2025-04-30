@@ -1,0 +1,108 @@
+
+
+<div class="effect my-1 fs-6 fw-bold  py-1 text-end" dir="rtl">
+  <div class="row my-4">
+    <h5 class="col-12 col-lg-8"> المؤثرات</h5>
+    <p-button label="رجوع" class="d-flex col-12 col-lg-4 justify-content-end me-auto" routerLink="/Main/Effects"
+      icon="pi pi-undo"></p-button>
+  </div>
+  <div class="card flex flex-col items-center gap-4">
+    <p-selectbutton (onChange)="addEffect()" [(ngModel)]="EFFECT_Fast_ADD_TYPE" [options]="options" size="large" />
+    <div *ngIf="EFFECT_Fast_ADD_TYPE">
+      <div class="py-3" >
+        <app-comboBox [(selected)]="effectPage.TypeEffect" [dataSource]="effects" optionLabel="NAME"
+          placeholder="اختر المؤثر" (selectedChange)="selectChange($event)"></app-comboBox>
+      </div>
+      <div *ngIf="effectSelected">
+        <app-dataGrid class="d-block my-2" #grid [AllowAdd]="true" [canSelectedSomeColumns]="false">
+          <div class="header my-1 fs-6 fw-bold py-3  px-2 py-1 text-end" header>
+            المؤثرات المضافة
+          </div>
+        </app-dataGrid>
+      </div>
+    </div>
+    <div *ngIf="!EFFECT_Fast_ADD_TYPE">
+      <app-stepper [Configuration]="_stepperConfig" >
+        <ng-template stepConfig Header="نوع المؤثر" namePropertyOfObject="ValidateEffectKind">
+          <div class="py-3" >
+            <app-comboBox [(selected)]="effectPage.TypeEffect"  [dataSource]="effects" optionLabel="NAME"
+              placeholder="اختر المؤثر" (selectedChange)="selectChange($event)"></app-comboBox>
+          </div>
+        </ng-template>
+        <ng-template stepConfig Header="تحديد الموظفين" namePropertyOfObject="ValidateEmploySelected">
+          <div class="row">
+            <app-InputLabel placeholder="تحديد الموظفين" class="d-block mt-5 w-100 ps-5 ">
+              <div pInputText class="py-3">
+                <app-EmployeSelection [(selectedEmploys)]="effectPage.selectedEmploys" [showInModel]="false"
+                  (selectedEmploysChange)="afterSelected($event)"></app-EmployeSelection>
+              </div>
+            </app-InputLabel>
+          </div>
+        </ng-template>
+        <ng-template stepConfig Header="بيانات  نوع المؤثر" namePropertyOfObject="ValidateEffectType" >
+          <div *ngIf="effectSelected">
+            <app-InputLabel placeholder="البيانات الخاصة بنوع المؤثر" class="d-block my-5">
+              <div pInputText class="py-5">
+                <div class="d-flex flex-wrap row-gap-4 column-gap-3 my-3">
+                  <ng-container *ngFor="let Effect of effectSelected.COLUMNS">
+                    <app-InputLabel [Effect]="Effect" [effectSelected]="effectSelected"  ></app-InputLabel>
+                  </ng-container>
+                </div>
+              </div>
+            </app-InputLabel>
+          </div>
+        </ng-template>
+        <ng-template stepConfig Header="قيمة وميعاد المؤثر"  namePropertyOfObject="ValidateEffectValue">
+          <div *ngIf="effectSelected && effectSelected.EFFECT_INFO">
+            <app-InputLabel placeholder="قمة المؤثر" class="d-block mt-5">
+              <div pInputText class="value-switch">
+                <p-inputNumber *ngIf="!this.effectSelected.EFFECT_INFO.ForceValue" [(ngModel)]="effectSelected.EFFECT_INFO.Value" placeholder="كتابة القيمة ... "></p-inputNumber>
+                <span class="fw-bold py-2 px-4 border border-2 rounded-1" *ngIf="effectSelected.EFFECT_INFO.ForceValue">{{effectSelected.EFFECT_INFO.Value}}</span>
+                <span for="divedThem" *ngIf="!this.effectSelected.EFFECT_INFO.ForceValue" >
+                  القيمة تقسم عليهم
+                  <p-checkbox [id]="'divedThem'" [(ngModel)]="this.effectSelected.EFFECT_INFO.divedThem" [binary]="true" />
+                </span>
+                <span for="awaySetMony" *ngIf="!this.effectSelected.EFFECT_INFO.ForceValue">
+                  تحسب بالساعة
+                  <p-checkbox  [id]="'awaySetMony'" [(ngModel)]="this.effectSelected.EFFECT_INFO.calcByHours" [binary]="true" />
+                </span>
+                <span *ngIf="this.effectSelected.EFFECT_INFO.ForceValue" [id]="'awaySetMony'"  > 
+                  <span *ngIf="this.effectSelected.EFFECT_INFO.calcByHours"> تحسب بالساعة</span>
+                  <span *ngIf="!this.effectSelected.EFFECT_INFO.calcByHours"> تحسب بالقيمة</span>
+                </span>
+              </div>
+            </app-InputLabel>
+            <app-InputLabel placeholder="وقت تطبيق المؤثر" class="d-block mt-5">
+              <div pInputText class="py-5">
+                <app-InputLabel placeholder="من شهر المؤثر" class="d-inline-block mx-2">
+                  <p-inputNumber [useGrouping]="false" [min]="_tools.GetNumberOfMonth()" max="12"
+                    [(ngModel)]="effectSelected.EFFECT_INFO.EFFECT_DATE_MONTH_FROM" placeholder="01/..."></p-inputNumber>
+                </app-InputLabel>
+                <app-InputLabel placeholder="من سنة المؤثر" class="d-inline-block mx-2">
+                  <p-inputNumber [useGrouping]="false" [min]="_tools.GetNumberOfYear()" [max]="_tools.GetNumberOfYear()+5"
+                    [(ngModel)]="effectSelected.EFFECT_INFO.EFFECT_DATE_YEAR_FROM" placeholder="2024/..."></p-inputNumber>
+                </app-InputLabel>
+                <app-InputLabel placeholder="عدد الشهور" width="800px" class="d-inline-block mx-2">
+                  <p-inputNumber [useGrouping]="false" min="1" max="24" [(ngModel)]="effectSelected.EFFECT_INFO.Count"
+                    placeholder="1-24"></p-inputNumber>
+                </app-InputLabel>
+              </div>
+            </app-InputLabel>
+          </div>
+        </ng-template>
+       
+        <ng-template stepConfig (onSelected)="addEffect()" Header="عرض المؤثر و الحفظ">
+          <div *ngIf="effectSelected">
+            <app-dataGrid class="d-block my-2" #grid [AllowAdd]="true" [canSelectedSomeColumns]="false">
+              <div class="header my-1 fs-6 fw-bold py-3  px-2 py-1 text-end" header>
+                المؤثرات المضافة
+              </div>
+            </app-dataGrid>
+          </div>
+        </ng-template>
+      </app-stepper>
+    </div>
+  </div>
+  
+
+</div>

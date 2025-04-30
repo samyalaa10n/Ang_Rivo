@@ -1,0 +1,9 @@
+<app-dataGrid [AllowSave]="false" [AddInherit]="true"  (onGridLoaded)="Config($event)" [AllowUpdate]="true" [Columns]="Columns" [dataSource]="Employees" ></app-dataGrid>
+<ng-template [appCustomColumn]="Columns[0]" let-item>
+  <p-button  (onClick)="showDialog=true;" label="عرض الملفات" icon="pi pi-file-check"></p-button>
+</ng-template>
+<p-dialog [(visible)]="showDialog" [maximizable]="true" [modal]="true"  header="عرض الملفات" [style]="{'width':'70%','height':'70%'}">
+  <div class="header" dir="rtl">
+
+  </div>
+</p-dialog>

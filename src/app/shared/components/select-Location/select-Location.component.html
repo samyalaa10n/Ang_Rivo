@@ -1,0 +1,10 @@
+<input class="form-text" *ngIf="this.location" [(ngModel)]="this.location.latitude" type="number">
+<input class="form-text" *ngIf="this.location" [(ngModel)]="this.location.longitude" type="number">
+<button class="btn btn-dark" (click)="test()">test</button>
+<div id="map" style="height: 50vh;"></div>
+
+<div>
+    <button (click)="getLocation()">Get Location</button>
+    <p *ngIf="location">Latitude: {{ location.latitude }}, Longitude: {{ location.longitude }}</p>
+    <p *ngIf="error">{{ error }}</p>
+</div>

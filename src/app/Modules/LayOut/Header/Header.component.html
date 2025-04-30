@@ -1,0 +1,24 @@
+<div dir="rtl" class="header-app  text-white bg-dark px-2 flex-wrap ">
+  <div class="d-flex justify-content-center align-items-center my-auto">
+    <p-button size="small" class="fs-4" icon="pi pi-align-justify " (onClick)="openNave()" aria-label="Save" />
+    <div class="container-fluid d-flex align-items-center">
+      <span class="title">
+        اسم المنظومة
+      </span>
+      <div class="me-auto d-flex align-items-center h-100">
+        <span>
+          الاشعارات
+          <i class="pi pi-bell"></i>
+        </span>
+        <span class="me-3">
+          {{this._tools._LoginName}}
+          <i class="pi pi-user"></i>
+        </span>
+        <span class="me-4" (click)="logOut()">
+          تسجيل الخروج
+          <i dir="rtl" class="pi pi-power-off"></i>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

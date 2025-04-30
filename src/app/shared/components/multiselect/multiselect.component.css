@@ -1,0 +1,27 @@
+::ng-deep .p-multiselect-overlay {
+    direction: rtl;
+}
+
+::ng-deep .multi .p-iftalabel label {
+    font-weight: bold !important;
+}
+
+::ng-deep .multi .p-iftalabel label {
+    font-weight  : bold !important;
+    background   : white;
+    width        : auto;
+    padding      : 8PX;
+    border-radius: 5px;
+    font-size    : 14px !important;
+    top          : -9px;
+    right        : 14px;
+}
+
+::ng-deep .multi .p-iftalabel {
+    padding-top: 10PX !important;
+    width      : 100%;
+}
+
+::ng-deep .multi .p-multiselect-label-container {
+    padding: 13px 0px 6px 4px !important;
+}

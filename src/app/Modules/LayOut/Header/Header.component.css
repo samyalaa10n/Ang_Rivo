@@ -1,0 +1,19 @@
+.header-app{
+    min-height: 8vh;
+    position: sticky;
+    top: 0px;
+    z-index: 1000;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    padding-top: 8px;
+}
+.header-app span{
+    cursor: pointer;
+}
+.header-app span:hover{
+   color: gray;
+}
+.title{
+    font-size: 22px;
+}

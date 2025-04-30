@@ -1,0 +1,27 @@
+<ng-template [appCustomColumn]="Columns[3]" let-item>
+    <div *ngIf="item.TYPE!=7 && item.TYPE!=8 && item.CONFIGURATION">
+        <label for="ny" class="mx-2">الحقل مطلوب</label>
+        <p-checkbox id="ny" (ngModelChange)="setValue(item,$event)" [ngModel]="getValue(item)" [binary]="true" />
+    </div>
+    <p-button  (onClick)="openSetting(item)" *ngIf="item.TYPE==7 || item.TYPE==8" label="تهيئة" icon="pi pi-spin pi-cog"></p-button>
+</ng-template>
+<app-get-add-edit-delete #curd *ngIf="Columns.length>0" header="بنود المؤثرات" ApiPage="EffectColumn"
+    [Columns]="Columns"></app-get-add-edit-delete>
+    <p-dialog [(visible)]="showDialog" [maximizable]="true" [modal]="true" (onHide)="confirmSetting(null)" header="تهيئة الحقل" [style]="{'width':'70%','height':'70%'}">
+        <div class="header" dir="rtl">
+           <app-dataGrid [AllowUpdate]="false" [canSelectedSomeColumns]="false" [Columns]="Columns_Setting" (onGridLoaded)="confirmSetting($event)" [(dataSource)]="CONFIGURATION.ArrayOfValues" >
+            <div header class="d-flex justify-content-start align-items-center">
+                <app-comboBox class="d-inline-block my-3" placeholder="القيمة الظاهرة" optionLabel="NAME" optionValue="ID" [(SelectedValue)]="CONFIGURATION.ShowValue" [dataSource]="[{ID:'ID',NAME:'الرقم'},{ID:'NAME',NAME:'الأسم'},{ID:'VALUE',NAME:'القيمة'}]"></app-comboBox>
+                <label for="ny1" class="mx-3">ينم اختيار القيمة من القائمة : 
+                    <p-checkbox id="ny1" [(ngModel)]="CONFIGURATION.FORCE_VALUE"  [binary]="true" />
+                </label>
+                <label for="ny2" class="mx-3"> الحقل مطلوب : 
+                    <p-checkbox id="ny2" [(ngModel)]="CONFIGURATION.REQUIRED"  [binary]="true" />
+                </label>
+                <label for="ny3" class="mx-3"> تحسب بالساعة : 
+                    <p-checkbox id="ny3" [(ngModel)]="CONFIGURATION.calculatedByHours"  [binary]="true" />
+                </label>
+            </div>
+           </app-dataGrid>
+        </div>
+    </p-dialog>

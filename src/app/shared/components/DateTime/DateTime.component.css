@@ -1,0 +1,13 @@
+::ng-deep .app-date [pinputtext]{
+    width: 100% !important;
+    padding: 15PX;
+}
+::ng-deep .app-date .p-datepicker{
+    width: 100% !important;
+}
+::ng-deep .p-datepicker-panel {
+    max-width: 500px !important;
+    min-width: unset !important;
+    direction: rtl !important;
+}
+

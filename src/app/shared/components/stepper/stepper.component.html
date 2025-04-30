@@ -1,0 +1,32 @@
+<div class="p-2 position-relative">
+    <div *ngIf="loading" style="width: 100%; background-color: white; z-index: 100;"
+        class="position-absolute top-0 bottom-0 left-0 right-0 d-flex justify-content-center align-items-center">
+        <p-progressSpinner></p-progressSpinner>
+    </div>
+    <div dir="rtl" class="Steps-Header" [ngClass]="{'hide':loading}">
+        <button *ngFor="let step of steps;let dx=index;" #buttonHeader [id]="'staper_'+(dx+1)" class="step steperBtn"
+            [disabled]="step.Disable" (click)="selectStep(step.StepConfig)">
+            {{step.Header}}
+            {{hideButton(buttonHeader,!step.Visible)}}
+        </button>
+    </div>
+    <div class="body-Stepper" [ngClass]="{'hide':loading}">
+        <ng-template [ngTemplateOutlet]="SelectedTemplate"></ng-template>
+    </div>
+    <div dir="ltr" class="" *ngIf="CheckIsViewMode()"
+        style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 300;">
+        <div class="p-2 d-block buttonsContainer" dir="rtl">
+            <button *ngIf="Configuration.ShowPreviousButton" class="btn btn-dark mx-1 px-3" style="font-size: 18px;"
+                (click)="Previous(Configuration._ActiveStepIndex)">
+                <fa-icon [icon]="faArrowRight"></fa-icon> {{Configuration.HeaderPrevious}}</button>
+            <button *ngIf="Configuration.ShowNextButton" class="btn btn-dark mx-1 px-3" style="font-size: 18px;"
+                (click)="Next(Configuration._ActiveStepIndex)">{{Configuration.HeaderNext}}
+                <fa-icon [icon]="faArrowLeft"></fa-icon>
+
+            </button>
+            <button class="btn btn-dark mx-1 px-3" style="font-size: 18px; " (click)="saveData()"
+            [disabled]="Configuration.disableSave">{{Configuration.HeaderSave}}
+            <fa-icon [icon]="faSave"></fa-icon></button>
+        </div>
+    </div>
+</div>

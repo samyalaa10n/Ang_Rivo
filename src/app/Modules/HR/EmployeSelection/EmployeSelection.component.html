@@ -1,0 +1,55 @@
+<p-button *ngIf="showInModel" [label]="LABEL" icon="pi pi-search" (onClick)="showDialog=true;"></p-button>
+<p-dialog [(visible)]="showDialog" [maximizable]="true" header="تحديد الموظفين" [modal]="true"
+  [style]="{ width: '50rem' }">
+  <ng-container *ngIf="showInModel">
+    <ng-container *ngTemplateOutlet="body"></ng-container>
+  </ng-container>
+</p-dialog>
+<ng-container *ngIf="!showInModel">
+  <ng-container *ngTemplateOutlet="body"></ng-container>
+</ng-container>
+
+<ng-template #body>
+  <div class="d-flex justify-content-start align-items-center column-gap-2">
+    <app-InputLabel placeholder="كود الموظف" class="d-inline-block my-3">
+      <p-autocomplete placeholder="بحث ..." [suggestions]="filteredData" emptyMessage="لا يوجد"
+        (onSelect)="Selected($event)" (completeMethod)="filterEmploy($event,'CODE')" optionLabel="CODE" />
+    </app-InputLabel>
+    <app-InputLabel placeholder="اسم الموظف" class="d-inline-block my-3">
+      <p-autocomplete placeholder="بحث ..." [suggestions]="filteredData" emptyMessage="لا يوجد"
+        (onSelect)="Selected($event)" (completeMethod)="filterEmploy($event,'NAME')" optionLabel="NAME" />
+    </app-InputLabel>
+  </div>
+
+  <div dir="rtl" class="w-100" style="height: 100%; overflow: auto; width: 100%;">
+
+    <div class="my-2 w-100">
+      <div pInputText class="my-2 place-selected  overflow-x-auto position-relative">
+        <i class="clear me-2 pi pi-times" (click)="clearAll()"></i>
+        @if(this.grid && this.selectedEmploys.length>0)
+        {
+        <div class="px-2 fs-5 position-absolute end-0 fw-bold d-flex justify-content-center align-items-center w-100" style="color: gray;">
+          الموظفين المحددين ...</div>
+        @for (item of this.selectedEmploys; track $index) {
+        <div class="item-Selected" (click)="Remove_Selected(item,true)">{{item.CODE}} - {{item.NAME}} -
+          {{item.DEPART}}<i class="me-2 pi pi-times"></i></div>
+        }
+        }
+        @else {
+        <div class="px-2 fs-5 fw-bold d-flex justify-content-center align-items-center w-100" style="color: gray;">
+          الموظفين المحددين ...</div>
+        }
+        <input #txt (input)="search(txt)" class="search-Label form-control form-text" placeholder="بحث ..." type="text">
+      </div>
+      <div class="d-flex flex-wrap">
+        <div class="my-3" style="width: 200px;" header>
+          <app-comboBox #comboBox [dataSource]="Departs" placeholder="اختر القسم" optionLabel="NAME"
+            (selectedChange)="SelectedChange($event)"></app-comboBox>
+        </div>
+        <p-button *ngIf="showInModel" class="my-auto me-2" label="تم التحديد" (onClick)="selectedData()"></p-button>
+      </div>
+      <app-dataGrid #grid [selectionMode]="'multiple'">
+      </app-dataGrid>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,29 @@
+::ng-deep .input-Item .p-inputtext {
+    width    : 100%;
+    font-size: 14px !important;
+
+    padding: 15PX;
+}
+
+::ng-deep .input-Item .p-iftalabel label {
+    font-weight  : bold !important;
+    background   : white;
+    width        : auto;
+    padding      : 8PX;
+    border-radius: 5px;
+    font-size    : 14px !important;
+    top: -9px;
+    right: 14px;
+}
+
+::ng-deep .input-Item .p-iftalabel {
+    padding-top: 10PX !important;
+    width      : 100%;
+  
+}
+.input-Item{
+    width: 100%;
+}
+.input-Item {
+    width: 100% !important;
+}

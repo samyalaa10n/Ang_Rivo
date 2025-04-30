@@ -1,0 +1,60 @@
+<div class="input-Item position-relative">
+  @if(Effect)
+  {
+  @switch (Effect.TYPE) {
+  @case (1) {
+  <app-comboBox *ngIf="Effect.CONFIGURATION" [(SelectedValue)]="Effect.value" [placeholder]="Effect.COLUMN_NAME"
+    [dataSource]="apiData"
+    [apiPathDataSource]="Effect.CONFIGURATION.API_CALLING" [optionValue]="Effect.CONFIGURATION.FOCUS_PROPERTY"
+    [optionLabel]="Effect.CONFIGURATION.FOCUS_PROPERTY"></app-comboBox>
+  }
+  @case (2) {
+  <app-comboBox *ngIf="Effect.CONFIGURATION" [(SelectedValue)]="Effect.value" [placeholder]="Effect.COLUMN_NAME" 
+    [dataSource]="apiData"
+    [apiPathDataSource]="Effect.CONFIGURATION.API_CALLING" [optionValue]="Effect.CONFIGURATION.FOCUS_PROPERTY"
+    [optionLabel]="Effect.CONFIGURATION.FOCUS_PROPERTY"></app-comboBox>
+  }
+  @case (9) {
+    <app-comboBox *ngIf="Effect.CONFIGURATION" [(SelectedValue)]="Effect.value" [placeholder]="Effect.COLUMN_NAME"
+      [dataSource]="apiData"  
+      [apiPathDataSource]="Effect.CONFIGURATION.API_CALLING" [optionValue]="Effect.CONFIGURATION.FOCUS_PROPERTY"
+      [optionLabel]="Effect.CONFIGURATION.FOCUS_PROPERTY"></app-comboBox>
+    }
+  @case (3) {
+  <p-iftalabel dir="rtl">
+    <input [id]="Effect.COLUMN_NAME" [(ngModel)]="Effect.value" pInputText type="text" placeholder="كتابة ... " />
+    <label [for]="Effect.COLUMN_NAME">{{Effect.COLUMN_NAME}}</label>
+  </p-iftalabel>
+  }
+  @case (4) {
+  <p-iftalabel dir="rtl">
+    <textarea [id]="Effect.COLUMN_NAME" [(ngModel)]="Effect.value" pInputText type="text"
+      placeholder="كتابة ... "></textarea>
+    <label [for]="Effect.COLUMN_NAME">{{Effect.COLUMN_NAME}}</label>
+  </p-iftalabel>
+  }
+  @case (5) {
+  <p-iftalabel dir="rtl">
+    <app-DateTime [id]="Effect.COLUMN_NAME" [(selectedDate)]="Effect.value"></app-DateTime>
+    <label [for]="Effect.COLUMN_NAME">{{Effect.COLUMN_NAME}}</label>
+  </p-iftalabel>
+  }
+  @case (7) {
+  <app-comboBox *ngIf="Effect.CONFIGURATION" [(SelectedValue)]="Effect.value" [placeholder]="Effect.COLUMN_NAME"
+    [optionValue]="Effect.CONFIGURATION.ShowValue" [dataSource]="Effect.CONFIGURATION.ArrayOfValues"
+    (selectedChange)="setEffectValue($event,true)" [optionLabel]="'NAME'"></app-comboBox>
+  }
+  @case (8) {
+  <app-multiselect *ngIf="Effect.CONFIGURATION" (dataSelectedChange)="setEffectValue($event)"
+    [(dataSelected)]="Effect.value" [placeholder]="Effect.COLUMN_NAME" [optionValue]="Effect.CONFIGURATION.ShowValue"
+    [dataSource]="Effect.CONFIGURATION.ArrayOfValues" [optionLabel]="'NAME'"></app-multiselect>
+  }
+  }
+  }
+  @else if (Effect==null) {
+  <p-iftalabel dir="rtl">
+    <ng-content></ng-content>
+    <label [for]="placeholder">{{placeholder}}</label>
+  </p-iftalabel>
+  }
+</div>

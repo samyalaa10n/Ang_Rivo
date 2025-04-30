@@ -1,0 +1,23 @@
+
+
+<app-stepper [Configuration]="StepperConfig">
+  <ng-template stepConfig Header="ادخال النواقص" [isViewMode]="true" >
+    <div dir="rtl">
+      <app-dataGrid  (onGridLoaded)="gridLoaded($event,true)"></app-dataGrid>
+    </div>
+  </ng-template>
+  <ng-template stepConfig Header="عرض النواقص"  [isViewMode]="true">
+    <div dir="rtl">
+      <div class="d-flex justify-content-start my-4">
+        <app-InputLabel placeholder="اختر السنة">
+          <p-inputNumber [(ngModel)]="Year" (ngModelChange)="EditFilterText()" [useGrouping]="false" [max]="2300" [min]="1900"  placeholder="كتابة القيمة ... "></p-inputNumber>
+        </app-InputLabel>
+        <app-comboBox class="d-block mx-2" [(SelectedValue)]="selectedMonth" (SelectedValueChange)="EditFilterText()" placeholder="اختر الشهر" [dataSource]="MonthsDataSource"  optionLabel="name" optionValue="Id"></app-comboBox>
+      </div>
+      <app-dataGrid  (onGridLoaded)="gridLoaded($event,false)"></app-dataGrid>
+
+    </div>
+  </ng-template>
+</app-stepper>
+
+

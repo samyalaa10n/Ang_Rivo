@@ -1,0 +1,202 @@
+<div class="app-grid border border-1 rounded-1 ">
+    <p-table #dt dir="rtl" [rows]="ManyRowsInShow" [paginator]="true" [dataKey]="dataKey" [scrollable]="true"
+        [value]="dataSource" scrollDirection="both" [tableStyle]="tableStyle" [resizableColumns]="true"
+        [scrollHeight]="scrollHeight" [rowsPerPageOptions]="rowsPerPageOptions" tableStyleClass="p-datatable-gridlines"
+        [globalFilterFields]="globalFilterFields" [showGridlines]="true" [reorderableColumns]="true"
+        [(selection)]="selectedItems" (selectionChange)="onSelectAllChange($event)"
+        (onRowUnselect)="onUnSelectRow($event)" (onRowSelect)="onSelectRow($event)" 
+        [columns]="selectedColumns" [reorderableColumns]="true" [selectionMode]="selectionMode"
+        [metaKeySelection]="singleSelectedMode" paginatorDropdownAppendTo="body">
+        <ng-template #caption>
+            <div *ngIf="AllowHeaderTemplate">
+                <div class="my-1">
+                    <ng-content select="[header]"></ng-content>
+                    <ng-content select="[btn]"></ng-content>
+                </div>
+                <div class="flex py-1">
+                    <app-multiselect class="d-inline-block my-2" *ngIf="canSelectedSomeColumns"
+                        [style]="{'width': '250px'}" display="comma" placeholder="اختر الأعمدة" [dataSource]="Columns"
+                        [(dataSelected)]="selectedColumns" optionLabel="header"
+                        selectedItemsLabel="تم تحديد {0} أعمدة"></app-multiselect>
+                    <p-iconfield *ngIf="AllowSearch" iconPosition="left" class="ml-auto">
+                        <p-inputicon>
+                            <i class="pi pi-search"></i>
+                        </p-inputicon>
+                        <input class="mx-1" style="width: unset;" pInputText type="text"
+                            (input)="globalFilter(dt,$event)" placeholder="بحث" />
+                        <p-button label="" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(dt)" />
+                    </p-iconfield>
+                </div>
+                <ng-content select="[body]"></ng-content>
+                <div class="my-2">
+                    <p-button *ngIf="AllowUpdate" label="تحديث" severity="info" class=" font-bold mx-1"
+                        icon="pi pi-sync" (click)="onUpdate(dt)" />
+                    <p-button *ngIf="AllowAdd" label="اضافة" severity="success" class=" font-bold mx-1"
+                        icon="pi pi-plus" (click)="AddNew(dt)" />
+                    <p-button *ngIf="AllowSave" btn class="px-1" severity="warn" label="حفظ" icon="pi pi-save"
+                        (click)="save()"></p-button>
+                    <p-button *ngIf="AllowDeleteSelected" severity="danger" label="حذف المحدد" class=" font-bold mx-1"
+                        icon="pi pi-trash" (click)="DeleteSelectedData()" />
+                </div>
+            </div>
+        </ng-template>
+        <ng-template #header let-columns>
+            <tr>
+                <th *ngIf="canReOrder" style="width: 6rem"></th>
+                <th *ngIf="canSelectRow" style="width: 4rem ;text-align: center;"><p-tableHeaderCheckbox
+                        *ngIf="!singleSelectedMode" /></th>
+                <th *ngIf="IsHasChild" style="width: 5rem"></th>
+                @for (column of columns; track $index) {
+                <th class="text-center " appResizableColumn [style]="'min-width:'+column.width+'px'">
+                    <div class="d-flex justify-content-center align-items-center px-2">
+                        <div [pSortableColumn]="column.name" class="p-3 text-center">
+                            <p-sortIcon [field]="column.name" />
+                            {{ column.header }}
+                        </div>
+                        <div class="me-auto">
+                            @if (column.filterType=='date') {
+                            <p-columnFilter matchMode="contains" placeholder="البحث" [type]="column.filterType"
+                                display="menu" [field]="column.name" />
+                            }
+                            @else if(column.filterType=='comboBox') {
+                            <p-columnFilter [field]="column.name" matchMode="in" display="menu" [showMatchModes]="false"
+                                [showOperator]="false" [showAddButton]="false">
+                                <ng-template #header>
+                                    <div class="px-4 pt-4 pb-0">
+                                        <span class="font-bold">اختر</span>
+                                    </div>
+                                </ng-template>
+                                <ng-template #filter let-value let-filter="filterCallback">
+                                    <app-multiselect [style]="{'width': '250px'}" placeholder="اختر"
+                                        [dataSource]="column.columnComboBoxDataSource"
+                                        (dataSelectedChange)="filter(editFilterMultiSelectValues($event,column.columnComboBoxOptionValue))"
+                                        [optionLabel]="column.columnComboBoxOptionLabel"
+                                        selectedItemsLabel="تم تحديد {0} أعمدة"></app-multiselect>
+                                </ng-template>
+                            </p-columnFilter>
+                            }
+                            @else if(column.filterType!='none') {
+                            <p-columnFilter display="menu" matchMode="contains" placeholder="البحث"
+                                [type]="column.filterType" [field]="column.name" />
+                            }
+                        </div>
+                    </div>
+                </th>
+                }
+                <th *ngIf="AllowCurdOperation" class="fixed-column px-2">
+
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-item let-expanded="expanded" let-rowIndex="rowIndex" let-columns="columns">
+            <tr #row [pSelectableRow]="item" [pSelectableRowDisabled]="!canSelectRow" [pSelectableRowIndex]="rowIndex"
+                [pReorderableRow]="rowIndex">
+                {{renderItems(item,row,rowIndex)}}
+                <td *ngIf="canReOrder" class="text-center" style="min-width: 4rem;">
+                    <span class="pi pi-bars" pReorderableRowHandle></span>
+                </td>
+                <td *ngIf="canSelectRow" class="text-center" style="min-width: 4rem;">
+                    <p-tableCheckbox *ngIf="!singleSelectedMode" [value]="item" />
+                    <p-tableRadioButton *ngIf="singleSelectedMode" [value]="item" />
+                </td>
+                <td *ngIf="IsHasChild " class="text-center" style="min-width: 4rem;">
+                    <p-button *ngIf="item[dataKey]>0" type="button" (onClick)="expandedRow(item,rowIndex)" pRipple [pRowToggler]="item"
+                        [text]="true" [rounded]="true" [plain]="true"
+                        [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+                </td>
+                @for (column of columns; track $index)
+                {
+                <td class="text-center">
+                    @switch (column.columnType) {
+                    @case ("lapel") {
+                    <ng-container *ngIf="item[column.name]!=null && item[column.name]!=undefined">
+                        {{column.Style_Show(item[column.name])}}
+                        
+                    </ng-container>
+                    }
+                    @case ("text") {
+                    <input class="inputText" pInputText type="text" #text placeholder="كتابة ... "
+                        (keydown)="pInputTextKeyDown($event,text,item)" (keyup)="onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})" [(ngModel)]="item[column.name]" />
+                    }
+                    @case ("yes-no") {
+                    <label for="ny" class="mx-2">{{column.header}}</label>
+                    <p-checkbox id="ny" (onChange)="onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})" [(ngModel)]="item[column.name]" [binary]="true" />
+                    <!-- <p-toggleswitch [(ngModel)]="item[column.name]" /> -->
+                    <!-- <p-togglebutton [(ngModel)]="item[column.name]" onLabel="نعم" offLabel="لا" styleClass="w-24" /> -->
+                    }
+                    @case ("date") {
+                    <app-DateTime placeholder="كتابة ... " [(selectedDate)]="item[column.name]" [maxDate]="column.columnMaxDate"  [minDate]="column.columnMinDate"
+                        (selectedDateChange)="onSelectColumnData(item,$event,column);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"></app-DateTime>
+                    }
+                    @case ("date-Time") {
+                        <app-DateTime placeholder="كتابة ... " [(selectedDate)]="item[column.name]"  [showTime]="true" [maxDate]="column.columnMaxDate"  [minDate]="column.columnMinDate"
+                            (selectedDateChange)="onSelectColumnData(item,$event,column);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"></app-DateTime>
+                        }
+                    @case ("number") {
+                    <p-inputnumber [(ngModel)]="item[column.name]"
+                        (onKeyDown)="pInputTextKeyDown($event,{value:'1'},item);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})" mode="decimal" />
+                    <!-- <p-datepicker [showButtonBar]="true" [(ngModel)]="item[column.name]" dateFormat="dd/mm/yy"
+                        appendTo="body" [showIcon]="true" inputId="buttondisplay" [showOnFocus]="true" /> -->
+                    }
+                    @case ("numberWithFraction") {
+                        <p-inputnumber [(ngModel)]="item[column.name]" [minFractionDigits]="0" [maxFractionDigits]="3"
+                            (onKeyDown)="pInputTextKeyDown($event,{value:'1'},item);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})" mode="decimal" />
+                        <!-- <p-datepicker [showButtonBar]="true" [(ngModel)]="item[column.name]" dateFormat="dd/mm/yy"
+                            appendTo="body" [showIcon]="true" inputId="buttondisplay" [showOnFocus]="true" /> -->
+                        }
+                    @case ("comboBox") {
+                    <app-comboBox #comboBox [dataSource]="column.columnComboBoxDataSource"
+                        [optionValue]="column.columnComboBoxOptionValue" [apiPathDataSource]="column.apiPathDataSource"
+                        [placeholder]="column.columnComboBoxPlaceholder"
+                        [optionLabel]="column.columnComboBoxOptionLabel"
+                        (selectedChange)="column.columnComboBoxChange($event,item,comboBox);onGridAction({EVENT:$event,itemEdit:item,ActonType:'SELECT',COLUMN:column})"
+                        [(SelectedValue)]="item[column.name]"></app-comboBox>
+                    }
+                    @case ("multiSelect") {
+                    <app-multiselect #Multiselect [IsInGridMode]="true"
+                        [dataSource]="column.columnMultiSelectDataSource" [placeholder]="column.columnMultiPlaceholder"
+                        [optionLabel]="column.columnMultiOptionLabel"
+                        (dataSelectedChange)="column.columnMultiSelectChange(Multiselect,item);onGridAction({EVENT:$event,itemEdit:item,ActonType:'SELECT',COLUMN:column})" [item]="item"
+                        [idItemKey]="dataKey" [selectIdKey]="column.columnMultiSelectselectIdKey"
+                        [optionValue]="column.columnMultiSelectOptionValue"
+                        [propertyBind]="column.columnMultiSelectpropertyBind"></app-multiselect>
+                    
+                    }
+                    @case ("multiSelectObjectMode") {
+                    <app-multiselect #Multiselect [dataSource]="column.columnMultiSelectDataSource"
+                        [placeholder]="column.columnMultiPlaceholder" [optionLabel]="column.columnMultiOptionLabel"
+                        [(dataSelected)]="item[column.name]" [idItemKey]="dataKey"
+                        (dataSelectedChange)="column.columnMultiSelectChange(Multiselect,item);onGridAction({EVENT:$event,itemEdit:item,ActonType:'SELECT',COLUMN:column})"
+                        [optionValue]="column.columnMultiSelectOptionValue"></app-multiselect>
+                    }
+                    @case ("textarea") {
+                    <textarea [(ngModel)]="item[column.name]" (keyup)="onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})" pInputText type="text"
+                        placeholder="كتابة ... "></textarea>
+                    }
+                    @case ("custom") {
+                    <ng-container [ngTemplateOutlet]="column.templateColumn"
+                        [ngTemplateOutletContext]="{ $implicit:item ,Grid:this}"></ng-container>
+                    }
+                    }
+                </td>
+                }
+                <td class="text-center fixed-column px-4" *ngIf="AllowCurdOperation">
+                    <p-button severity="danger" *ngIf="AllowDelete" label="حذف" icon="pi pi-trash"
+                        (click)="onDeleteItem(item)"></p-button>
+                    <p-button class="mx-2" severity="success" *ngIf="AllowEdit" label="تعديل" icon="pi pi-pen-to-square"
+                        (click)="onEditItem(item)"></p-button>
+                    <p-button class="mx-2 " severity="success" *ngIf="AddInherit" label="جديد" icon="pi pi-plus"
+                        (click)="onAddInert(item)"></p-button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template #expandedrow let-item *ngIf="IsHasChild">
+            <tr>
+                <th [colSpan]="colSpan" class="p-1 border border-1 bg-light">
+                    <app-dataGrid #childGrid [ParentGrid]="this" [RowParent]="item"></app-dataGrid>
+                </th>
+            </tr>
+        </ng-template>
+    </p-table>
+    <ng-content select="[footer]"></ng-content>
+</div>
