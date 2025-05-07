@@ -1,5 +1,5 @@
 <div class="py-3 row">
-  <div class="col-12" *ngIf="pathFile==null && pathFile==''">
+  <div class="col-12" *ngIf="pathFile==null || pathFile==''">
     <label for="file" class="btn btn-dark w-100 text-end"> رفع {{Header}}</label>
     <input id="file" hidden type="file">
   </div>

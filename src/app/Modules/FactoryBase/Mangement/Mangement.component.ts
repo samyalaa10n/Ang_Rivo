@@ -18,6 +18,7 @@ export class MangementComponent implements OnInit {
 
   async ngOnInit() {
     let fateherDeparts = await this._tools.getAsync("Mangement") as Array<any>;
+    let Departs = await this._tools.getAsync("Depart") as Array<any>;
     this.Columns.push(new Column('ID', "الكود", "lapel", "text"))
     this.Columns.push(new Column('POSATION', "الأسم", "text", "text", 400))
     this.Columns.push(new Column('POSATION_FATHER_ID', "المدير", "comboBox", "comboBox", 200));
@@ -25,6 +26,11 @@ export class MangementComponent implements OnInit {
     this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "ID";
     this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "اختر المدير"
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = fateherDeparts;
+    this.Columns.push(new Column('DEPART_ID', "القسم", "comboBox", "comboBox", 200));
+    this.Columns[this.Columns.length - 1].columnComboBoxOptionLabel = "NAME";
+    this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "ID";
+    this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "اختر القسم"
+    this.Columns[this.Columns.length - 1].columnComboBoxDataSource = Departs;
 
   }
   configTable(grid: DataGridComponent) {
@@ -33,6 +39,8 @@ export class MangementComponent implements OnInit {
   }
   async update() {
     let fateherDeparts = await this._tools.getAsync("Mangement") as Array<any>;
+    let Departs = await this._tools.getAsync("Depart") as Array<any>;
     this.Columns[2].columnComboBoxDataSource = fateherDeparts;
+    this.Columns[3].columnComboBoxDataSource = Departs;
   }
 }

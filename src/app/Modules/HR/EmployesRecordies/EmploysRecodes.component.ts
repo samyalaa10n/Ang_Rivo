@@ -32,7 +32,6 @@ export class EmploysRecodesComponent implements OnInit {
     this.Columns.push(new Column('CONSCRIPTION_POSITION', "موقف التجنيد"))
     this.Columns.push(new Column('QUALIFICATION_DEGREE', "درجة المؤهل"))
     this.Columns.push(new Column('NAME_OF_ACADEMIC_QUALIFICATION', "اسم المؤهل الدراسي"))
-    this.Columns.push(new Column('WHATSAPP_NUMBER', "رقم الوتس"))
     this.Columns.push(new Column('PHONE_NUMBER', "رقم التيلفون"))
     this.Columns.push(new Column('EMAIL', "البريد الألكتروني"))
     this.Columns.push(new Column('ADDRESS', "العنوان بالتفصيل"))

@@ -28,4 +28,6 @@ export class HeaderComponent implements OnInit {
     localStorage.removeItem("logInfo")
     this._router.navigate(['Login'])
   }
+
+  
 }

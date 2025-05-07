@@ -20,6 +20,7 @@ export class AppComponent {
 
   }
   ngOnInit() {
+
     this.primeng.zIndex = {
       modal: 1100,    // dialog, sidebar
       overlay: 1000,  // dropdown, overlaypanel

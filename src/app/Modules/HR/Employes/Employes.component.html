@@ -1,48 +1,64 @@
 <!-- <app-get-add-edit-delete *ngIf="Columns.length>0"  header="الموظفين"  ApiPage="Employee" [Columns]="Columns" (onUpdate)="update()"></app-get-add-edit-delete> -->
 <!-- <p-inputNumber  placeholder="كتابة القيمة ... "></p-inputNumber> -->
-<p-button class="d-flex my-2 justify-content-end w-100 me-auto" label="رجوع" (onClick)="back()"  icon="pi pi-undo"></p-button>
-<p-button class="d-flex my-2 justify-content-end w-100 me-auto" label="اختبار" (onClick)="StepperConfig.onSave()"  icon="pi pi-undo"></p-button>
+<p-button class="d-flex my-2 justify-content-end w-100 me-auto" label="رجوع" (onClick)="back()"
+  icon="pi pi-undo"></p-button>
+<!-- <p-button class="d-flex my-2 justify-content-end w-100 me-auto" label="اختبار" (onClick)="StepperConfig.onSave()"  icon="pi pi-undo"></p-button> -->
 <app-stepper [Configuration]="StepperConfig">
-  <ng-template stepConfig Header="البيانات الشخصية">
+  <ng-template stepConfig namePropertyOfObject="Validation_Main_EmployData" Header="البيانات الشخصية">
     <div dir="rtl">
       <div class="row my-3">
         <div class="col-lg-3 col-12 ">
           <app-InputLabel placeholder="أسم الموظف رباعي">
-            <input type="text" [(ngModel)]="employee.NAME" pInputText placeholder="... كتابة">
+            <div (mouseleave)="confirmName()" class="d-flex justify-content-center p-2 Name-input">
+              <input type="text" id="n_0" (keyup)="editTextName($event,0,'First_Name')" [(ngModel)]="First_Name"
+                pInputText placeholder="كتابة...">
+              <input type="text" id="n_1" (keyup)="editTextName($event,1,'second_Name')" [(ngModel)]="second_Name"
+                pInputText placeholder="كتابة...">
+              <input type="text" id="n_2" (keyup)="editTextName($event,2,'thirty_Name')" [(ngModel)]="thirty_Name"
+                pInputText placeholder="كتابة...">
+              <input type="text" id="n_3" (keyup)="editTextName($event,3,'forty_Name')" [(ngModel)]="forty_Name"
+                pInputText placeholder="كتابة...">
+            </div>
           </app-InputLabel>
         </div>
         <div class="col-lg-3 col-12">
-          <app-InputLabel placeholder="الرقم القومي">
-            <input type="text"  [(ngModel)]="employee.NATIONAL_ID" pInputText placeholder="... كتابة">
-          </app-InputLabel>
+          <app-comboBox [(SelectedValue)]="employee.TYPE" [dataSource]="[{name:'ذكر',id:2},{name:'انثي',id:1}]"
+            placeholder="النوع" optionValue="name" optionLabel="name"></app-comboBox>
         </div>
+
         <div class="col-lg-3 col-12">
           <app-InputLabel placeholder="تاريخ الميلاد">
             <app-DateTime [(selectedDate)]="employee.DATE_OF_BIRTH"></app-DateTime>
           </app-InputLabel>
         </div>
         <div class="col-lg-3 col-12">
-          <app-comboBox [(SelectedValue)]="employee.MARITAL_STATUS" [dataSource]="[{name:'أعزب',id:1},{name:'متزوج',id:2}, {name:'مطلق',id:3},{name:'أرمل',id:4}]"
+          <app-comboBox [(SelectedValue)]="employee.MARITAL_STATUS"
+            [dataSource]="[{name:'أعزب',id:1},{name:'متزوج',id:2}, {name:'مطلق',id:3},{name:'أرمل',id:4}]"
             placeholder="الحالة الأجتماعية" optionValue="name" optionLabel="name"></app-comboBox>
         </div>
 
       </div>
       <div class="row my-3">
+        <div class="col-lg-3 col-12 ">
+          <app-comboBox [(SelectedValue)]="employee.NATIONALITY" [dataSource]="_tools._countries" placeholder="الجنسية"
+            optionValue="name" optionLabel="name"></app-comboBox>
+        </div>
         <div class="col-lg-3 col-12">
-          <app-comboBox [(SelectedValue)]="employee.TYPE" [dataSource]="[{name:'ذكر',id:2},{name:'انثي',id:1}]" placeholder="النوع" optionValue="name"
-            optionLabel="name"></app-comboBox>
+
+          <app-InputLabel placeholder="الرقم القومي">
+            <span class="length_of_Text">{{_tools.GetStringLength(employee.NATIONAL_ID)}}</span>
+            <input type="text" [(ngModel)]="employee.NATIONAL_ID" pInputText placeholder="كتابة...">
+          </app-InputLabel>
         </div>
         <div class="col-lg-3 col-12 ">
-          <app-comboBox [(SelectedValue)]="employee.RELIGION" [dataSource]="[{name:'مسلم',id:1},{name:'مسيحي',id:2},{name:'يهودي',id:3}]"
-            placeholder="الديانة" optionValue="name" optionLabel="name"></app-comboBox>
+          <app-comboBox [(SelectedValue)]="employee.RELIGION"
+            [dataSource]="[{name:'مسلم',id:1},{name:'مسيحي',id:2},{name:'يهودي',id:3}]" placeholder="الديانة"
+            optionValue="name" optionLabel="name"></app-comboBox>
         </div>
-        <div class="col-lg-3 col-12 ">
-          <app-comboBox [(SelectedValue)]="employee.NATIONALITY" [dataSource]="[{name:'مصري',id:1},{name:'سعودي',id:2},{name:'سوداني',id:3},{name:'سوري',id:3}]"
-            placeholder="الجنسية" optionValue="name" optionLabel="name"></app-comboBox>
-        </div>
+
         <div class="col-lg-3 col-12">
           <app-comboBox [(SelectedValue)]="employee.CONSCRIPTION_POSITION"
-            [dataSource]="[{name:'اعفاء نهائي',id:1},{name:'اعفاء مؤقت',id:2}, {name:'قضي الخدمة',id:3},{name:'بالخدمة',id:4}]"
+            [dataSource]="[{name:'اعفاء نهائي',id:1},{name:'اعفاء مؤقت',id:2}, {name:'قضي الخدمة',id:3},{name:'بالخدمة',id:4},{name:'لم يصبة الدور',id:5}]"
             placeholder="موقف التجنيد" optionValue="name" optionLabel="name"></app-comboBox>
         </div>
 
@@ -56,21 +72,16 @@
         </div>
         <div class="col-lg-3 col-12">
           <app-InputLabel placeholder="اسم المؤهل الدراسي">
-            <input type="text" [(ngModel)]="employee.NAME_OF_ACADEMIC_QUALIFICATION" pInputText placeholder="... كتابة">
+            <input type="text" [(ngModel)]="employee.NAME_OF_ACADEMIC_QUALIFICATION" pInputText placeholder="كتابة...">
           </app-InputLabel>
         </div>
-        <div class="col-lg-3 col-12">
-          <app-InputLabel placeholder="رقم الوتس">
-            <input type="text" [(ngModel)]="employee.WHATSAPP_NUMBER" pInputText placeholder="... كتابة">
-          </app-InputLabel>
-        </div>
+
         <div class="col-lg-3 col-12">
           <app-InputLabel placeholder="رقم التيلفون">
-            <input type="text" [(ngModel)]="employee.PHONE_NUMBER" pInputText placeholder="... كتابة">
+            <span class="length_of_Text">{{_tools.GetStringLength(employee.PHONE_NUMBER)}}</span>
+            <input type="text" [(ngModel)]="employee.PHONE_NUMBER" pInputText placeholder="كتابة...">
           </app-InputLabel>
         </div>
-      </div>
-      <div class="row my-3">
         <div class="col-lg-3 col-12">
           <app-InputLabel placeholder="البريد الألكتروني">
             <input type="text" [(ngModel)]="employee.EMAIL" pInputText placeholder="exampl@gmail.com">
@@ -80,53 +91,49 @@
       <div class="row my-3">
         <div class="col-12">
           <app-InputLabel placeholder="العنوان بالتفصيل">
-            <textarea pInputText [(ngModel)]="employee.ADDRESS" placeholder="... كتابة"></textarea>
+            <textarea pInputText [(ngModel)]="employee.ADDRESS" placeholder="كتابة..."></textarea>
           </app-InputLabel>
         </div>
       </div>
 
     </div>
   </ng-template>
-  <ng-template stepConfig Header="البيانات الوظيفية">
+  <ng-template stepConfig namePropertyOfObject="Validation_Functional_Data" Header="البيانات الوظيفية">
     <div dir="rtl">
       <div class="row my-3">
         <div class="col-lg-3 col-12 ">
           <app-InputLabel placeholder="كود الموظف">
-            <input type="text" [(ngModel)]="employee.CODE" pInputText placeholder="... كتابة">
+            <input type="text" [(ngModel)]="employee.CODE" pInputText placeholder="كتابة...">
           </app-InputLabel>
         </div>
         <div class="col-lg-3 col-12 ">
-          <app-comboBox [(SelectedValue)]="employee.POSATION_ID" [dataSource]="Managements" placeholder="اخنر الوظيفة" optionValue="ID"
-            optionLabel="POSATION"></app-comboBox>
+          <app-comboBox [(SelectedValue)]="employee.DEPART_ID" (SelectedValueChange)="filterManagement()"
+            [dataSource]="Departs" placeholder="اخنر القسم" optionValue="ID" optionLabel="NAME"></app-comboBox>
         </div>
         <div class="col-lg-3 col-12 ">
-          <app-comboBox [(SelectedValue)]="employee.JOB_GRADE"
-            [dataSource]="[{name:'الأولي',id:1},{name:'الثانية',id:2},{name:'الثالثة',id:3},{name:'الرابعة',id:3}]"
-            placeholder="الدرجة الوظيفية" optionValue="name" optionLabel="name"></app-comboBox>
-        </div>
-        <div class="col-lg-3 col-12 ">
-          <app-comboBox 
-            [(SelectedValue)]="employee.TYPE_OF_CONTRACT"
-            [dataSource]="[{name:'دائم',id:1},{name:'مؤقت',id:2},{name:'يومي',id:3}]"
-            placeholder="نوع التعاقد" optionValue="name" optionLabel="name"></app-comboBox>
+          <app-comboBox (SelectedValueChange)="clearRelatedData($event)" [(SelectedValue)]="employee.TYPE_OF_CONTRACT"
+            [dataSource]="[{name:'دائم',id:1},{name:'مؤقت',id:2},{name:'يومي',id:3}]" placeholder="نوع التعاقد"
+            optionValue="name" optionLabel="name"></app-comboBox>
         </div>
       </div>
       <div class="row my-3">
         <div class="col-lg-3 col-12 ">
           <app-InputLabel placeholder="قيمة الراتب">
-            <p-inputNumber [(ngModel)]="employee.SALARY" [maxFractionDigits]="3" class="d-block w-100" placeholder="كتابة القيمة ... "></p-inputNumber>
+            <p-inputNumber [(ngModel)]="employee.SALARY" [maxFractionDigits]="3" class="d-block w-100"
+              placeholder="كتابة القيمة ... "></p-inputNumber>
           </app-InputLabel>
         </div>
         <div class="col-lg-3 col-12 ">
           <app-InputLabel placeholder="قيمة البدلات">
-            <p-inputNumber [(ngModel)]="employee.SUITS" class="d-block w-100" [maxFractionDigits]="3" placeholder="كتابة القيمة ... "></p-inputNumber>
+            <p-inputNumber [(ngModel)]="employee.SUITS" class="d-block w-100" [maxFractionDigits]="3"
+              placeholder="كتابة القيمة ... "></p-inputNumber>
           </app-InputLabel>
         </div>
       </div>
       <div class="row my-3">
-        <div class="col-lg-3 col-12 ">
-          <app-comboBox [(SelectedValue)]="employee.DEPART_ID" [dataSource]="Departs" placeholder="اخنر القسم" optionValue="ID"
-            optionLabel="NAME"></app-comboBox>
+        <div class="col-lg-3 col-12 " *ngIf="this.employee.DEPART_ID">
+          <app-comboBox [(SelectedValue)]="employee.POSATION_ID" [dataSource]="Managements" placeholder="اخنر الوظيفة"
+            optionValue="ID" optionLabel="POSATION"></app-comboBox>
         </div>
         <div class="col-lg-3 col-12">
           <app-InputLabel placeholder="تاريخ التعين">
@@ -135,10 +142,11 @@
         </div>
         <div class="col-lg-3 col-12">
           <app-comboBox [(SelectedValue)]="employee.ASSIGNMENT_MODE"
+            (SelectedValueChange)="Edit_APPOINTMENT_END_DATE()"
             [dataSource]="[{name:'بالخدمة',id:1},{name:'مستقيل',id:2},{name:'منقطع',id:3},{name:'اخلاء',id:4},{name:'رفد',id:5},{name:'عدم صلاحية',id:6}]"
             placeholder="وضع التعين" optionValue="name" optionLabel="name"></app-comboBox>
         </div>
-        <div class="col-lg-3 col-12">
+        <div class="col-lg-3 col-12" *ngIf="employee.ASSIGNMENT_MODE !== 'بالخدمة'">
           <app-InputLabel placeholder="تاريخ انتهاء التعين">
             <app-DateTime [(selectedDate)]="employee.APPOINTMENT_END_DATE"></app-DateTime>
           </app-InputLabel>
@@ -146,23 +154,23 @@
       </div>
     </div>
   </ng-template>
-  <ng-template stepConfig Header="بيانات التأمين">
+  <ng-template stepConfig namePropertyOfObject="Validation_Insurance_Data" Header="بيانات التأمين"
+    [Visible]="employee.TYPE_OF_CONTRACT=='دائم'">
     <div dir="rtl">
       <div class="row my-3">
         <div class="col-lg-4 col-12 ">
           <app-InputLabel placeholder="الرقم التاميني">
-            <input type="text" [(ngModel)]="employee.INSURANCE_NUMBER" pInputText placeholder="... كتابة">
+            <input type="text" [(ngModel)]="employee.INSURANCE_NUMBER" pInputText placeholder="كتابة...">
           </app-InputLabel>
         </div>
         <div class="col-lg-4 col-12 ">
-          <app-comboBox 
-            [(SelectedValue)]="employee.INSURANCE_COMPANY"
-            [dataSource]="[{name:'قطاع خاص',id:1},{name:'حكومي',id:2},{name:'حر',id:3}]"
-            placeholder="جهة التأمين" optionValue="name" optionLabel="name"></app-comboBox>
+          <app-comboBox [(SelectedValue)]="employee.INSURANCE_COMPANY"
+            [dataSource]="[{name:'قطاع خاص',id:1},{name:'حكومي',id:2},{name:'حر',id:3}]" placeholder="جهة التأمين"
+            optionValue="name" optionLabel="name"></app-comboBox>
         </div>
         <div class="col-lg-4 col-12 ">
           <app-InputLabel placeholder="رقم ملف التأمينات">
-            <input type="text" [(ngModel)]="employee.INSURANCE_FILE_NUMBER" pInputText placeholder="... كتابة">
+            <input type="text" [(ngModel)]="employee.INSURANCE_FILE_NUMBER" pInputText placeholder="كتابة...">
           </app-InputLabel>
         </div>
 
@@ -175,43 +183,49 @@
         </div>
         <div class="col-lg-4 col-12 ">
           <app-InputLabel placeholder="مبلغ التأمين للفرد">
-            <p-inputNumber [(ngModel)]="employee.INSURANCE_AMOUNT_PER_PERSON" [maxFractionDigits]="3" class="d-block w-100" placeholder="كتابة القيمة ... "></p-inputNumber>
+            <p-inputNumber [(ngModel)]="employee.INSURANCE_AMOUNT_PER_PERSON" [maxFractionDigits]="3"
+              class="d-block w-100" placeholder="كتابة القيمة ... "></p-inputNumber>
           </app-InputLabel>
         </div>
         <div class="col-lg-4 col-12 ">
           <app-InputLabel placeholder="مبلغ التأمين للشركة">
-            <p-inputNumber [(ngModel)]="employee.COMPANY_INSURANCE_AMOUNT" [maxFractionDigits]="3"  class="d-block w-100" placeholder="كتابة القيمة ... "></p-inputNumber>
+            <p-inputNumber [(ngModel)]="employee.COMPANY_INSURANCE_AMOUNT" [maxFractionDigits]="3" class="d-block w-100"
+              placeholder="كتابة القيمة ... "></p-inputNumber>
           </app-InputLabel>
         </div>
       </div>
     </div>
   </ng-template>
-  <ng-template stepConfig Header="البيانات الدورية">
+  <ng-template stepConfig namePropertyOfObject="Validation_Periodic_Data" Header="البيانات الدورية">
     <div dir="rtl">
       <div class="row my-3">
         <div class="col-lg-4 col-12 ">
-          <app-multiselect [IsInGridMode]="true" [item]="employee" idItemKey="ID" propertyBind="PLACES"  selectIdKey="EMPLOYEE_ID" [dataSource]="Places"  placeholder="اخنر مكان العمل" optionValue="PLACE_ID"
+          <app-multiselect [IsInGridMode]="true" [item]="employee" idItemKey="ID" propertyBind="PLACES"
+            selectIdKey="EMPLOYEE_ID" [dataSource]="Places" placeholder="اخنر مكان العمل" optionValue="PLACE_ID"
             optionLabel="NAME"></app-multiselect>
         </div>
         <div class="col-lg-4 col-12 ">
-          <app-comboBox [(SelectedValue)]="employee.METHOD_OF_TRANSITION"
+          <app-comboBox [(SelectedValue)]="employee.METHOD_OF_TRANSITION" (SelectedValueChange)="employee.BUS_NAME='';"
             [dataSource]="[{name:'باص',id:1},{name:'بدل موصلات',id:2},{name:'ملاكي',id:3},{name:'سكن الشركة',id:3}]"
             placeholder="طريقة الانتقال" optionValue="name" optionLabel="name"></app-comboBox>
         </div>
-        <div class="col-lg-4 col-12 ">
+        <div class="col-lg-4 col-12 " *ngIf="employee.METHOD_OF_TRANSITION=='باص'">
           <app-InputLabel placeholder="اسم الباص">
-            <input type="text" [(ngModel)]="employee.BUS_NAME" pInputText placeholder="... كتابة">
+            <input type="text" [(ngModel)]="employee.BUS_NAME" pInputText placeholder="كتابة...">
           </app-InputLabel>
         </div>
       </div>
       <div class="row my-3">
         <div class="col-lg-4 col-12 ">
-          <app-comboBox [(SelectedValue)]="employee.EMPLOYEE_MEAL" [dataSource]="[{name:'من المائدة',id:1},{name:'بدل وجبة',id:2},{name:'ليس لة وجبة',id:3}]"
+          <app-comboBox [(SelectedValue)]="employee.EMPLOYEE_MEAL"
+            [dataSource]="[{name:'من المائدة',id:1},{name:'بدل وجبة',id:2},{name:'ليس لة وجبة',id:3}]"
             placeholder="وجبة الموظف" optionValue="name" optionLabel="name"></app-comboBox>
         </div>
         <div class="col-lg-4 col-12 ">
-          <app-InputLabel placeholder="رصيد الأفتتاحي لأعتيادي">
-            <p-inputNumber class="d-block w-100" [maxFractionDigits]="3" [(ngModel)]="employee.OPENING_BALANCE_FOR_REGULAR" [useGrouping]="false" placeholder="كتابة القيمة ... "></p-inputNumber>
+          <app-InputLabel placeholder="رصيد الأفتتاحي لأعتيادي" *ngIf="employee.TYPE_OF_CONTRACT=='دائم'">
+            <p-inputNumber class="d-block w-100" [maxFractionDigits]="3"
+              [(ngModel)]="employee.OPENING_BALANCE_FOR_REGULAR" [useGrouping]="false"
+              placeholder="كتابة القيمة ... "></p-inputNumber>
           </app-InputLabel>
         </div>
       </div>
@@ -232,21 +246,22 @@
           <app-UpLoadFile [(pathFile)]="employee.BIRTH_CERTIFICATE_PHOTO" Header="صورة شهادة الميلاد"></app-UpLoadFile>
         </div>
         <div class="col-6">
-          <app-UpLoadFile [(pathFile)]="employee.ACADEMIC_QUALIFICATION_PHOTO"  Header="صورة المؤهل الدراسي"></app-UpLoadFile>
+          <app-UpLoadFile [(pathFile)]="employee.ACADEMIC_QUALIFICATION_PHOTO"
+            Header="صورة المؤهل الدراسي"></app-UpLoadFile>
         </div>
       </div>
       <div class="row my-3">
         <div class="col-6">
-          <app-UpLoadFile [(pathFile)]="employee.ARMY_CERTIFICATE_PHOTO"  Header="صورة شهادة الجيش"></app-UpLoadFile>
+          <app-UpLoadFile [(pathFile)]="employee.ARMY_CERTIFICATE_PHOTO" Header="صورة شهادة الجيش"></app-UpLoadFile>
         </div>
       </div>
       <div class="row my-3">
         <div class="col-6">
-          <app-UpLoadFile [(pathFile)]="employee.CRIMINAL_RECORD_PHOTO"  Header="صورة صحيفة الحالة الجنائية"></app-UpLoadFile>
+          <app-UpLoadFile [(pathFile)]="employee.CRIMINAL_RECORD_PHOTO"
+            Header="صورة صحيفة الحالة الجنائية"></app-UpLoadFile>
         </div>
       </div>
     </div>
   </ng-template>
 
 </app-stepper>
-

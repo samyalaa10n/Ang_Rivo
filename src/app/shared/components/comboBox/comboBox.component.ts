@@ -47,6 +47,7 @@ export class ComboBoxComponent implements OnInit {
     }
   }
   selectedItem(item: any) {
+    debugger
     if (item && item != "") {
       this.selectedChange.emit(item);
       if (item[this.optionValue] != undefined) {

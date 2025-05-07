@@ -15,6 +15,11 @@ import { GridAction } from '../../../shared/components/dataGrid/dataGrid.compone
 export class UserComponent implements OnInit {
   Columns: Array<Column> = [];
   constructor(private _tools: Tools) { }
+  /**
+   * Initializes the component by setting up column configurations and populating the RuleGroup data source.
+   * Fetches RuleGroup data without permissions and configures columns for a user management grid,
+   * including setting up a combobox column for user type selection.
+   */
   async ngOnInit() {
     let RuleGroup = await this._tools.getAsync("RuleGroup/GetWithOutPermeations") as Array<any>;
     this.Columns.push(new Column('ID', "الكود", "lapel", "text"))
@@ -31,6 +36,11 @@ export class UserComponent implements OnInit {
   }
   async ngAfterViewInit() {
   }
+  /**
+     * Updates the RuleGroup data source for the user type column in the grid.
+     * Fetches the latest RuleGroup data without permissions and updates the combobox data source.
+     * @param {Table} Td - The PrimeNG table component to be updated
+     */
   async update(Td: Table) {
     let RuleGroup = await this._tools.getAsync("RuleGroup/GetWithOutPermeations") as Array<any>;
     this.Columns[5].columnComboBoxDataSource=RuleGroup;

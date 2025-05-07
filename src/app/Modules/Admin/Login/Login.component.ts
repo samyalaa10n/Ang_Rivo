@@ -14,26 +14,22 @@ import { Router } from '@angular/router';
   imports: [InputLabelComponent, FormsModule, InputTextModule, ButtonModule]
 })
 export class LoginComponent implements OnInit {
-  logInfo = { USER_NAME: "", PASSWORD: "" }
+  logInfo = { NAME: "", PASSWORD: "" }
+
   constructor(private _tools: Tools, private _router: Router) { }
 
   ngOnInit() {
+   
     if (localStorage.getItem("logInfo") != null) {
       this._router.navigate(['Main', 'Home'])
     }
-  }
-  async login() {
-    let response: any = await this._tools.postAsync('Login/Log', this.logInfo)
-    if (response) {
-      if (response.SUCCESS) {
-        console.log(response)
-        this._tools._LoginName=response.USER.NAME;
-        localStorage.setItem("logInfo", encodeURIComponent(JSON.stringify(response.USER)))
-        this._router.navigate(['Main', 'Home'])
-      }
-      else {
-        this._tools.Toaster.showError(response.MESSAGE)
-      }
+    else
+    {
+      this._tools.hubConnection?.stop();
     }
   }
+  async login() {
+    this._tools.startConnection(JSON.stringify(this.logInfo));
+  }
+
 }
