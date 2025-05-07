@@ -1295,6 +1295,11 @@ export class Tools {
       else {
         this.hubConnection?.stop();
         this.Toaster.showError(response.message)
+        console.log(response)
+        if (response.logOut) {
+          localStorage.removeItem("logInfo") 
+          this._router.navigate(['Login'])
+        }
       }
     });
   }
