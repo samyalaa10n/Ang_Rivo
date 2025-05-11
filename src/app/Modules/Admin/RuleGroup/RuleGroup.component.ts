@@ -27,10 +27,10 @@ export class RuleGroupComponent implements OnInit {
   constructor(private _tools: Tools) { }
 
   async ngOnInit() {
-    this.Promotions = await this._tools.getAsync("RuleGroup/GetPromotions") as Array<any>;
+   // this.Promotions = await this._tools.getAsync("RuleGroup/GetPromotions") as Array<any>;
     this.Columns.push(new Column('ID', "الكود", "lapel", "text"))
     this.Columns.push(new Column('NAME', "اسم المجموعة", "text", "text"))
-    this.Columns.push(new Column('IS_ACTIVE', "مفعل اام لا","yes-no", "yes-no"))
+    this.Columns.push(new Column('IS_ACTIVE', "مفعل ام لا","yes-no", "yes-no"))
     this.columnsChildGrid.push(new Column("NAME_PERMITION", "اسم الصلاحية"))
     this.columnsChildGrid.push(new Column("VALUES", "الخصائص", "custom"))
     this.columnsChildGrid[this.columnsChildGrid.length - 1].columnMultiPlaceholder = "اختر الخصائص";

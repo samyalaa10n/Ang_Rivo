@@ -121,6 +121,20 @@ export class NaveComponent implements OnInit {
             },
             items: [
               {
+                label: 'أجهزة الحضور و الانصراف',
+                icon: 'pi pi-database',
+                command: (event) => {
+                  this._router.navigate(['Main', 'AttendanceAndDepartureDevices']);
+                },
+              },
+              {
+                label: 'سجل الحضور و الانصراف',
+                icon: 'pi pi-database',
+                command: (event) => {
+                  this._router.navigate(['Main', 'AttendanceRecord']);
+                },
+              },
+              {
                 label: 'الأجازات',
                 icon: 'pi pi-database',
                 command: (event) => {

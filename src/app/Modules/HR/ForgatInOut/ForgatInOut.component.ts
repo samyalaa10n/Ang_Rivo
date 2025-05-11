@@ -82,7 +82,7 @@ export class ForgatInOutComponent implements OnInit {
       this.Columns[1].columnComboBoxChange = (select, item, comboBox) => {
         var userData = localStorage.getItem("logInfo")
         if (userData != null) {
-          item.USER_RECORD_NAME = JSON.parse(decodeURIComponent(userData)).NAME
+          item.USER_RECORD_NAME = JSON.parse(userData).useR_NAME
         }
         item.ID_EMPLOY = select.ID;
         item.DEPART = select.DEPART;
@@ -99,7 +99,7 @@ export class ForgatInOutComponent implements OnInit {
       this.Columns[2].columnComboBoxChange = (select, item, comboBox) => {
         var userData = localStorage.getItem("logInfo")
         if (userData != null) {
-          item.USER_RECORD_NAME = JSON.parse(decodeURIComponent(userData)).NAME
+          item.USER_RECORD_NAME = JSON.parse(userData).useR_NAME
         }
         item.ID_EMPLOY = select.ID;
         item.DEPART = select.DEPART;

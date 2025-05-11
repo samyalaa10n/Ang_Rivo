@@ -21,17 +21,18 @@ export class UserComponent implements OnInit {
    * including setting up a combobox column for user type selection.
    */
   async ngOnInit() {
-    let RuleGroup = await this._tools.getAsync("RuleGroup/GetWithOutPermeations") as Array<any>;
+    let RuleGroup = await this._tools.getAsync("RuleGroup") as Array<any>;
     this.Columns.push(new Column('ID', "الكود", "lapel", "text"))
-    this.Columns.push(new Column('NAME', "الأسم", "text", "text"))
-    this.Columns.push(new Column('USER_NAME', "اسم المستخدم", "text", "text"))
+    this.Columns.push(new Column('USER_HRCODE', "كود الموظف", "text", "text"))
+    this.Columns.push(new Column('EMAIL', "البريد الالكتروني", "text", "text"))
+    this.Columns.push(new Column('NAME', "اسم المستخدم", "text", "text"))
     this.Columns.push(new Column('PASSWORD', "كلمة المرور", "text", "text"))
     this.Columns.push(new Column('IS_ACTIVE', "مفعل ام لأ", "yes-no", "yes-no"))
-    this.Columns.push(new Column('RULEGROUP_ID', "نوع المستخدم", "comboBox", "comboBox"))
-    this.Columns[5].columnComboBoxOptionValue="ID";
-    this.Columns[5].columnComboBoxOptionLabel="NAME";
-    this.Columns[5].columnComboBoxPlaceholder="اختر نوع المستخدم";
-    this.Columns[5].columnComboBoxDataSource=RuleGroup;
+    this.Columns.push(new Column('GROUP_ID', "نوع المستخدم", "comboBox", "comboBox"))
+    this.Columns[6].columnComboBoxOptionValue="ID";
+    this.Columns[6].columnComboBoxOptionLabel="NAME";
+    this.Columns[6].columnComboBoxPlaceholder="اختر نوع المستخدم";
+    this.Columns[6].columnComboBoxDataSource=RuleGroup;
   
   }
   async ngAfterViewInit() {
@@ -42,7 +43,7 @@ export class UserComponent implements OnInit {
      * @param {Table} Td - The PrimeNG table component to be updated
      */
   async update(Td: Table) {
-    let RuleGroup = await this._tools.getAsync("RuleGroup/GetWithOutPermeations") as Array<any>;
+    let RuleGroup = await this._tools.getAsync("RuleGroup") as Array<any>;
     this.Columns[5].columnComboBoxDataSource=RuleGroup;
   }
 }

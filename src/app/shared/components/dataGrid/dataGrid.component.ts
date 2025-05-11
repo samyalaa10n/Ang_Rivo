@@ -104,6 +104,7 @@ export class DataGridComponent implements OnInit {
   @Input() selectedItems: Array<any> = [];
   @Input() selectedColumns: Array<any> = [];
   @Input() AllowDeleteSelected: boolean = true;
+  @Input() AllowExportExcel: boolean = true;
   @Input() singleSelectedMode: boolean = false;
   @Input() canSelectedSomeColumns: boolean = true;
   @Output() onGridLoaded: EventEmitter<any> = new EventEmitter()
@@ -163,6 +164,10 @@ export class DataGridComponent implements OnInit {
   }
   async onUpdate(table: Table) {
 
+  }
+  exportExcel()
+  {
+   this._tools.exportAsExcelFile(this.dataSource,'Exported')
   }
   ngAfterViewInit() {
     // this.editFilterWork()

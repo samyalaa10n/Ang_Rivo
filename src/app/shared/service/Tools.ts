@@ -6,11 +6,14 @@ import { Router } from "@angular/router";
 import { DatePipe } from "@angular/common";
 import { LoadingComponent } from "../components/Loading/Loading.component";
 import * as signalR from '@microsoft/signalr';
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
 @Injectable({
   providedIn: 'root'
 })
 export class Tools {
   public hubConnection: signalR.HubConnection | undefined;
+  Authentication:any=null
   tempData: any = null
   baseUrl: string = "https://localhost:44327/api/"
   Toaster!: ToasterComponent
@@ -1278,18 +1281,20 @@ export class Tools {
     this.hubConnection = new signalR.HubConnectionBuilder().withUrl(`https://localhost:44327/Connect?UserData=${UserData}`, {
       withCredentials: true // لتأكيد إرسال الـ cookies إذا كان يستخدم
     }).build();
-
+    this.Loading.startLoading();
     this.hubConnection.start()
       .then(() => {
         console.log('SignalR Connection Established')
       })
       .catch(err => {
+        this.Loading.stopLoading();
         console.log(err)
       });
     this.hubConnection.on("OnConnectedData", (response) => {
+      this.Loading.stopLoading();
       if (response.success) {
         this._LoginName = response.useR_NAME;
-        localStorage.setItem("logInfo", encodeURIComponent(JSON.stringify(response.tokeN_GENERATE)))
+        localStorage.setItem("logInfo", JSON.stringify(response))
         this._router.navigate(['Main', 'Home'])
       }
       else {
@@ -1432,5 +1437,56 @@ export class Tools {
       return item.length;
     }
     return 0;
+  }
+
+
+  exportAsExcelFile(json: any[], fileName: string): void {
+    // تحويل JSON إلى ورقة عمل
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
+    
+    // إنشاء ملف Excel يحتوي على الورقة
+    const workbook: XLSX.WorkBook = {
+      Sheets: { data: worksheet },
+      SheetNames: ['data']
+    };
+
+    // تحويل الملف إلى بايت
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+    // حفظ الملف
+    this.saveAsExcelFile(excelBuffer, fileName);
+  }
+
+  private saveAsExcelFile(buffer: any, fileName: string): void {
+    const data: Blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
+    });
+    FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
+  }
+  onFileChange(evt: any) {
+    const target: DataTransfer = <DataTransfer>(evt.target);
+    if (target.files.length !== 1) {
+      console.error('من فضلك اختر ملف Excel واحد فقط');
+      return;
+    }
+
+    const reader: FileReader = new FileReader();
+    reader.onload = (e: any) => {
+      const bstr: string = e.target.result;
+      const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
+
+      const wsname: string = wb.SheetNames[0]; // أول شيت
+      const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+
+      let data  = XLSX.utils.sheet_to_json(ws); // تحويله إلى JSON
+      console.log(data); // طباعة المحتوى
+      this.onFileEndImport(data);
+    };
+
+    reader.readAsBinaryString(target.files[0]);
+  }
+  onFileEndImport(data:Array<any>)
+  {
+
   }
 }

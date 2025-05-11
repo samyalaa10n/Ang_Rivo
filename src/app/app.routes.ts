@@ -18,6 +18,8 @@ import { RuleGroupComponent } from './Modules/Admin/RuleGroup/RuleGroup.componen
 import { ForgatInOutComponent } from './Modules/HR/ForgatInOut/ForgatInOut.component';
 import { HolidayRecodesComponent } from './Modules/HR/holidayRecords/holidayRecords.component';
 import { EmploysRecodesComponent } from './Modules/HR/EmployesRecordies/EmploysRecodes.component';
+import { AttendanceAndDepartureDevicesComponent } from './Modules/HR/AttendanceAndDepartureDevices/AttendanceAndDepartureDevices.component';
+import { AttendanceRecordComponent } from './Modules/HR/AttendanceRecord/AttendanceRecord.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'Login', title: "الرئيسية", pathMatch: "full" },
@@ -40,6 +42,8 @@ export const routes: Routes = [
             { path: 'Accounts',title:'الحسابات', component: AccountComponent },
             { path: 'Users',title:'المستخدمين', component: UserComponent },
             { path: 'RuleGroup',title:'نوع المستخدم', component: RuleGroupComponent },
+            { path: 'AttendanceAndDepartureDevices',title:'اجهزة الحضور و الانصراف', component: AttendanceAndDepartureDevicesComponent },
+            { path: 'AttendanceRecord',title:'سجل الحضور و الانصراف', component: AttendanceRecordComponent },
         ]
     },
     { path: '**', redirectTo: 'Main', title: "الرئيسية", pathMatch: "full" }

@@ -4,9 +4,9 @@
         [scrollHeight]="scrollHeight" [rowsPerPageOptions]="rowsPerPageOptions" tableStyleClass="p-datatable-gridlines"
         [globalFilterFields]="globalFilterFields" [showGridlines]="true" [reorderableColumns]="true"
         [(selection)]="selectedItems" (selectionChange)="onSelectAllChange($event)"
-        (onRowUnselect)="onUnSelectRow($event)" (onRowSelect)="onSelectRow($event)" 
-        [columns]="selectedColumns" [reorderableColumns]="true" [selectionMode]="selectionMode"
-        [metaKeySelection]="singleSelectedMode" paginatorDropdownAppendTo="body">
+        (onRowUnselect)="onUnSelectRow($event)" (onRowSelect)="onSelectRow($event)" [columns]="selectedColumns"
+        [reorderableColumns]="true" [selectionMode]="selectionMode" [metaKeySelection]="singleSelectedMode"
+        paginatorDropdownAppendTo="body">
         <ng-template #caption>
             <div *ngIf="AllowHeaderTemplate">
                 <div class="my-1">
@@ -37,6 +37,8 @@
                         (click)="save()"></p-button>
                     <p-button *ngIf="AllowDeleteSelected" severity="danger" label="حذف المحدد" class=" font-bold mx-1"
                         icon="pi pi-trash" (click)="DeleteSelectedData()" />
+                    <p-button *ngIf="AllowExportExcel" label="تصدير" class="font-bold mx-1"
+                        icon="pi pi-file-excel" (click)="exportExcel()" />
                 </div>
             </div>
         </ng-template>
@@ -100,8 +102,8 @@
                     <p-tableRadioButton *ngIf="singleSelectedMode" [value]="item" />
                 </td>
                 <td *ngIf="IsHasChild " class="text-center" style="min-width: 4rem;">
-                    <p-button *ngIf="item[dataKey]>0" type="button" (onClick)="expandedRow(item,rowIndex)" pRipple [pRowToggler]="item"
-                        [text]="true" [rounded]="true" [plain]="true"
+                    <p-button *ngIf="item[dataKey]>0" type="button" (onClick)="expandedRow(item,rowIndex)" pRipple
+                        [pRowToggler]="item" [text]="true" [rounded]="true" [plain]="true"
                         [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
                 </td>
                 @for (column of columns; track $index)
@@ -111,39 +113,47 @@
                     @case ("lapel") {
                     <ng-container *ngIf="item[column.name]!=null && item[column.name]!=undefined">
                         {{column.Style_Show(item[column.name])}}
-                        
+
                     </ng-container>
                     }
                     @case ("text") {
                     <input class="inputText" pInputText type="text" #text placeholder="كتابة ... "
-                        (keydown)="pInputTextKeyDown($event,text,item)" (keyup)="onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})" [(ngModel)]="item[column.name]" />
+                        (keydown)="pInputTextKeyDown($event,text,item)"
+                        (keyup)="onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"
+                        [(ngModel)]="item[column.name]" />
                     }
                     @case ("yes-no") {
                     <label for="ny" class="mx-2">{{column.header}}</label>
-                    <p-checkbox id="ny" (onChange)="onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})" [(ngModel)]="item[column.name]" [binary]="true" />
+                    <p-checkbox id="ny"
+                        (onChange)="onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"
+                        [(ngModel)]="item[column.name]" [binary]="true" />
                     <!-- <p-toggleswitch [(ngModel)]="item[column.name]" /> -->
                     <!-- <p-togglebutton [(ngModel)]="item[column.name]" onLabel="نعم" offLabel="لا" styleClass="w-24" /> -->
                     }
                     @case ("date") {
-                    <app-DateTime placeholder="كتابة ... " [(selectedDate)]="item[column.name]" [maxDate]="column.columnMaxDate"  [minDate]="column.columnMinDate"
+                    <app-DateTime placeholder="كتابة ... " [(selectedDate)]="item[column.name]"
+                        [maxDate]="column.columnMaxDate" [minDate]="column.columnMinDate"
                         (selectedDateChange)="onSelectColumnData(item,$event,column);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"></app-DateTime>
                     }
                     @case ("date-Time") {
-                        <app-DateTime placeholder="كتابة ... " [(selectedDate)]="item[column.name]"  [showTime]="true" [maxDate]="column.columnMaxDate"  [minDate]="column.columnMinDate"
-                            (selectedDateChange)="onSelectColumnData(item,$event,column);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"></app-DateTime>
-                        }
+                    <app-DateTime placeholder="كتابة ... " [(selectedDate)]="item[column.name]" [showTime]="true"
+                        [maxDate]="column.columnMaxDate" [minDate]="column.columnMinDate"
+                        (selectedDateChange)="onSelectColumnData(item,$event,column);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"></app-DateTime>
+                    }
                     @case ("number") {
                     <p-inputnumber [(ngModel)]="item[column.name]"
-                        (onKeyDown)="pInputTextKeyDown($event,{value:'1'},item);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})" mode="decimal" />
+                        (onKeyDown)="pInputTextKeyDown($event,{value:'1'},item);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"
+                        mode="decimal" />
                     <!-- <p-datepicker [showButtonBar]="true" [(ngModel)]="item[column.name]" dateFormat="dd/mm/yy"
                         appendTo="body" [showIcon]="true" inputId="buttondisplay" [showOnFocus]="true" /> -->
                     }
                     @case ("numberWithFraction") {
-                        <p-inputnumber [(ngModel)]="item[column.name]" [minFractionDigits]="0" [maxFractionDigits]="3"
-                            (onKeyDown)="pInputTextKeyDown($event,{value:'1'},item);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})" mode="decimal" />
-                        <!-- <p-datepicker [showButtonBar]="true" [(ngModel)]="item[column.name]" dateFormat="dd/mm/yy"
+                    <p-inputnumber [(ngModel)]="item[column.name]" [minFractionDigits]="0" [maxFractionDigits]="3"
+                        (onKeyDown)="pInputTextKeyDown($event,{value:'1'},item);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"
+                        mode="decimal" />
+                    <!-- <p-datepicker [showButtonBar]="true" [(ngModel)]="item[column.name]" dateFormat="dd/mm/yy"
                             appendTo="body" [showIcon]="true" inputId="buttondisplay" [showOnFocus]="true" /> -->
-                        }
+                    }
                     @case ("comboBox") {
                     <app-comboBox #comboBox [dataSource]="column.columnComboBoxDataSource"
                         [optionValue]="column.columnComboBoxOptionValue" [apiPathDataSource]="column.apiPathDataSource"
@@ -156,11 +166,11 @@
                     <app-multiselect #Multiselect [IsInGridMode]="true"
                         [dataSource]="column.columnMultiSelectDataSource" [placeholder]="column.columnMultiPlaceholder"
                         [optionLabel]="column.columnMultiOptionLabel"
-                        (dataSelectedChange)="column.columnMultiSelectChange(Multiselect,item);onGridAction({EVENT:$event,itemEdit:item,ActonType:'SELECT',COLUMN:column})" [item]="item"
-                        [idItemKey]="dataKey" [selectIdKey]="column.columnMultiSelectselectIdKey"
+                        (dataSelectedChange)="column.columnMultiSelectChange(Multiselect,item);onGridAction({EVENT:$event,itemEdit:item,ActonType:'SELECT',COLUMN:column})"
+                        [item]="item" [idItemKey]="dataKey" [selectIdKey]="column.columnMultiSelectselectIdKey"
                         [optionValue]="column.columnMultiSelectOptionValue"
                         [propertyBind]="column.columnMultiSelectpropertyBind"></app-multiselect>
-                    
+
                     }
                     @case ("multiSelectObjectMode") {
                     <app-multiselect #Multiselect [dataSource]="column.columnMultiSelectDataSource"
@@ -170,8 +180,9 @@
                         [optionValue]="column.columnMultiSelectOptionValue"></app-multiselect>
                     }
                     @case ("textarea") {
-                    <textarea [(ngModel)]="item[column.name]" (keyup)="onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})" pInputText type="text"
-                        placeholder="كتابة ... "></textarea>
+                    <textarea [(ngModel)]="item[column.name]"
+                        (keyup)="onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})" pInputText
+                        type="text" placeholder="كتابة ... "></textarea>
                     }
                     @case ("custom") {
                     <ng-container [ngTemplateOutlet]="column.templateColumn"
