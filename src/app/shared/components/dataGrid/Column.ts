@@ -6,7 +6,7 @@ export class Column {
     constructor(
         public name: string = '',
         public header: string = '',
-        public columnType: "text" | "number" | "numberWithFraction" | "lapel" | "date-Time" | "date" | "custom" | "comboBox" | "multiSelect" | "multiSelectObjectMode" | "yes-no" | "textarea" = "lapel",
+        public columnType: "text" | "number" | "numberWithFraction" | "lapel" | "date-Time" | "Time" | "date" | "custom" | "comboBox" | "multiSelect" | "multiSelectObjectMode" | "yes-no" | "textarea" = "lapel",
         public filterType: "text" | "numeric" | "boolean" | "date" | "comboBox" | "yes-no" | "none" = "text",
         public width: number = 100,
         public frozen: boolean = false

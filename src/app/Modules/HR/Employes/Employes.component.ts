@@ -16,6 +16,7 @@ import { UpLoadFileComponent } from "../../../shared/components/UpLoadFile/UpLoa
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { ActivatedRoute } from '@angular/router';
+import { DataGridComponent } from "../../../shared/components/dataGrid/dataGrid.component";
 
 
 @Component({
@@ -23,38 +24,40 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './Employes.component.html',
   styleUrls: ['./Employes.component.css'],
   standalone: true,
-  imports: [StepperComponent, FormsModule, ButtonModule, StepConfigurationDirective, InputLabelComponent, InputNumberModule, InputTextModule, NgIf, ComboBoxComponent, DateTimeComponent, MultiselectComponent, UpLoadFileComponent]
+  imports: [StepperComponent, FormsModule, ButtonModule, StepConfigurationDirective, InputLabelComponent, InputNumberModule, InputTextModule, NgIf, ComboBoxComponent, DateTimeComponent, MultiselectComponent, UpLoadFileComponent, DataGridComponent]
 })
 export class EmployesComponent implements OnInit {
   StepperConfig: StepperConfiguration = new StepperConfiguration(this);
   Columns: Array<Column> = [];
   Managements: Array<any> = []
+  Employs: Array<any> = []
+  selectedEmploys: Array<any> = []
   Departs: Array<any> = []
   Places: Array<any> = []
   First_Name: string = "";
   second_Name: string = "";
   thirty_Name: string = "";
   forty_Name: string = "";
-  ModePage: "Edit" | "Add" | "Add Inherit" = "Add"
-  employee = {
+  ModePage: "Edit" | "Add" | "EditMore" | "Add Inherit" | null = null
+  employee: any = {
     "ID": 0,
     "ROW_NUMBER": -1,
     "CODE": null,
-    "NAME": "",
+    "NAME": null,
     "NATIONAL_ID": null,
     "MARITAL_STATUS": null,
     "RELIGION": null,
-    "NATIONALITY": "مصر",
+    "NATIONALITY": null,
     "CONSCRIPTION_POSITION": null,
     "DATE_OF_BIRTH": null,
-    "TYPE": "ذكر",
+    "TYPE": null,
     "WHATSAPP_NUMBER": null,
     "PHONE_NUMBER": null,
     "EMAIL": null,
     "ADDRESS": null,
     "QUALIFICATION_DEGREE": null,
     "NAME_OF_ACADEMIC_QUALIFICATION": null,
-    "JOB_GRADE": "",
+    "JOB_GRADE": null,
     "TYPE_OF_CONTRACT": null,
     "ASSIGNMENT_MODE": null,
     "DATE_OF_APPOINTMENT": null,
@@ -63,15 +66,15 @@ export class EmployesComponent implements OnInit {
     "POSATION_ID": null,
     "INSURANCE_FILE_NUMBER": null,
     "INSURANCE_NUMBER": null,
-    "INSURANCE_COMPANY": 'قطاع خاص',
+    "INSURANCE_COMPANY": null,
     "INSURANCE_SUBSCRIPTION_DATE": null,
     "INSURANCE_AMOUNT_PER_PERSON": null,
     "COMPANY_INSURANCE_AMOUNT": null,
     "METHOD_OF_TRANSITION": null,
-    "BUS_NAME": "",
+    "BUS_NAME": null,
     "EMPLOYEE_MEAL": null,
-    "OPENING_BALANCE_FOR_REGULAR": 0,
-    "SUITS": 0,
+    "OPENING_BALANCE_FOR_REGULAR": null,
+    "SUITS": null,
     "SALARY": null,
     "IMAGE_PRINT": null,
     "FINGER_PRINT": null,
@@ -81,19 +84,17 @@ export class EmployesComponent implements OnInit {
     "ACADEMIC_QUALIFICATION_PHOTO": null,
     "ARMY_CERTIFICATE_PHOTO": null,
     "CRIMINAL_RECORD_PHOTO": null,
-    "PLACES": [
-      {
-        "ID": 0,
-        "ROW_NUMBER": 0,
-        "EMPLOYEE_ID": 0,
-        "PLACE_ID": 0
-      }
-    ]
+    "PLACES": null,
+    "WEEKEND": null
   }
   constructor(public _tools: Tools, private _ActiveRouter: ActivatedRoute, private el: ElementRef<HTMLElement>) {
   }
   //
   async ngOnInit() {
+
+    this.Columns.push(new Column('ID', "رقم النظام"))
+    this.Columns.push(new Column('CODE', "كود الموظف"))
+    this.Columns.push(new Column('NAME', "أسم الموظف"))
     this.Places = await this._tools.getAsync("Place") as Array<any>
     this.Managements = await this._tools.getAsync("Mangement") as Array<any>
     this.Departs = await this._tools.getAsync("Depart") as Array<any>
@@ -121,7 +122,7 @@ export class EmployesComponent implements OnInit {
                 this.pictureNameEmploy();
                 this.employee.ROW_NUMBER = -1;
                 this.employee.ID = 0;
-                this.employee.PLACES.forEach(place => { place.EMPLOYEE_ID = 0; place.ID = 0; place.ROW_NUMBER = -1 });
+                (this.employee.PLACES as Array<any>).forEach(place => { place.EMPLOYEE_ID = 0; place.ID = 0; place.ROW_NUMBER = -1 });
               }
             }
           }
@@ -131,23 +132,66 @@ export class EmployesComponent implements OnInit {
           this.StepperConfig.Steps[0].select();
           this.clearEmployData()
         }
+        else if (PRAMS.get("Type")?.includes("Edit_selected_Items")) {
+          this.ModePage = "EditMore"
+          // this.StepperConfig.Steps[0].select();
+          let ListId = PRAMS.get("Type")?.split("=")[1].split(",");
+          var response = await this._tools.getAsync(`Employee`)
+          if (Array.isArray(response) && ListId != undefined) {
+            this.selectedEmploys = response.filter(x => ListId.includes(`${x.ID}`))
+            this.Employs = response.filter(x => ListId.includes(`${x.ID}`))
+            if (this.selectedEmploys.length > 0) {
+              this.employee = this.selectedEmploys[0]
+            }
+          }
+          this.clearEmployData()
+        }
       },
     })
     this.StepperConfig.onSave = async () => {
-      var response = await this._tools.postAsync("Employee/AddMore", [this.employee]);
+      if (this.ModePage != "EditMore") {
+        var response = await this._tools.postAsync("Employee/AddMore", [this.employee]);
+        if (response) {
+          this._tools.Toaster.showSuccess("تم الحفظ بنجاح")
+          switch (this.ModePage) {
+            case "Edit":
+              this._tools._router.navigate(["Main", "Employs"])
+              break;
+            case "Add Inherit":
+              this._tools._router.navigate(["Main", "Employs", "Control"], { queryParams: { Type: 'Add_Inherit' } })
+              break;
+            case "Add":
+              this._tools._router.navigate(["Main", "Employs", "Control"], { queryParams: { Type: 'Add' } })
+              break;
+          }
+        }
+      }
+      else {
+        this.selectedEmploys.forEach(item => {
+          item.ROW_NUMBER = 1;
+          item.DEPART_ID = this.employee.DEPART_ID != null ? this.employee.DEPART_ID : item.DEPART_ID;
+          item.TYPE_OF_CONTRACT = this.employee.TYPE_OF_CONTRACT != null ? this.employee.TYPE_OF_CONTRACT : item.TYPE_OF_CONTRACT;
+          item.SALARY = this.employee.SALARY != null ? this.employee.SALARY : item.SALARY;
+          item.SUITS = this.employee.SUITS != null ? this.employee.SUITS : item.SUITS;
+          item.POSATION_ID = this.employee.POSATION_ID != null ? this.employee.POSATION_ID : item.POSATION_ID;
+          item.DATE_OF_APPOINTMENT = this.employee.DATE_OF_APPOINTMENT != null ? this.employee.DATE_OF_APPOINTMENT : item.DATE_OF_APPOINTMENT;
+          item.ASSIGNMENT_MODE = this.employee.ASSIGNMENT_MODE != null ? this.employee.ASSIGNMENT_MODE : item.ASSIGNMENT_MODE;
+          item.APPOINTMENT_END_DATE = this.employee.APPOINTMENT_END_DATE != null ? this.employee.APPOINTMENT_END_DATE : item.APPOINTMENT_END_DATE;
+          item.INSURANCE_COMPANY = this.employee.INSURANCE_COMPANY != null ? this.employee.INSURANCE_COMPANY : item.INSURANCE_COMPANY;
+          item.INSURANCE_SUBSCRIPTION_DATE = this.employee.INSURANCE_SUBSCRIPTION_DATE != null ? this.employee.INSURANCE_SUBSCRIPTION_DATE : item.INSURANCE_SUBSCRIPTION_DATE;
+          item.INSURANCE_AMOUNT_PER_PERSON = this.employee.INSURANCE_AMOUNT_PER_PERSON != null ? this.employee.INSURANCE_AMOUNT_PER_PERSON : item.INSURANCE_AMOUNT_PER_PERSON;
+          item.COMPANY_INSURANCE_AMOUNT = this.employee.COMPANY_INSURANCE_AMOUNT != null ? this.employee.COMPANY_INSURANCE_AMOUNT : item.COMPANY_INSURANCE_AMOUNT;
+          item.Places = this.employee.Places != null ? this.employee.Places : item.Places;
+          item.METHOD_OF_TRANSITION = this.employee.METHOD_OF_TRANSITION != null ? this.employee.METHOD_OF_TRANSITION : item.METHOD_OF_TRANSITION;
+          item.BUS_NAME = this.employee.BUS_NAME != null ? this.employee.BUS_NAME : item.BUS_NAME;
+          item.EMPLOYEE_MEAL = this.employee.EMPLOYEE_MEAL != null ? this.employee.EMPLOYEE_MEAL : item.EMPLOYEE_MEAL;
+          item.OPENING_BALANCE_FOR_REGULAR = this.employee.OPENING_BALANCE_FOR_REGULAR != null ? this.employee.OPENING_BALANCE_FOR_REGULAR : item.OPENING_BALANCE_FOR_REGULAR;
+        })
+      }
+      var response = await this._tools.putAsync("Employee/EditMore", this.selectedEmploys);
       if (response) {
         this._tools.Toaster.showSuccess("تم الحفظ بنجاح")
-        switch (this.ModePage) {
-          case "Edit":
-            this._tools._router.navigate(["Main", "Employs"])
-            break;
-          case "Add Inherit":
-            this._tools._router.navigate(["Main", "Employs", "Control"], { queryParams: { Type: 'Add_Inherit' } })
-            break;
-          case "Add":
-            this._tools._router.navigate(["Main", "Employs", "Control"], { queryParams: { Type: 'Add' } })
-            break;
-        }
+        this._tools._router.navigate(["Main", "Employs"])
       }
 
       return true;
@@ -155,12 +199,10 @@ export class EmployesComponent implements OnInit {
     }
   }
   pictureNameEmploy() {
-    if (this.employee.NAME.split(" ").length == 4) {
-      this.First_Name = this.employee.NAME.split(' ')[0];
-      this.second_Name = this.employee.NAME.split(' ')[1];
-      this.thirty_Name = this.employee.NAME.split(' ')[2];
-      this.forty_Name = this.employee.NAME.split(' ')[3];
-    }
+    this.First_Name = this.employee.NAME.split(' ')[0] == undefined ? "" : this.employee.NAME.split(' ')[0];
+    this.second_Name = this.employee.NAME.split(' ')[1] == undefined ? "" : this.employee.NAME.split(' ')[1];
+    this.thirty_Name = this.employee.NAME.split(' ')[2] == undefined ? "" : this.employee.NAME.split(' ')[2];
+    this.forty_Name = this.employee.NAME.split(' ')[3]== undefined ? "" : this.employee.NAME.split(' ')[3];
   }
   Edit_APPOINTMENT_END_DATE() {
     if (this.employee.ASSIGNMENT_MODE === 'بالخدمة') {
@@ -176,21 +218,21 @@ export class EmployesComponent implements OnInit {
       "ID": 0,
       "ROW_NUMBER": -1,
       "CODE": null,
-      "NAME": "",
+      "NAME": null,
       "NATIONAL_ID": null,
       "MARITAL_STATUS": null,
       "RELIGION": null,
-      "NATIONALITY": "مصر",
+      "NATIONALITY": null,
       "CONSCRIPTION_POSITION": null,
       "DATE_OF_BIRTH": null,
-      "TYPE": "ذكر",
+      "TYPE": null,
       "WHATSAPP_NUMBER": null,
       "PHONE_NUMBER": null,
       "EMAIL": null,
       "ADDRESS": null,
       "QUALIFICATION_DEGREE": null,
       "NAME_OF_ACADEMIC_QUALIFICATION": null,
-      "JOB_GRADE": "",
+      "JOB_GRADE": null,
       "TYPE_OF_CONTRACT": null,
       "ASSIGNMENT_MODE": null,
       "DATE_OF_APPOINTMENT": null,
@@ -199,15 +241,15 @@ export class EmployesComponent implements OnInit {
       "POSATION_ID": null,
       "INSURANCE_FILE_NUMBER": null,
       "INSURANCE_NUMBER": null,
-      "INSURANCE_COMPANY": 'قطاع خاص',
+      "INSURANCE_COMPANY": null,
       "INSURANCE_SUBSCRIPTION_DATE": null,
       "INSURANCE_AMOUNT_PER_PERSON": null,
       "COMPANY_INSURANCE_AMOUNT": null,
       "METHOD_OF_TRANSITION": null,
-      "BUS_NAME": "",
+      "BUS_NAME": null,
       "EMPLOYEE_MEAL": null,
-      "OPENING_BALANCE_FOR_REGULAR": 0,
-      "SUITS": 0,
+      "OPENING_BALANCE_FOR_REGULAR": null,
+      "SUITS": null,
       "SALARY": null,
       "IMAGE_PRINT": null,
       "FINGER_PRINT": null,
@@ -217,14 +259,8 @@ export class EmployesComponent implements OnInit {
       "ACADEMIC_QUALIFICATION_PHOTO": null,
       "ARMY_CERTIFICATE_PHOTO": null,
       "CRIMINAL_RECORD_PHOTO": null,
-      "PLACES": [
-        {
-          "ID": 0,
-          "ROW_NUMBER": 0,
-          "EMPLOYEE_ID": 0,
-          "PLACE_ID": 0
-        }
-      ]
+      "PLACES": null,
+      "WEEKEND": null
     }
   }
   back() {
@@ -339,6 +375,7 @@ export class EmployesComponent implements OnInit {
     }
     return true;
   }
+
   Validation_Functional_Data(): boolean {
     if (this._tools.isEmpty(this.employee.CODE)) {
       this._tools.Toaster.showError("يجب ادخال الرقم الوظيفي للموظف")
@@ -433,5 +470,6 @@ export class EmployesComponent implements OnInit {
     }
     return true;
   }
+
 
 }

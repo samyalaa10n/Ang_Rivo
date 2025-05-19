@@ -5,6 +5,9 @@
 ::ng-deep .app-date .p-datepicker{
     width: 100% !important;
 }
+::ng-deep .p-datepicker:has(.p-datepicker-input-icon-container) .p-datepicker-input{
+  text-align: center !important;
+}
 ::ng-deep .p-datepicker-panel {
     max-width: 500px !important;
     min-width: unset !important;

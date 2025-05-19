@@ -80,7 +80,6 @@ export class DataGridComponent implements OnInit {
   @Input() AllowSave: boolean = true;
   @Input()
   public set IsLoading(v: boolean) {
-    console.log(v)
     if (v) {
       this._tools.Loading.startLoading();
     } else {
@@ -90,6 +89,7 @@ export class DataGridComponent implements OnInit {
 
   @Input() AllowHeaderTemplate: boolean = true;
   @Input() AllowDelete: boolean = true;
+  @Input() StopAllButtons: boolean = false;
   @Input() AllowCurdOperation: boolean = true;
   @Input() AllowEdit: boolean = false;
   @Input() AddInherit: boolean = false;
@@ -106,7 +106,7 @@ export class DataGridComponent implements OnInit {
   @Input() AllowDeleteSelected: boolean = true;
   @Input() AllowExportExcel: boolean = true;
   @Input() singleSelectedMode: boolean = false;
-  @Input() canSelectedSomeColumns: boolean = true;
+  @Input() canSelectedSomeColumns: boolean = false;
   @Output() onGridLoaded: EventEmitter<any> = new EventEmitter()
   @Input() rowsPerPageOptions: Array<any> = [3, 5, 10, 20, 50];
   @Input() selectionMode: 'single' | 'multiple' | undefined | null;
@@ -128,7 +128,20 @@ export class DataGridComponent implements OnInit {
 
   constructor(private _tools: Tools, private el: ElementRef<HTMLElement>) { }
   ngOnInit() {
-    this.canSelectRow = this.AllowDeleteSelected
+    if (this.StopAllButtons) {
+      this.AllowAdd=false;
+      this.AllowDelete=false;
+      this.AllowDeleteSelected=false;
+      this.AllowEdit=false;
+      this.AllowExportExcel=false;
+      this.AllowSave=false;
+      this.AllowUpdate=false;
+      this.AllowCurdOperation=false;
+      this.canSelectRow=false;
+      this.canSelectedSomeColumns=false;
+
+    }
+    this.canSelectRow = this.AllowDeleteSelected == true ? true : this.canSelectRow
   }
   async save() {
     let dataSaved: Array<any> = [];
@@ -165,9 +178,8 @@ export class DataGridComponent implements OnInit {
   async onUpdate(table: Table) {
 
   }
-  exportExcel()
-  {
-   this._tools.exportAsExcelFile(this.dataSource,'Exported')
+  exportExcel() {
+    this._tools.exportAsExcelFile(this.dataSource, 'Exported')
   }
   ngAfterViewInit() {
     // this.editFilterWork()
@@ -178,11 +190,11 @@ export class DataGridComponent implements OnInit {
     })
     this._tools.waitExecuteFunction(100, () => {
       this.onGridLoaded.emit(this);
-      (this.dt as any).MyGrid=this;
+      (this.dt as any).MyGrid = this;
     })
   }
   ngOnChanges() {
-    this.canSelectRow = this.AllowDeleteSelected
+    this.canSelectRow = this.AllowDeleteSelected == true ? true : this.canSelectRow
     let grid = new ChildGrid(this, this.RowParent)
     if (this.ParentGrid && this.RowParent) {
       if (!this.ParentGrid.childrenGrid.map(x => x.item).includes(this.RowParent)) {
@@ -279,7 +291,7 @@ export class DataGridComponent implements OnInit {
   onGridAction(Action: GridAction) {
 
   }
-  
+
   selectLastInput() {
     this._tools.waitExecuteFunction(100, () => {
       let btnLastPage = this.el.nativeElement.querySelector(".p-paginator-last") as HTMLElement
@@ -327,9 +339,9 @@ export class DataGridComponent implements OnInit {
   }
 }
 
-export interface GridAction{
-  EVENT:any,
-  itemEdit:any,
-  ActonType:"CLICK"|"KEYUP"|"SELECT",
-  COLUMN:Column
+export interface GridAction {
+  EVENT: any,
+  itemEdit: any,
+  ActonType: "CLICK" | "KEYUP" | "SELECT",
+  COLUMN: Column
 }

@@ -135,6 +135,13 @@ export class NaveComponent implements OnInit {
                 },
               },
               {
+                label: 'ورديات العمل',
+                icon: 'pi pi-database',
+                command: (event) => {
+                  this._router.navigate(['Main', 'shifts']);
+                },
+              },
+              {
                 label: 'الأجازات',
                 icon: 'pi pi-database',
                 command: (event) => {
@@ -158,12 +165,20 @@ export class NaveComponent implements OnInit {
             ]
           },
           {
+            label: 'البدلات',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'Suits']);
+            },
+          },
+          {
             label: 'الرواتب الشهرية',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'Companies']);
             },
           },
+         
         ]
       }
     ]

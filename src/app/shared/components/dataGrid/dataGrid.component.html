@@ -14,9 +14,9 @@
                     <ng-content select="[btn]"></ng-content>
                 </div>
                 <div class="flex py-1">
-                    <app-multiselect class="d-inline-block my-2" *ngIf="canSelectedSomeColumns"
+                    <app-multiselect class="d-inline-block my-2" [IsInGridMode]="false" *ngIf="canSelectedSomeColumns && Columns.length>0"
                         [style]="{'width': '250px'}" display="comma" placeholder="اختر الأعمدة" [dataSource]="Columns"
-                        [(dataSelected)]="selectedColumns" optionLabel="header"
+                        [(dataSelected)]="selectedColumns" optionLabel="header" optionValue="name"
                         selectedItemsLabel="تم تحديد {0} أعمدة"></app-multiselect>
                     <p-iconfield *ngIf="AllowSearch" iconPosition="left" class="ml-auto">
                         <p-inputicon>
@@ -37,16 +37,16 @@
                         (click)="save()"></p-button>
                     <p-button *ngIf="AllowDeleteSelected" severity="danger" label="حذف المحدد" class=" font-bold mx-1"
                         icon="pi pi-trash" (click)="DeleteSelectedData()" />
-                    <p-button *ngIf="AllowExportExcel" label="تصدير" class="font-bold mx-1"
-                        icon="pi pi-file-excel" (click)="exportExcel()" />
+                    <p-button *ngIf="AllowExportExcel" label="تصدير" class="font-bold mx-1" icon="pi pi-file-excel"
+                        (click)="exportExcel()" />
+                    <ng-content select="[MORE_BUTTON]"></ng-content>
                 </div>
             </div>
         </ng-template>
         <ng-template #header let-columns>
             <tr>
                 <th *ngIf="canReOrder" style="width: 6rem"></th>
-                <th *ngIf="canSelectRow" style="width: 4rem ;text-align: center;"><p-tableHeaderCheckbox
-                        *ngIf="!singleSelectedMode" /></th>
+                <th *ngIf="canSelectRow" style="width: 4rem ;text-align: center;"><p-tableHeaderCheckbox *ngIf="!singleSelectedMode" /></th>
                 <th *ngIf="IsHasChild" style="width: 5rem"></th>
                 @for (column of columns; track $index) {
                 <th class="text-center " appResizableColumn [style]="'min-width:'+column.width+'px'">
@@ -140,6 +140,11 @@
                         [maxDate]="column.columnMaxDate" [minDate]="column.columnMinDate"
                         (selectedDateChange)="onSelectColumnData(item,$event,column);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"></app-DateTime>
                     }
+                    @case ("Time") {
+                        <app-DateTime placeholder="كتابة ... " hourFormat="" [(selectedDate)]="item[column.name]"   [showTimeOnly]="true"
+                            [maxDate]="column.columnMaxDate" [minDate]="column.columnMinDate"
+                            (selectedDateChange)="onSelectColumnData(item,$event,column);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"></app-DateTime>
+                        }
                     @case ("number") {
                     <p-inputnumber [(ngModel)]="item[column.name]"
                         (onKeyDown)="pInputTextKeyDown($event,{value:'1'},item);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"

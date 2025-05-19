@@ -8,12 +8,13 @@ import { LoadingComponent } from "../components/Loading/Loading.component";
 import * as signalR from '@microsoft/signalr';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
+import excelDateToJSDate from 'excel-date-to-js';
 @Injectable({
   providedIn: 'root'
 })
 export class Tools {
   public hubConnection: signalR.HubConnection | undefined;
-  Authentication:any=null
+  Authentication: any = null
   tempData: any = null
   baseUrl: string = "https://localhost:44327/api/"
   Toaster!: ToasterComponent
@@ -1302,7 +1303,7 @@ export class Tools {
         this.Toaster.showError(response.message)
         console.log(response)
         if (response.logOut) {
-          localStorage.removeItem("logInfo") 
+          localStorage.removeItem("logInfo")
           this._router.navigate(['Login'])
         }
       }
@@ -1389,6 +1390,9 @@ export class Tools {
     else if (typeof dateTime == "string") return new Date(dateTime + ' GMT')
     return new Date()
   }
+  convertNumberToData(_number: any): Date {
+    return excelDateToJSDate.getJsDateFromExcel(_number)
+  }
   EditFormateData(dateTime: any, format: string) {
     if (dateTime != null && dateTime != "") {
       return this._dateFormat.transform(dateTime, format)
@@ -1443,7 +1447,7 @@ export class Tools {
   exportAsExcelFile(json: any[], fileName: string): void {
     // تحويل JSON إلى ورقة عمل
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
-    
+
     // إنشاء ملف Excel يحتوي على الورقة
     const workbook: XLSX.WorkBook = {
       Sheets: { data: worksheet },
@@ -1478,15 +1482,40 @@ export class Tools {
       const wsname: string = wb.SheetNames[0]; // أول شيت
       const ws: XLSX.WorkSheet = wb.Sheets[wsname];
 
-      let data  = XLSX.utils.sheet_to_json(ws); // تحويله إلى JSON
-      console.log(data); // طباعة المحتوى
+      let data = XLSX.utils.sheet_to_json(ws); // تحويله إلى JSON
       this.onFileEndImport(data);
+      evt.target.value = null;
     };
 
     reader.readAsBinaryString(target.files[0]);
   }
-  onFileEndImport(data:Array<any>)
-  {
+  onFileEndImport(data: Array<any>) {
 
+  }
+  dynamicSortMutable(data: Array<any>, onProertys: Array<string>): Array<any> {
+    return data.sort((a, b) => {
+      for (let index = 0; index < onProertys.length; index++) {
+        const onProerty = onProertys[index];
+        if (a[onProerty] != undefined) {
+          if (typeof a[onProerty] == "string") {
+            var nameA = a[onProerty].toLowerCase(); // case-insensitive
+            var nameB = b[onProerty].toLowerCase();
+            if (nameA < nameB) return -1;
+            if (nameA > nameB) return 1;
+          }
+          else if (a[onProerty] instanceof Date) {
+         
+            if (a[onProerty] < b[onProerty]) return -1;
+            if (a[onProerty] > b[onProerty]) return 1;
+          }
+          else if (typeof a[onProerty] == "number") {
+         
+            if (a[onProerty] < b[onProerty]) return -1;
+            if (a[onProerty] > b[onProerty]) return 1;
+          }
+        }
+      }
+      return 0;
+    });
   }
 }

@@ -1,50 +1,125 @@
 import { Routes } from '@angular/router';
-import { MainComponent } from './Modules/LayOut/Main/Main.component';
-import { CompanyComponent } from './Modules/FactoryBase/Company/Company.component';
-import { DepartComponent } from './Modules/FactoryBase/Depart/Depart.component';
-import { PlaceComponent } from './Modules/FactoryBase/Place/Place.component';
-import { MangementComponent } from './Modules/FactoryBase/Mangement/Mangement.component';
-import { EmployesComponent } from './Modules/HR/Employes/Employes.component';
-import { EffectInSystemComponent } from './Modules/HR/EffectInSystem/EffectInSystem.component';
-import { ColumnEffectComponent } from './Modules/HR/ColumnEffect/ColumnEffect.component';
-import { EffectComponent } from './Modules/HR/Effect/Effect.component';
-import { EffectRecodesComponent } from './Modules/HR/EffectRecodes/EffectRecodes.component';
-import { AccountComponent } from './Modules/Admin/Account/Account.component';
-import { UserComponent } from './Modules/Admin/User/User.component';
-import { LoginComponent } from './Modules/Admin/Login/Login.component';
-import { HomeComponent } from './Modules/LayOut/Home/Home.component';
 import { authGuard } from './shared/Gurd/auth.guard';
-import { RuleGroupComponent } from './Modules/Admin/RuleGroup/RuleGroup.component';
-import { ForgatInOutComponent } from './Modules/HR/ForgatInOut/ForgatInOut.component';
-import { HolidayRecodesComponent } from './Modules/HR/holidayRecords/holidayRecords.component';
-import { EmploysRecodesComponent } from './Modules/HR/EmployesRecordies/EmploysRecodes.component';
-import { AttendanceAndDepartureDevicesComponent } from './Modules/HR/AttendanceAndDepartureDevices/AttendanceAndDepartureDevices.component';
-import { AttendanceRecordComponent } from './Modules/HR/AttendanceRecord/AttendanceRecord.component';
+
+
 
 export const routes: Routes = [
-    { path: '', redirectTo: 'Login', title: "الرئيسية", pathMatch: "full" },
-    { path: 'Login',title:'تسجيل الدخول', component: LoginComponent },
+    { path: '', redirectTo: 'Login', pathMatch: 'full' },
     {
-        path: 'Main', title: "الرئيسية",canActivate:[authGuard],canActivateChild:[authGuard], component: MainComponent, children: [
-            { path: 'Home',title:'الترحيب', component: HomeComponent },
-            { path: 'EffectInSystem',title:'مؤثرات النظام', component: EffectInSystemComponent },
-            { path: 'ColumnEffect',title:'بنود المؤثر', component: ColumnEffectComponent },
-            { path: 'Mangements',title:'الهيكل الاداري', component: MangementComponent },
-            { path: 'Employs',title:'قائمة الموظفين', component: EmploysRecodesComponent },
-            { path: 'Employs/Control',title:'بيانات الموظف', component: EmployesComponent },
-            { path: 'Companies',title:'الشركات', component: CompanyComponent },
-            { path: 'ForgatInOut',title:'نواقص الحضور و الانصراف', component: ForgatInOutComponent },
-            { path: 'Holiday',title:'تسجيل الاجازات', component: HolidayRecodesComponent },
-            { path: 'Places',title:'اماكن العمل', component: PlaceComponent },
-            { path: 'Effects',title:'المؤثرات', component: EffectRecodesComponent },
-            { path: 'Effects/Add',title:'اضافة مؤئثر', component: EffectComponent },
-            { path: 'Departs',title:'الأقسام', component: DepartComponent },
-            { path: 'Accounts',title:'الحسابات', component: AccountComponent },
-            { path: 'Users',title:'المستخدمين', component: UserComponent },
-            { path: 'RuleGroup',title:'نوع المستخدم', component: RuleGroupComponent },
-            { path: 'AttendanceAndDepartureDevices',title:'اجهزة الحضور و الانصراف', component: AttendanceAndDepartureDevicesComponent },
-            { path: 'AttendanceRecord',title:'سجل الحضور و الانصراف', component: AttendanceRecordComponent },
-        ]
+      path: 'Login',
+      title: 'تسجيل الدخول',
+      loadComponent: () => import('./Modules/Admin/Login/Login.component').then(m => m.LoginComponent)
     },
-    { path: '**', redirectTo: 'Main', title: "الرئيسية", pathMatch: "full" }
-];
+    {
+      path: 'Main',
+      title: 'الرئيسية',
+      canActivate: [authGuard],
+      canActivateChild: [authGuard],
+      loadComponent: () => import('./Modules/LayOut/Main/Main.component').then(m => m.MainComponent),
+      children: [
+        {
+          path: 'Home',
+          title: 'الترحيب',
+          loadComponent: () => import('./Modules/LayOut/Home/Home.component').then(m => m.HomeComponent)
+        },
+        {
+          path: 'EffectInSystem',
+          title: 'مؤثرات النظام',
+          loadComponent: () => import('./Modules/HR/EffectInSystem/EffectInSystem.component').then(m => m.EffectInSystemComponent)
+        },
+        {
+          path: 'ColumnEffect',
+          title: 'بنود المؤثر',
+          loadComponent: () => import('./Modules/HR/ColumnEffect/ColumnEffect.component').then(m => m.ColumnEffectComponent)
+        },
+        {
+          path: 'Employs',
+          title: 'قائمة الموظفين',
+          loadComponent: () => import('./Modules/HR/EmployesRecordies/EmploysRecodes.component').then(m => m.EmploysRecodesComponent)
+        },
+        {
+          path: 'Employs/Control',
+          title: 'بيانات الموظف',
+          loadComponent: () => import('./Modules/HR/Employes/Employes.component').then(m => m.EmployesComponent)
+        },
+        {
+          path: 'Companies',
+          title: 'الشركات',
+          loadComponent: () => import('./Modules/FactoryBase/Company/Company.component').then(m => m.CompanyComponent)
+        },
+        {
+          path: 'Departs',
+          title: 'الأقسام',
+          loadComponent: () => import('./Modules/FactoryBase/Depart/Depart.component').then(m => m.DepartComponent)
+        },
+        {
+          path: 'Places',
+          title: 'أماكن العمل',
+          loadComponent: () => import('./Modules/FactoryBase/Place/Place.component').then(m => m.PlaceComponent)
+        },
+        {
+          path: 'Mangements',
+          title: 'الهيكل الإداري',
+          loadComponent: () => import('./Modules/FactoryBase/Mangement/Mangement.component').then(m => m.MangementComponent)
+        },
+        {
+          path: 'Holiday',
+          title: 'تسجيل الإجازات',
+          loadComponent: () => import('./Modules/HR/holidayRecords/holidayRecords.component').then(m => m.HolidayRecodesComponent)
+        },
+        {
+          path: 'ForgatInOut',
+          title: 'نواقص الحضور والانصراف',
+          loadComponent: () => import('./Modules/HR/ForgatInOut/ForgatInOut.component').then(m => m.ForgatInOutComponent)
+        },
+        {
+          path: 'Effects',
+          title: 'المؤثرات',
+          loadComponent: () => import('./Modules/HR/EffectRecodes/EffectRecodes.component').then(m => m.EffectRecodesComponent)
+        },
+        {
+          path: 'Effects/Add',
+          title: 'إضافة مؤثر',
+          loadComponent: () => import('./Modules/HR/Effect/Effect.component').then(m => m.EffectComponent)
+        },
+        {
+          path: 'Accounts',
+          title: 'الحسابات',
+          loadComponent: () => import('./Modules/Admin/Account/Account.component').then(m => m.AccountComponent)
+        },
+        {
+          path: 'Users',
+          title: 'المستخدمين',
+          loadComponent: () => import('./Modules/Admin/User/User.component').then(m => m.UserComponent)
+        },
+        {
+          path: 'RuleGroup',
+          title: 'نوع المستخدم',
+          loadComponent: () => import('./Modules/Admin/RuleGroup/RuleGroup.component').then(m => m.RuleGroupComponent)
+        },
+        {
+          path: 'AttendanceAndDepartureDevices',
+          title: 'أجهزة الحضور والانصراف',
+          loadComponent: () => import('./Modules/HR/AttendanceAndDepartureDevices/AttendanceAndDepartureDevices.component').then(m => m.AttendanceAndDepartureDevicesComponent)
+        },
+        {
+          path: 'AttendanceRecord',
+          title: 'سجل الحضور والانصراف',
+          loadComponent: () => import('./Modules/HR/AttendanceRecord/AttendanceRecord.component').then(m => m.AttendanceRecordComponent)
+        },
+        {
+          path: 'Suits',
+          title: 'البدلات',
+          loadComponent: () => import('./Modules/HR/Suits/Suits.component').then(m => m.SuitsComponent)
+        }
+        ,
+        {
+          path: 'shifts',
+          title: 'ورديات العمل',
+          loadComponent: () => import('./Modules/HR/Shifts/Shifts.component').then(m => m.ShiftsComponent)
+        }
+      ]
+    },
+    { path: '**', redirectTo: 'Main', pathMatch: 'full' }
+  ];
+  

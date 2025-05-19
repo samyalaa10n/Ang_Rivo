@@ -1,4 +1,16 @@
 <div dir="rtl" class="border p-2 rounded-1">
   <input hidden id="I_FILE" type="file" (change)="GetFile($event)">
   <label  class="btn btn-primary" for="I_FILE" > استيراد الحضور و الانصراف من Excel<i class=" mx-2 pi pi-file-import"></i> </label>
+  <br>
+  <div class="my-4 d-flex justify-content-start align-items-center">
+    <app-InputLabel class="d-inline-block mx-2 " placeholder="من تاريخ">
+      <app-DateTime  [(selectedDate)]="request.START"></app-DateTime>
+    </app-InputLabel>
+    <app-InputLabel class="d-inline-block mx-2" placeholder="الي تاريخ">
+      <app-DateTime  [(selectedDate)]="request.END"></app-DateTime>
+    </app-InputLabel>
+    <app-comboBox class="d-inline-block mx-2 " placeholder="اختر القسم" optionLabel="NAME" optionValue="ID" [(SelectedValue)]="request.SELECTED_Depart" [dataSource]="Departs"></app-comboBox>
+    <p-button  label="عرض" (onClick)="showData()"></p-button>
+  </div>
+  <app-dataGrid [dataSource]="dataSource" [Columns]="columns" [AllowUpdate]="false" [AllowExportExcel]="true" [canSelectedSomeColumns]="false" [canSelectRow]="false" [AllowDelete]="false" [AllowDeleteSelected]="false" [AllowEdit]="false" [AllowCurdOperation]="false" [AllowSave]="false" [AllowAdd]="false"></app-dataGrid>
 </div>
