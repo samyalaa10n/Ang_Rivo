@@ -9,6 +9,7 @@ import * as signalR from '@microsoft/signalr';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import excelDateToJSDate from 'excel-date-to-js';
+import moment, * as momentLP from 'moment';
 @Injectable({
   providedIn: 'root'
 })
@@ -21,6 +22,18 @@ export class Tools {
   Loading!: LoadingComponent
   _dateFormat!: DatePipe;
   _LoginName: string = ""
+  Date_Data = {
+    dayNames: ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'],
+    dayNamesShort: ['أحد', 'اثن', 'ثلا', 'أرب', 'خمي', 'جمع', 'سبت'],
+    dayNamesMin: ['ح', 'ن', 'ث', 'ر', 'خ', 'ج', 'س'],
+    monthNames: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'],
+    monthNamesShort: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'],
+    today: 'اليوم',
+    clear: 'مسح',
+    dateFormat: 'dd/mm/yy',
+    weekHeader: 'أسبوع',
+    firstDayOfWeek: 0
+  }
   _countries = [
     {
       "code": "AD",
@@ -1275,6 +1288,7 @@ export class Tools {
   ]
   constructor(public _httpClient: HttpClient, public _router: Router) {
     console.log(this.EditData(new Date("12/1/2024")).getFullYear())
+    moment.locale('ar');
   }
 
   // Start the SignalR connection
@@ -1395,7 +1409,9 @@ export class Tools {
   }
   EditFormateData(dateTime: any, format: string) {
     if (dateTime != null && dateTime != "") {
-      return this._dateFormat.transform(dateTime, format)
+      let Mdata = this.convertDataToMoment(dateTime)
+
+      return Mdata.format("YYYY-MM-DD HH:mm");
     }
     return dateTime;
   }
@@ -1504,12 +1520,12 @@ export class Tools {
             if (nameA > nameB) return 1;
           }
           else if (a[onProerty] instanceof Date) {
-         
+
             if (a[onProerty] < b[onProerty]) return -1;
             if (a[onProerty] > b[onProerty]) return 1;
           }
           else if (typeof a[onProerty] == "number") {
-         
+
             if (a[onProerty] < b[onProerty]) return -1;
             if (a[onProerty] > b[onProerty]) return 1;
           }
@@ -1517,5 +1533,54 @@ export class Tools {
       }
       return 0;
     });
+  }
+  getDataFromJson(selectedDate: string): Date {
+    return new Date(`${selectedDate.split("T")[0]} ${selectedDate.split("T")[1]} GMT+3`);
+  }
+  getValueJsonWithGMT(E: Date, TimeGMT = 2) {
+    let editHours = (txt: string): string => {
+      let endValue = '';
+      if ((Number.parseInt(txt) + TimeGMT) < 10) {
+        endValue = "0" + ((Number.parseInt(txt) + TimeGMT)).toString();
+      }
+      else if ((Number.parseInt(txt) + TimeGMT) > 23) {
+        endValue = "0" + ((Number.parseInt(txt) + TimeGMT) - 24).toString();
+      }
+      else {
+        endValue = (Number.parseInt(txt) + TimeGMT).toString();
+      }
+      return endValue;
+    }
+    let oldJson = E.toJSON();
+    let hours = editHours(oldJson.split("T")[1].split(":")[0]);
+    oldJson = `${oldJson.split('T')[0]}T${hours}:${oldJson.split("T")[1].split(":")[1]}:${oldJson.split("T")[1].split(":")[2]}`
+    console.log(oldJson)
+    return oldJson;
+  }
+  getValueFromTime(e: Date) {
+    let value: any = { HOUR: null, MINUTE: null }
+    value.HOUR = e.getHours();
+    value.MINUTE = e.getMinutes();
+    return value;
+  }
+  getTimeFromValue(e: any) {
+    let date = new Date(new Date().toLocaleDateString("en") + " GMT")
+    date.setHours(e.HOUR);
+    date.setMinutes(e.MINUTE);
+    return date;
+  }
+  convertDataToMoment(JSdate: Date): momentLP.Moment {
+    const date = moment(JSdate);
+    return date;
+  }
+
+  getDayName(date: momentLP.Moment | Date | string): string {
+    if (date instanceof Date) {
+      date = this.convertDataToMoment(date)
+    }
+    if (typeof date == "string") {
+      date = this.convertDataToMoment(this.getDataFromJson(date))
+    }
+    return this.Date_Data.dayNames[date.day()];
   }
 }

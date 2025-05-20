@@ -110,7 +110,6 @@ export class AttendanceRecordComponent implements OnInit {
         rec.ID_DIVICE_PLACE=places.find(Z=>Z.ID==device_info.PLACE_ID).NAME ;
         source.push(rec);
       }) 
-      console.log(source)
       this.dataSource=this._tools.dynamicSortMutable(source,["CODE","DATETIME"])
     }
   }

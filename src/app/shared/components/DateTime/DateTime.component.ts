@@ -41,7 +41,7 @@ export class DateTimeComponent implements OnInit {
     if (this.showTime || this.showTimeOnly) {
       if (typeof this.selectedDate == "string") {
         //2025-04-23T18:23:00
-        this.selectedDate = new Date(`${this.selectedDate.split("T")[0]} ${this.selectedDate.split("T")[1]} GMT+3`);
+        this.selectedDate = this._tools.getDataFromJson(this.selectedDate);
       }
       else {
         this.selectedDate = this.selectedDate;
@@ -61,7 +61,7 @@ export class DateTimeComponent implements OnInit {
       //   return;
       // }
       if (this.showTime || this.showTimeOnly) {
-        this.selectedDateChange.emit(this.getValueJsonWithGMT(e, 3))
+        this.selectedDateChange.emit(this._tools.getValueJsonWithGMT(e, 3))
         return;
       }
       let text = new Date(e).toLocaleDateString("EN") + " GMT";
@@ -87,38 +87,7 @@ export class DateTimeComponent implements OnInit {
     this.selectedDate = null;
     this.selectedDateChange.emit(null);
   }
-  getValueJsonWithGMT(E: Date, TimeGMT = 2) {
-    let editHours = (txt: string): string => {
-      let endValue = '';
-      if ((Number.parseInt(txt) + TimeGMT) < 10) {
-        endValue = "0" + ((Number.parseInt(txt) + TimeGMT)).toString();
-      }
-      else if ((Number.parseInt(txt) + TimeGMT) > 23) {
-        endValue = "0" + ((Number.parseInt(txt) + TimeGMT) - 24).toString();
-      }
-      else {
-        endValue = (Number.parseInt(txt) + TimeGMT).toString();
-      }
-      return endValue;
-    }
-    let oldJson = E.toJSON();
-    let hours = editHours(oldJson.split("T")[1].split(":")[0]);
-    oldJson = `${oldJson.split('T')[0]}T${hours}:${oldJson.split("T")[1].split(":")[1]}:${oldJson.split("T")[1].split(":")[2]}`
-    console.log(oldJson)
-    return oldJson;
-  }
-  getValueFromTime(e: Date) {
-    debugger
-    let value: any = { HOUR: null, MINUTE: null }
-    value.HOUR = e.getHours();
-    value.MINUTE = e.getMinutes();
-    return value;
-  }
-  getTimeFromValue(e: any) {
-    let date = new Date(new Date().toLocaleDateString("en") + " GMT")
-    date.setHours(e.HOUR);
-    date.setMinutes(e.MINUTE);
-    return date;
-  }
+
+
 }
 

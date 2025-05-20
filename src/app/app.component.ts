@@ -21,18 +21,7 @@ export class AppComponent {
   }
   ngOnInit() {
 
-    this.primeng.setTranslation({
-      dayNames: ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'],
-      dayNamesShort: ['أحد', 'اثن', 'ثلا', 'أرب', 'خمي', 'جمع', 'سبت'],
-      dayNamesMin: ['ح', 'ن', 'ث', 'ر', 'خ', 'ج', 'س'],
-      monthNames: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'],
-      monthNamesShort: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'],
-      today: 'اليوم',
-      clear: 'مسح',
-      dateFormat: 'dd/mm/yy',
-      weekHeader: 'أسبوع',
-      firstDayOfWeek: 0
-    });
+    this.primeng.setTranslation(this._tools.Date_Data);
 
     this.primeng.zIndex = {
       modal: 1100,    // dialog, sidebar

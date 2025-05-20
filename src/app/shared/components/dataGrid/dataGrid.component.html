@@ -197,6 +197,8 @@
                 </td>
                 }
                 <td class="text-center fixed-column px-4" *ngIf="AllowCurdOperation">
+                    <ng-container  [ngTemplateOutlet]="templateBtn"
+                        [ngTemplateOutletContext]="{ $implicit:item ,Grid:this}"></ng-container>
                     <p-button severity="danger" *ngIf="AllowDelete" label="حذف" icon="pi pi-trash"
                         (click)="onDeleteItem(item)"></p-button>
                     <p-button class="mx-2" severity="success" *ngIf="AllowEdit" label="تعديل" icon="pi pi-pen-to-square"

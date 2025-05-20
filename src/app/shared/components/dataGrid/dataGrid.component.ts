@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, QueryList, ViewChild, viewChildren, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, QueryList, TemplateRef, ViewChild, viewChildren, ViewChildren } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { ColumnFilter, Table, TableModule } from 'primeng/table';
 import { PResizableColumnDirective } from './pResizableColumn.directive';
@@ -48,6 +48,10 @@ export class DataGridComponent implements OnInit {
   @Input() public set dataSource(v: any[]) {
     if (v != undefined) {
       this._dataSource = v;
+      v.forEach((item, index) => {
+        this.RenderItemSource.emit({ item, index });
+        this.onRenderItemSource(item, index);
+      })
       if (this.startDataSource.length == 0) {
         this.startDataSource = this._tools.cloneObject(this.dataSource);
       }
@@ -87,6 +91,7 @@ export class DataGridComponent implements OnInit {
     }
   }
 
+  @Input() templateBtn!: TemplateRef<any>
   @Input() AllowHeaderTemplate: boolean = true;
   @Input() AllowDelete: boolean = true;
   @Input() StopAllButtons: boolean = false;
@@ -108,6 +113,7 @@ export class DataGridComponent implements OnInit {
   @Input() singleSelectedMode: boolean = false;
   @Input() canSelectedSomeColumns: boolean = false;
   @Output() onGridLoaded: EventEmitter<any> = new EventEmitter()
+  @Output() RenderItemSource: EventEmitter<any> = new EventEmitter()
   @Input() rowsPerPageOptions: Array<any> = [3, 5, 10, 20, 50];
   @Input() selectionMode: 'single' | 'multiple' | undefined | null;
   @ViewChildren('columnFilter') columnFilters!: QueryList<ColumnFilter>
@@ -129,16 +135,16 @@ export class DataGridComponent implements OnInit {
   constructor(private _tools: Tools, private el: ElementRef<HTMLElement>) { }
   ngOnInit() {
     if (this.StopAllButtons) {
-      this.AllowAdd=false;
-      this.AllowDelete=false;
-      this.AllowDeleteSelected=false;
-      this.AllowEdit=false;
-      this.AllowExportExcel=false;
-      this.AllowSave=false;
-      this.AllowUpdate=false;
-      this.AllowCurdOperation=false;
-      this.canSelectRow=false;
-      this.canSelectedSomeColumns=false;
+      this.AllowAdd = false;
+      this.AllowDelete = false;
+      this.AllowDeleteSelected = false;
+      this.AllowEdit = false;
+      this.AllowExportExcel = false;
+      this.AllowSave = false;
+      this.AllowUpdate = false;
+      this.AllowCurdOperation = false;
+      this.canSelectRow = false;
+      this.canSelectedSomeColumns = false;
 
     }
     this.canSelectRow = this.AllowDeleteSelected == true ? true : this.canSelectRow
@@ -170,6 +176,9 @@ export class DataGridComponent implements OnInit {
         this.startDataSource = this._tools.cloneObject(data);
       }
     })
+
+  }
+  onRenderItemSource(item: any, index: number) {
 
   }
   async onSaveChanges(data: any = null) {
@@ -250,7 +259,7 @@ export class DataGridComponent implements OnInit {
   }
 
   onLoadedChildDataGrid(parent: DataGridComponent, ChildGrid: DataGridComponent, RowParentItem: any) {
-
+   
   }
   async AddNew(table: Table) {
     if (this.dataSource == undefined) {
@@ -286,10 +295,13 @@ export class DataGridComponent implements OnInit {
 
   }
   onAddInert(item: any) {
-
+    let nItem = this._tools.cloneObject(item)
+    nItem.ROW_NUMBER = -1;
+    nItem.ID = -1;
+    this.dataSource.push(nItem)
   }
   onGridAction(Action: GridAction) {
-
+    this.onRenderItemSource(Action.itemEdit,this.dataSource.indexOf(Action.itemEdit))
   }
 
   selectLastInput() {

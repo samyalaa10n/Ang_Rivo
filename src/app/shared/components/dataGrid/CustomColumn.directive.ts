@@ -7,13 +7,18 @@ import { Column } from './Column';
 })
 export class CustomColumnDirective {
 
-  @Input() appCustomColumn!: Column
+  @Input() appCustomColumn!: Column | DataGridComponent
   constructor(private _temp: TemplateRef<any>) {
-    console.log(_temp)
+  
   }
   ngOnChanges() {
     if (this.appCustomColumn) {
-      this.appCustomColumn.templateColumn = this._temp;
+      if (this.appCustomColumn instanceof Column) {
+        this.appCustomColumn.templateColumn = this._temp;
+      }
+      if (this.appCustomColumn instanceof DataGridComponent) {
+        this.appCustomColumn.templateBtn = this._temp;
+      }
     }
   }
 
