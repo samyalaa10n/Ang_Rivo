@@ -1,5 +1,5 @@
 import { AfterViewInit, Directive, ElementRef, EventEmitter, HostListener, Inject, Input, Output, PLATFORM_ID } from '@angular/core';
-import { Tools } from '../../service/Tools';
+import { Tools } from '../../service/Tools.service';
 import { Column } from './Column';
 import { isPlatformBrowser } from '@angular/common';
 

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { GetAddEditDeleteComponent } from "../../../shared/pages/get-add-edit-delete/get-add-edit-delete.component";
 import { DataGridComponent } from "../../../shared/components/dataGrid/dataGrid.component";
-import { Tools } from '../../../shared/service/Tools';
+import { Tools } from '../../../shared/service/Tools.service';
 import { ComboBoxComponent } from "../../../shared/components/comboBox/comboBox.component";
 import { Column } from '../../../shared/components/dataGrid/Column';
 import { EmployeSelectionComponent } from "../EmployeSelection/EmployeSelection.component";
@@ -92,8 +92,8 @@ export class EffectComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.effects = await this._tools.getAsync("EffectInSystem") as Array<any>
-    this.colsInfo = await this._tools.getAsync("EffectColumn") as Array<any>;
+    this.effects = await this._tools.Network.getAsync("EffectInSystem") as Array<any>
+    this.colsInfo = await this._tools.Network.getAsync("EffectColumn") as Array<any>;
   }
   async selectChange(effect: EffectInfo) {
     this.Columns = [];
@@ -199,7 +199,7 @@ export class EffectComponent implements OnInit {
               DB_EFFECTS.push(sender)
             });
             this.grid.IsLoading = true;
-            this._tools.postAsync("Effect/AddMore", DB_EFFECTS).then(result => {
+            this._tools.Network.postAsync("Effect/AddMore", DB_EFFECTS).then(result => {
               if (result == true) {
                 this._tools.Toaster.showSuccess("تم التسجيل بنجاح");
                 this.grid.IsLoading = false;
@@ -226,38 +226,17 @@ export class EffectComponent implements OnInit {
         }
         this.grid.dataSource = [];
         this.grid.Columns.push(new Column("index", "مسلسل", "lapel"))
-        this.grid.Columns.push(new Column("CODE", "الكود", "comboBox"))
-        this.grid.Columns.push(new Column("NAME", "الأسم", "comboBox"))
+        this.grid.Columns.push(new Column("EMPLOY_ID", "الكود", "comboBox"))
         this.grid.Columns.push(new Column("DEPART", "القسم", "lapel"))
-        let suggestionsData = await this._tools.getAsync("Employee/Suggestions_Code_and_Name") as Array<any>
-        this.grid.Columns[1].apiPathDataSource = "Employee/Suggestions_Code_and_Name";
+        let suggestionsData = await this._tools.Network.getAsync("Employee/Suggestions_Code_Concat_Name") as Array<any>
+        this.grid.Columns[1].apiPathDataSource = "Employee/Suggestions_Code_Concat_Name";
         this.grid.Columns[1].columnComboBoxDataSource = suggestionsData;
         this.grid.Columns[1].columnComboBoxOptionLabel = "CODE";
-        this.grid.Columns[1].columnComboBoxOptionValue = "CODE";
+        this.grid.Columns[1].columnComboBoxOptionValue = "ID";
         this.grid.Columns[1].columnComboBoxPlaceholder = "حدد كود الموظف"
         this.grid.Columns[1].columnComboBoxChange = (select, item, comboBox) => {
-          item.NAME = select.NAME;
-          item.EMPLOY_ID = select.ID;
           item.DEPART = select.DEPART;
           comboBox.onClear = () => {
-            item.NAME = null;
-            item.EMPLOY_ID = null;
-            item.DEPART = null;
-          }
-        }
-
-        this.grid.Columns[2].apiPathDataSource = "Employee/Suggestions_Code_and_Name";
-        this.grid.Columns[2].columnComboBoxDataSource = suggestionsData;
-        this.grid.Columns[2].columnComboBoxOptionLabel = "NAME";
-        this.grid.Columns[2].columnComboBoxOptionValue = "NAME";
-        this.grid.Columns[2].columnComboBoxPlaceholder = "حدد اسم الموظف"
-        this.grid.Columns[2].columnComboBoxChange = (select, item, comboBox) => {
-          item.CODE = select.CODE;
-          item.EMPLOY_ID = select.ID;
-          item.DEPART = select.DEPART;
-          comboBox.onClear = () => {
-            item.CODE = null;
-            item.EMPLOY_ID = null;
             item.DEPART = null;
           }
         }
@@ -291,7 +270,7 @@ export class EffectComponent implements OnInit {
             case 2:
             case 9:
               columnConfig.apiPathDataSource = col.CONFIGURATION.API_CALLING;
-              columnConfig.columnComboBoxDataSource = await this._tools.getAsync(col.CONFIGURATION.API_CALLING) as Array<any>;
+              columnConfig.columnComboBoxDataSource = await this._tools.Network.getAsync(col.CONFIGURATION.API_CALLING) as Array<any>;
               columnConfig.columnComboBoxOptionLabel = col.CONFIGURATION.FOCUS_PROPERTY;
               columnConfig.columnComboBoxOptionValue = col.CONFIGURATION.FOCUS_PROPERTY;
               columnConfig.columnComboBoxPlaceholder = col.COLUMN_NAME;

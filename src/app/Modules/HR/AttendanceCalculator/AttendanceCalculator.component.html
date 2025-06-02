@@ -1,0 +1,48 @@
+<div dir="rtl">
+  <div class="my-4 d-flex justify-content-start align-items-center">
+    <app-InputLabel class="d-inline-block mx-2 " placeholder="من تاريخ">
+      <app-DateTime saveTempInput="s_1" [(selectedDate)]="request.START"></app-DateTime>
+    </app-InputLabel>
+    <app-InputLabel class="d-inline-block mx-2" placeholder="الي تاريخ">
+      <app-DateTime saveTempInput="s_2" [(selectedDate)]="request.END"></app-DateTime>
+    </app-InputLabel>
+    <app-multiselect class="d-inline-block mx-2 " placeholder="اختر القسم" optionLabel="NAME" optionValue="ID"
+      [(dataSelectedValues)]="request.SELECTED_Departs" [dataSource]="Departs"></app-multiselect>
+    <p-button label="عرض" (onClick)="showData()"></p-button>
+    <p-button *ngIf="Data" class="mx-2" (onClick)="ShowEmploySelection=true;" label="تحديد الموظف لمراجعة"></p-button>
+  </div>
+  <p-dialog [(visible)]="ShowEmploySelection" [maximizable]="true" [modal]="true" header="حدد الموظف"
+    [style]="{'width':'100%','height':'100%'}">
+    <div *ngIf="Data">
+      <div class="Employe">
+        <p-accordion>
+          <p-accordion-panel *ngFor="let depart of SelectedDepartEmploys;let dx=index;" [value]="dx">
+            <p-accordion-header>
+              {{depart.DepName}}
+            </p-accordion-header>
+            <p-accordion-content>
+              <ng-template  [appCustomColumn]="G_Target" let-item>
+                <p-button class="mx-2 " *ngIf="item==employSelected"    [raised]="true"   label="محدد"  ></p-button>
+                <p-button class="mx-2 " *ngIf="item!=employSelected" (onClick)="selectEmploy(item)" size="small" variant="text" [raised]="true"   label="تحديد"  ></p-button>
+              </ng-template>
+              <app-dataGrid #G_Target [Columns]="Columns" [AllowAdd]="false" [AllowEdit]="false" [AllowDelete]="false" [canSelectedSomeColumns]="false" [AllowUpdate]="false" [AllowExportExcel]="false" [AllowSave]="false" [AllowUpdate]="false" [AllowDeleteSelected]="false" [dataSource]="depart.Employs"  [canSelectRow]="true" [canSelectRow]="false"> 
+              </app-dataGrid>
+
+            </p-accordion-content>
+          </p-accordion-panel>
+        </p-accordion>
+      </div>
+    </div>
+  </p-dialog>
+  <div *ngIf="StepNumber==0">
+    <app-revisionAttendance *ngIf="employSelected && Data" [employSelected]="employSelected" [Data]="Data"  class="d-block my-2" [Attendance]="AttendanceList"></app-revisionAttendance>
+  </div>
+  <div *ngIf="StepNumber==1">
+    <ng-container>
+      <ng-container *ngFor="let day of Days">
+        <app-CalculateDay #CalcDay class="d-block my-2" [Attendance]="AttendanceList" [Data]="Data"
+          [depart]="DepartSelected" [Employ]="selectEmploy" [Day]="day"></app-CalculateDay>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>

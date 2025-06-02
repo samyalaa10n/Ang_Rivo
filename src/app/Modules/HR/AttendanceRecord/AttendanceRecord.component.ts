@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-import { Tools } from '../../../shared/service/Tools';
+import { Tools } from '../../../shared/service/Tools.service';
 import { InputLabelComponent } from "../../../shared/pages/TextLabel/InputLabel.component";
 import { DateTimeComponent } from "../../../shared/components/DateTime/DateTime.component";
 import { DataGridComponent } from "../../../shared/components/dataGrid/dataGrid.component";
@@ -21,7 +21,7 @@ export class AttendanceRecordComponent implements OnInit {
   constructor(public _tools: Tools) { }
   request = { START: null, END: null,SELECTED_Depart:0 }
   async ngOnInit() {
-    this.Departs = await this._tools.getAsync("Depart") as Array<any>
+    this.Departs = await this._tools.Network.getAsync("Depart") as Array<any>
     this.columns.push(new Column("ID","رقم السجل","lapel"))
     this.columns.push(new Column("ID_EMPLOYE","رقم النظام","lapel"))
     this.columns.push(new Column("CODE","كود الموظف","lapel"))
@@ -29,7 +29,7 @@ export class AttendanceRecordComponent implements OnInit {
     this.columns.push(new Column("DEPART","قسم الموظف","lapel"))
     this.columns.push(new Column("DATETIME","وقت التوقيع","lapel"))
     this.columns[this.columns.length - 1].Style_Show = (VALUE) => {
-      return this._tools.EditFormateData(VALUE, "dd/MM/yyyy HH:mm:ss")
+      return this._tools.DateTime.EditFormateData(VALUE)
     };
     this.columns.push(new Column("TYPE","نوع التوقيع","lapel"))
     this.columns.push(new Column("ID_DIVICE_IN_SYSTEM","رقم المكينة","lapel"))
@@ -37,13 +37,11 @@ export class AttendanceRecordComponent implements OnInit {
     this.columns.push(new Column("ID_DIVICE_PLACE","مكان المكينة","lapel"))
   }
   async GetFile(e: any) {
-    let devices = await this._tools.getAsync("AttendanceAndDepartureDevice") as Array<any>;
-    let Employs = await this._tools.getAsync("Employee/Suggestions_Code_and_Name") as Array<any>;
+    let devices = await this._tools.Network.getAsync("AttendanceAndDepartureDevice") as Array<any>;
+    let Employs = await this._tools.Network.getAsync("Employee/Suggestions_Code_and_Name") as Array<any>;
     if (devices != null && Employs != null) {
-      this._tools.onFileChange(e)
-      let SERVER_DATA: Array<any> = []
-      this._tools.onFileEndImport = async (data) => {
-        data.forEach(rec => {
+      this._tools.Excel.ExcelFileChange(e,async (json:Array<any>)=>{
+        json.forEach(rec => {
           let record = {
             "ID": 0,
             "ROW_NUMBER": -1,
@@ -61,26 +59,27 @@ export class AttendanceRecordComponent implements OnInit {
           record.TYPE = (rec.Status as string).toLocaleLowerCase();
           record.ID_DIVICE_RECORD = `${devices.find(x => x.CODE == rec.LocationID)?.CODE}`;
           record.ID_DIVICE_IN_SYSTEM = devices.find(x => x.CODE == rec.LocationID)?.ID;
-          record.DATETIME = this._tools.convertNumberToData(rec.DateTime) as any;
+          record.DATETIME = this._tools.DateTime.convertNumberToData(rec.DateTime) as any;
           if (record.TYPE != undefined&& record.DEPART_ID && record.CODE != undefined && record.ID_EMPLOYE != undefined && record.DATETIME != undefined && record.ID_DIVICE_IN_SYSTEM != undefined && record.ID_DIVICE_RECORD != undefined) {
             SERVER_DATA.push(record);
           }
         })
-       var response= await this._tools.postAsync("AttendanceRecord/AddMore", SERVER_DATA)
+       var response= await this._tools.Network.postAsync("AttendanceRecord/AddMore", SERVER_DATA)
        console.log(response)
        if(Array.isArray(response))
         {
           this._tools.Toaster.showSuccess("تم حفظ البيانات بنجاح")
         }
-      }
+      })
+      let SERVER_DATA: Array<any> = []
     }
   }
 
   async showData() {
-    let devices = await this._tools.getAsync("AttendanceAndDepartureDevice") as Array<any>;
-    let Employs = await this._tools.getAsync("Employee/Suggestions_Code_and_Name") as Array<any>;
-    var places = await this._tools.getAsync("Place") as Array<any>;
-    var data = await this._tools.getAsync("AttendanceRecord?filter=" + JSON.stringify(this.request)) as Array<any>;
+    let devices = await this._tools.Network.getAsync("AttendanceAndDepartureDevice") as Array<any>;
+    let Employs = await this._tools.Network.getAsync("Employee/Suggestions_Code_and_Name") as Array<any>;
+    var places = await this._tools.Network.getAsync("Place") as Array<any>;
+    var data = await this._tools.Network.getAsync("AttendanceRecord?filter=" + JSON.stringify(this.request)) as Array<any>;
     if (data) {
       let source:Array<any>=[];
       data.forEach(item=>{
@@ -115,22 +114,10 @@ export class AttendanceRecordComponent implements OnInit {
   }
 }
 
-
+  
 // DateTime
-// : 
-// 45737.33033564815
 // Department
-// : 
-// "المدينه التجمع"
 // LocationID
-// : 
-// "103"
 // Name
-// : 
-// "احمد فاروق فتحى ابراهيم"
 // No
-// : 
-// "20009"
 // Status
-// : 
-// "C/In"

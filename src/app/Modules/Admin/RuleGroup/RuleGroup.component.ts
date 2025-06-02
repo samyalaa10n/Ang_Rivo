@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { GetAddEditDeleteComponent } from "../../../shared/pages/get-add-edit-delete/get-add-edit-delete.component";
 import { Column } from '../../../shared/components/dataGrid/Column';
 import { NgIf } from '@angular/common';
-import { Tools } from '../../../shared/service/Tools';
+import { Tools } from '../../../shared/service/Tools.service';
 import { DataGridComponent, GridAction } from '../../../shared/components/dataGrid/dataGrid.component';
 import { Table } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';

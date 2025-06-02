@@ -3,37 +3,20 @@ import { Injectable } from "@angular/core";
 import { ToasterComponent } from "../components/Toaster/Toaster.component";
 import _ from 'lodash';
 import { Router } from "@angular/router";
-import { DatePipe } from "@angular/common";
 import { LoadingComponent } from "../components/Loading/Loading.component";
-import * as signalR from '@microsoft/signalr';
-import * as XLSX from 'xlsx';
-import * as FileSaver from 'file-saver';
-import excelDateToJSDate from 'excel-date-to-js';
-import moment, * as momentLP from 'moment';
+import { Network } from "./Network.service";
+import { Excel } from "./Excel.service";
+import { Validation } from "./Validation.service";
+import { TDateTime } from "./DateTime.service";
+import { Location } from "./Location.service";
 @Injectable({
   providedIn: 'root'
 })
 export class Tools {
-  public hubConnection: signalR.HubConnection | undefined;
   Authentication: any = null
   tempData: any = null
-  baseUrl: string = "https://localhost:44327/api/"
-  Toaster!: ToasterComponent
   Loading!: LoadingComponent
-  _dateFormat!: DatePipe;
-  _LoginName: string = ""
-  Date_Data = {
-    dayNames: ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'],
-    dayNamesShort: ['أحد', 'اثن', 'ثلا', 'أرب', 'خمي', 'جمع', 'سبت'],
-    dayNamesMin: ['ح', 'ن', 'ث', 'ر', 'خ', 'ج', 'س'],
-    monthNames: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'],
-    monthNamesShort: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'],
-    today: 'اليوم',
-    clear: 'مسح',
-    dateFormat: 'dd/mm/yy',
-    weekHeader: 'أسبوع',
-    firstDayOfWeek: 0
-  }
+  Toaster!: ToasterComponent
   _countries = [
     {
       "code": "AD",
@@ -1286,58 +1269,28 @@ export class Tools {
       "dialCode": "+263"
     }
   ]
-  constructor(public _httpClient: HttpClient, public _router: Router) {
-    console.log(this.EditData(new Date("12/1/2024")).getFullYear())
-    moment.locale('ar');
+  MonthsDataSource = [
+    { name: "1-يناير", Id: 1 },
+    { name: "2-فبراير", Id: 2 },
+    { name: "3-مارس", Id: 3 },
+    { name: "4-إبريل", Id: 4 },
+    { name: "5-مايو", Id: 5 },
+    { name: "6-ينيو", Id: 6 },
+    { name: "7-يوليو", Id: 7 },
+    { name: "8-اغسطس", Id: 8 },
+    { name: "9-سبتمبر", Id: 9 },
+    { name: "10-أكتوبر", Id: 10 },
+    { name: "11-نوفمبر", Id: 11 },
+    { name: "12-ديسمبر", Id: 12 }
+  ]
+  TYPES_DataSource = [
+    { name: "اعتيادي", Id: 1 },
+    { name: "عارضة", Id: 2 },
+    { name: "بالخصم", Id: 3 },
+    { name: "اخري", Id: 4 },
+  ]
+  constructor(public _httpClient: HttpClient, public _router: Router, public DateTime: TDateTime, public Network: Network, public Excel: Excel, public Location: Location, public Validation: Validation) {
   }
-
-  // Start the SignalR connection
-  public startConnection(UserData: string): void {
-    this.hubConnection = new signalR.HubConnectionBuilder().withUrl(`https://localhost:44327/Connect?UserData=${UserData}`, {
-      withCredentials: true // لتأكيد إرسال الـ cookies إذا كان يستخدم
-    }).build();
-    this.Loading.startLoading();
-    this.hubConnection.start()
-      .then(() => {
-        console.log('SignalR Connection Established')
-      })
-      .catch(err => {
-        this.Loading.stopLoading();
-        console.log(err)
-      });
-    this.hubConnection.on("OnConnectedData", (response) => {
-      this.Loading.stopLoading();
-      if (response.success) {
-        this._LoginName = response.useR_NAME;
-        localStorage.setItem("logInfo", JSON.stringify(response))
-        this._router.navigate(['Main', 'Home'])
-      }
-      else {
-        this.hubConnection?.stop();
-        this.Toaster.showError(response.message)
-        console.log(response)
-        if (response.logOut) {
-          localStorage.removeItem("logInfo")
-          this._router.navigate(['Login'])
-        }
-      }
-    });
-  }
-  // Send a message
-  public sendMessage(mestod: string, user: string, message: string): void {
-    if (this.hubConnection) {
-      this.hubConnection.invoke(mestod, user, message)
-        .catch(err => console.error(err));
-    }
-  }
-
-  // Add a listener for receiving messages
-  public addMessageListener(on: string, callback: (user: string, message: string) => void): void {
-    if (this.hubConnection) {
-      this.hubConnection.on(on, callback);
-    }
-  }
-
   waitExecuteFunction(delay: number, func: any) {
     let timer = setTimeout(() => {
       func();
@@ -1346,105 +1299,6 @@ export class Tools {
   }
   cloneObject(object: any): any {
     return _.cloneDeep(object)
-  }
-  public async getAsync<T>(url: string): Promise<T | undefined> {
-    try {
-      this.Loading.startLoading();
-      let response = await this._httpClient.get<T>(this.baseUrl + url).toPromise();
-      this.Loading.stopLoading();
-      return response
-    }
-    catch (ex: any) {
-      this.Loading.stopLoading();
-      //   this.Toaster?.showErrorAlert(ex.error.title, ex.error.detail)
-      return undefined;
-    }
-  }
-  public async postAsync<T>(url: string, data: any): Promise<T | undefined> {
-    try {
-      this.Loading.startLoading();
-      let response = await this._httpClient.post<T>(this.baseUrl + url, data).toPromise();
-      this.Loading.stopLoading();
-      return response
-    }
-    catch (ex: any) {
-      this.Loading.stopLoading();
-      //   this.Toaster?.showErrorAlert(ex.error.title, ex.error.detail)
-      return undefined;
-    }
-  }
-  public async putAsync<T>(url: string, data: any, filterHeader: string = ""): Promise<T | undefined> {
-    try {
-      this.Loading.startLoading();
-      let response = await this._httpClient.put<T>(this.baseUrl + url, data, { headers: { "filter": filterHeader } }).toPromise();
-      this.Loading.stopLoading();
-      return response
-    }
-    catch (ex: any) {
-      this.Loading.stopLoading();
-      //   this.Toaster?.showErrorAlert(ex.error.title, ex.error.detail)
-      return undefined;
-    }
-  }
-  public async deleteAsync<T>(url: string, data: any = null): Promise<T | undefined> {
-    try {
-      this.Loading.startLoading();
-      let response = await this._httpClient.delete<T>(this.baseUrl + url, { body: data }).toPromise();
-      this.Loading.stopLoading();
-      return response
-    }
-    catch (ex: any) {
-      this.Loading.stopLoading();
-      //   this.Toaster?.showErrorAlert(ex.error.title, ex.error.detail)
-      return undefined;
-    }
-  }
-  EditData(dateTime: Date): Date {
-    if (dateTime instanceof Date) return new Date(dateTime.toLocaleDateString("en") + ' GMT')
-    else if (typeof dateTime == "string") return new Date(dateTime + ' GMT')
-    return new Date()
-  }
-  convertNumberToData(_number: any): Date {
-    return excelDateToJSDate.getJsDateFromExcel(_number)
-  }
-  EditFormateData(dateTime: any, format: string) {
-    if (dateTime != null && dateTime != "") {
-      let Mdata = this.convertDataToMoment(dateTime)
-
-      return Mdata.format("YYYY-MM-DD HH:mm");
-    }
-    return dateTime;
-  }
-  GetNumberOfMonth(): number {
-    return this.EditData(new Date()).getMonth() + 1;
-  }
-  GetNumberOfYear(): number {
-    return this.EditData(new Date()).getFullYear();
-  }
-  IsEqual(object1: any, object2: any): boolean {
-    if (object1 == undefined || object2 == undefined) {
-      return true
-    }
-    let words1 = JSON.stringify(object1).split("").sort()
-    let words2 = JSON.stringify(object2).split("").sort()
-    for (let index = 0; index < words1.length; index++) {
-      const word1 = words1[index];
-      const word2 = words2[index];
-      if (word1 != word2) {
-        return false
-      }
-    }
-    return true
-  }
-  isNumbers(text: any): boolean {
-    return !(/^[0-9]+$/.test(text));
-  }
-  isEmpty(text: any): boolean {
-    return text == undefined || text == null || text == "";
-  }
-  isEmail(email: any): boolean {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return !regex.test(email);
   }
   GetStringLength(item: any, splitMode = false): number {
     if (item == null || item == undefined) {
@@ -1459,55 +1313,6 @@ export class Tools {
     return 0;
   }
 
-
-  exportAsExcelFile(json: any[], fileName: string): void {
-    // تحويل JSON إلى ورقة عمل
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
-
-    // إنشاء ملف Excel يحتوي على الورقة
-    const workbook: XLSX.WorkBook = {
-      Sheets: { data: worksheet },
-      SheetNames: ['data']
-    };
-
-    // تحويل الملف إلى بايت
-    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-
-    // حفظ الملف
-    this.saveAsExcelFile(excelBuffer, fileName);
-  }
-
-  private saveAsExcelFile(buffer: any, fileName: string): void {
-    const data: Blob = new Blob([buffer], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
-    });
-    FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
-  }
-  onFileChange(evt: any) {
-    const target: DataTransfer = <DataTransfer>(evt.target);
-    if (target.files.length !== 1) {
-      console.error('من فضلك اختر ملف Excel واحد فقط');
-      return;
-    }
-
-    const reader: FileReader = new FileReader();
-    reader.onload = (e: any) => {
-      const bstr: string = e.target.result;
-      const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
-
-      const wsname: string = wb.SheetNames[0]; // أول شيت
-      const ws: XLSX.WorkSheet = wb.Sheets[wsname];
-
-      let data = XLSX.utils.sheet_to_json(ws); // تحويله إلى JSON
-      this.onFileEndImport(data);
-      evt.target.value = null;
-    };
-
-    reader.readAsBinaryString(target.files[0]);
-  }
-  onFileEndImport(data: Array<any>) {
-
-  }
   dynamicSortMutable(data: Array<any>, onProertys: Array<string>): Array<any> {
     return data.sort((a, b) => {
       for (let index = 0; index < onProertys.length; index++) {
@@ -1534,53 +1339,10 @@ export class Tools {
       return 0;
     });
   }
-  getDataFromJson(selectedDate: string): Date {
-    return new Date(`${selectedDate.split("T")[0]} ${selectedDate.split("T")[1]} GMT+3`);
+  saveInputInLabel(key: string, data: any) {
+    localStorage.setItem(key, JSON.stringify(data))
   }
-  getValueJsonWithGMT(E: Date, TimeGMT = 2) {
-    let editHours = (txt: string): string => {
-      let endValue = '';
-      if ((Number.parseInt(txt) + TimeGMT) < 10) {
-        endValue = "0" + ((Number.parseInt(txt) + TimeGMT)).toString();
-      }
-      else if ((Number.parseInt(txt) + TimeGMT) > 23) {
-        endValue = "0" + ((Number.parseInt(txt) + TimeGMT) - 24).toString();
-      }
-      else {
-        endValue = (Number.parseInt(txt) + TimeGMT).toString();
-      }
-      return endValue;
-    }
-    let oldJson = E.toJSON();
-    let hours = editHours(oldJson.split("T")[1].split(":")[0]);
-    oldJson = `${oldJson.split('T')[0]}T${hours}:${oldJson.split("T")[1].split(":")[1]}:${oldJson.split("T")[1].split(":")[2]}`
-    console.log(oldJson)
-    return oldJson;
-  }
-  getValueFromTime(e: Date) {
-    let value: any = { HOUR: null, MINUTE: null }
-    value.HOUR = e.getHours();
-    value.MINUTE = e.getMinutes();
-    return value;
-  }
-  getTimeFromValue(e: any) {
-    let date = new Date(new Date().toLocaleDateString("en") + " GMT")
-    date.setHours(e.HOUR);
-    date.setMinutes(e.MINUTE);
-    return date;
-  }
-  convertDataToMoment(JSdate: Date): momentLP.Moment {
-    const date = moment(JSdate);
-    return date;
-  }
-
-  getDayName(date: momentLP.Moment | Date | string): string {
-    if (date instanceof Date) {
-      date = this.convertDataToMoment(date)
-    }
-    if (typeof date == "string") {
-      date = this.convertDataToMoment(this.getDataFromJson(date))
-    }
-    return this.Date_Data.dayNames[date.day()];
+  getInputLabel(key: any): any {
+    return JSON.parse(localStorage.getItem(key) ?? '')
   }
 }

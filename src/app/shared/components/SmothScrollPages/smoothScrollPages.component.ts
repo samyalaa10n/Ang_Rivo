@@ -1,6 +1,6 @@
 import { Component, ElementRef } from '@angular/core';
 import { AnimateOnScroll, AnimateOnScrollModule } from 'primeng/animateonscroll';
-import { Tools } from '../../service/Tools';
+import { Tools } from '../../service/Tools.service';
 
 @Component({
     selector: 'app-SmoothScrollPages',

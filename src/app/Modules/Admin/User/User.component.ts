@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, viewChild } from '@angular/core';
 import { GetAddEditDeleteComponent } from "../../../shared/pages/get-add-edit-delete/get-add-edit-delete.component";
-import { Tools } from '../../../shared/service/Tools';
+import { Tools } from '../../../shared/service/Tools.service';
 import { Column } from '../../../shared/components/dataGrid/Column';
 import { NgIf } from '@angular/common';
 import { Table } from 'primeng/table';
@@ -21,7 +21,7 @@ export class UserComponent implements OnInit {
    * including setting up a combobox column for user type selection.
    */
   async ngOnInit() {
-    let RuleGroup = await this._tools.getAsync("RuleGroup") as Array<any>;
+    let RuleGroup = await this._tools.Network.getAsync("RuleGroup") as Array<any>;
     this.Columns.push(new Column('ID', "الكود", "lapel", "text"))
     this.Columns.push(new Column('USER_HRCODE', "كود الموظف", "text", "text"))
     this.Columns.push(new Column('EMAIL', "البريد الالكتروني", "text", "text"))
@@ -43,7 +43,7 @@ export class UserComponent implements OnInit {
      * @param {Table} Td - The PrimeNG table component to be updated
      */
   async update(Td: Table) {
-    let RuleGroup = await this._tools.getAsync("RuleGroup") as Array<any>;
+    let RuleGroup = await this._tools.Network.getAsync("RuleGroup") as Array<any>;
     this.Columns[5].columnComboBoxDataSource=RuleGroup;
   }
 }

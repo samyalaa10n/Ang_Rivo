@@ -7,7 +7,7 @@ import { NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
-import { Tools } from '../../service/Tools';
+import { Tools } from '../../service/Tools.service';
 import { FormsModule } from '@angular/forms';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ChildGrid } from './ChildGrid';
@@ -112,6 +112,7 @@ export class DataGridComponent implements OnInit {
   @Input() AllowExportExcel: boolean = true;
   @Input() singleSelectedMode: boolean = false;
   @Input() canSelectedSomeColumns: boolean = false;
+  @Output() GridAction: EventEmitter<any> = new EventEmitter()
   @Output() onGridLoaded: EventEmitter<any> = new EventEmitter()
   @Output() RenderItemSource: EventEmitter<any> = new EventEmitter()
   @Input() rowsPerPageOptions: Array<any> = [3, 5, 10, 20, 50];
@@ -159,7 +160,7 @@ export class DataGridComponent implements OnInit {
       }
     })
     this.dataSource.forEach((item, index) => {
-      if (!this._tools.IsEqual(this.startDataSource.find(x => x.ID == item.ID), item)) {
+      if (!this._tools.Validation.IsEqual(this.startDataSource.find(x => x.ID == item.ID), item)) {
         dataSaved.push(item)
       }
       if (this.startDataSource.find(x => x.ID == item.ID) == null) {
@@ -188,7 +189,7 @@ export class DataGridComponent implements OnInit {
 
   }
   exportExcel() {
-    this._tools.exportAsExcelFile(this.dataSource, 'Exported')
+    this._tools.Excel.exportAsExcelFile(this.dataSource, 'Exported')
   }
   ngAfterViewInit() {
     // this.editFilterWork()
@@ -302,6 +303,7 @@ export class DataGridComponent implements OnInit {
   }
   onGridAction(Action: GridAction) {
     this.onRenderItemSource(Action.itemEdit,this.dataSource.indexOf(Action.itemEdit))
+    this.GridAction.emit(Action);
   }
 
   selectLastInput() {
@@ -354,6 +356,6 @@ export class DataGridComponent implements OnInit {
 export interface GridAction {
   EVENT: any,
   itemEdit: any,
-  ActonType: "CLICK" | "KEYUP" | "SELECT",
-  COLUMN: Column
+  ActonType: "CLICK" | "KEYUP" | "SELECT"|"UN_SELECT",
+  COLUMN: Column|null
 }

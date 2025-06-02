@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { Tools } from '../../service/Tools';
+import { Tools } from '../../service/Tools.service';
 @Component({
   selector: 'app-Toaster',
   templateUrl: './Toaster.component.html',
@@ -16,6 +16,7 @@ export class ToasterComponent implements OnInit {
 
   ngOnInit() {
     this._tools.Toaster=this;
+    this._tools.Network.Toaster=this;
   }
   showSuccess(detail:string) {
     this.messageService.add({ severity: 'success', summary: 'تم بنجاح', detail: detail });

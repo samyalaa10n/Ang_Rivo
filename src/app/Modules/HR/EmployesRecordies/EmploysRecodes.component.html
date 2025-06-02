@@ -1,12 +1,12 @@
 <app-dataGrid #grid [AllowSave]="true" [canSelectedSomeColumns]="true"  [AddInherit]="true"  (onGridLoaded)="Config($event)" [AllowUpdate]="true" [Columns]="Columns" [dataSource]="Employees" >
-  <div header>
+  <div header class="my-2">
     <input hidden id="I_FILE" type="file" (change)="GetFile($event)">
-    <label  class="btn btn-primary" for="I_FILE" > استيراد بيانات المواظفين Excel<i class=" mx-2 pi pi-file-import"></i> </label>
+    <label  class="btn btn-primary btn-sm" for="I_FILE" > استيراد بيانات المواظفين Excel<i class=" mx-2 pi pi-file-import"></i> </label>
   </div>
-  <p-button *ngIf="grid.selectedItems.length>0" MORE_BUTTON class="mx-2" severity="success" (onClick)="editMore(grid)"  label="تعديل المحدد" icon="pi pi-pen-to-square"></p-button>
+  <p-button *ngIf="grid.selectedItems.length>0" [outlined]="true" [size]="'small'" [variant]="'text'" [raised]="true" MORE_BUTTON class="mx-2" severity="success" (onClick)="editMore(grid)"  label="تعديل المحدد" icon="pi pi-pen-to-square"></p-button>
 </app-dataGrid>
 <ng-template [appCustomColumn]="Columns[0]" let-item>
-  <p-button  (onClick)="showDialog=true;" label="عرض الملفات" icon="pi pi-file-check"></p-button>
+  <p-button  (onClick)="showDialog=true;" [outlined]="true" [size]="'small'" [variant]="'text'" [raised]="true" label="عرض الملفات" icon="pi pi-file-check"></p-button>
 </ng-template>
 <p-dialog [(visible)]="showDialog" [maximizable]="true" [modal]="true"  header="عرض الملفات" [style]="{'width':'70%','height':'70%'}">
   <div class="header" dir="rtl">

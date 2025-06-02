@@ -1,0 +1,187 @@
+<div class="tools my-3 p-3 border border-1">
+    <div class="p-2">
+        <app-InputLabel *ngIf="employSelected" class="d-inline-block  mx-4" placeholder="الكود">
+            <div class="py-3" pInputText>{{employSelected.CODE}}</div>
+        </app-InputLabel>
+        <app-InputLabel *ngIf="employSelected" class="d-inline-block mx-4" placeholder="الأسم">
+            <div class="py-3" pInputText>{{employSelected.NAME}}</div>
+        </app-InputLabel>
+        <span class="p-2 mx-2 border border-1">عدد الأمضائات : {{Attendance.length}}</span>
+        <span class="p-2 mx-2 border border-1"> اجمالي ساعات العمل: {{getTotalHours()}}</span>
+    </div>
+    <div class="p-2">
+        <p-button class="mx-1 w-100" size="small" (onClick)="ShowDeleted()" variant="text" [raised]="true"
+            severity="danger" label="عرض الأمضائات الملغية"></p-button>
+    </div>
+</div>
+<div dir="rtl" *ngIf="DataLoaded" class="position-relative overflow-scroll MyTable-Height">
+    <table class="table table-sm MyTable ">
+        <thead class="position-sticky  top-0 bg-secondary py-4 border border-1" style="z-index: 100;">
+            <tr>
+                <th class="text-center" style="width: 100px;">يوم التوقيع</th>
+                <th class="text-center" style="width: 100px;">تاريخ التوقيع</th>
+                <th class="text-center" style="width: 70px;">وقت التوقيع</th>
+                <th class="text-center" style="width: 50px;">نوع التوقيع</th>
+                <th class="text-center" style="width: 100px;"> ساعات العمل</th>
+                <th class="text-center" style="width: 200px;"> قوانين</th>
+                <th class="text-center" style="width: 110px;">اسم المكينة</th>
+                <th class="text-center" style="width: 100px;">مكان التوقيع</th>
+                <th class="text-center" style="width: 100px;">شفت الموظف</th>
+                <th></th>
+                <th style="width: 100px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let Att of Attendance;  let dx=index;">
+                <tr class="position-relative" [ngClass]="{'bg-info': Att.IsAdded,'bg-warning':Att.ERROR}">
+                    <td class="text-center" >{{_tools.DateTime.getDayName(Att.DATETIME)}}</td>
+                    <td class="text-center"><app-DateTime [showOnFocus]="true"  class="d-inline-block " placeholder="اختر التاريخ" [(selectedDate)]="Att.DATETIME" (selectedDateChange)="onChangeAttendance(Att,$event)"></app-DateTime></td>
+                    <td class="text-center"><app-DateTime [selectOnFocus]="true" class="d-inline-block " placeholder="اختر الوقت" [showTimeOnly]="true" [showTime]="true" [(selectedDate)]="Att.TIME" (selectedDateChange)="onChangeAttendance(Att,$event)"></app-DateTime></td>
+                    <td *ngIf="!Att.IsAdded" class="text-center"><app-comboBox [showClear]="false" placeholder="اختر نوع التوقيع" class="d-inline-block" optionLabel="name"  [(SelectedValue)]="Att.TYPE" (SelectedValueChange)="onChangeAttendance(Att,$event)" optionValue="name" [dataSource]="[{name:'c/in'},{name:'c/out'}]"></app-comboBox></td>
+                    <td *ngIf="Att.IsAdded" class="text-center">{{Att.TYPE}}</td>
+                    <td class="text-center">{{Att.HOURS}}</td>
+                    <td class="text-center">
+                        <div *ngIf="Att.TYPE =='c/in'">
+                            <div *ngIf="Att.LATE"><span>تأخير : </span> <span>{{Att.LATE}}</span></div>
+                            <div><span>مبكر : </span></div>
+                        </div>
+                        <div *ngIf="Att.TYPE =='c/out'">
+                            <div><span>اضافي : </span></div>
+                            <div><span>اذن : </span></div>
+                        </div>
+                    </td>
+                    <td *ngIf="!Att.IsAdded" class="text-center">{{getDeviceInfo(Att.ID_DIVICE_IN_SYSTEM).NAME}}</td>
+                    <td *ngIf="!Att.IsAdded" class="text-center">{{getDevicePlace(Att.ID_DIVICE_IN_SYSTEM).NAME}}</td>
+                    <td *ngIf="Att.IsAdded && Data">بصمة يدوية</td>
+                    <td *ngIf="Att.IsAdded && Data" class="text-center"><app-comboBox [showClear]="false"
+                            placeholder="اختر مكان التوقيع" class="d-inline-block" optionLabel="NAME"
+                            [(SelectedValue)]="Att.ID_PLACE" (SelectedValueChange)="onChangeAttendance(Att,$event)"
+                            optionValue="ID" [dataSource]="Data.PLACES"></app-comboBox>
+                    </td>
+                    <td >
+                        <app-comboBox *ngIf="Att.TYPE=='c/in'" placeholder="اسم الشفت" optionLabel="NAME" optionValue="ID" [(SelectedValue)]="Att.Shift" [dataSource]="Data.SHIFTS"></app-comboBox>
+                    </td>
+                    <td>
+                        <span *ngIf="Att.ERROR"
+                            class="bg-danger p-1 rounded-1 border border-1 border-danger icon-link-hover "
+                            style="right: 5px; top: 5px;"><i class="pi pi-info-circle text-white"></i></span>
+                        <span *ngIf="Att?.RecordChanges?.length > 1">يوجد تعديل</span>
+                    </td>
+
+                    <td style="position: relative; height: 40px;">
+                        <p-speeddial [model]="getBtnItems(Att)" type="linear" [transitionDelay]="180"
+                            [buttonProps]="{ severity: 'help', rounded: true }"
+                            [tooltipOptions]="{ tooltipPosition: 'right' }" direction="left" [showIcon]="'pi pi-cog'"
+                            [hideIcon]="'pi pi-times'" [style]="{
+                        position: 'absolute',
+                        left: '10px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        zIndex: 10
+                      }">
+                        </p-speeddial>
+                    </td>
+
+                </tr>
+            </ng-container>
+        </tbody>
+    </table>
+    <p-dialog [(visible)]="ShowDialogDeleted" [maximizable]="true" [modal]="true"
+        [style]="{'width':'50%','height':'50%'}" header="الامضائات الملغية">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>تاريخ التوقيع</th>>
+                    <th>يوم التوقيع</th>
+                    <th>نوع التوقيع</th>
+                    <th>اسم المكينة</th>
+                    <th>مكان التوقيع</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let Att of AttendanceDelete; let dx=index;">
+                    <th>{{_tools.DateTime.EditFormateData(Att.DATETIME,'yyyy/MM/DD HH:mm:ss')}}</th>
+                    <th>{{_tools.DateTime.getDayName(Att.TIME)}}</th>
+                    <th>{{Att.TYPE}}</th>
+                    <th>{{getDeviceInfo(Att.ID_DIVICE_IN_SYSTEM).NAME}}</th>
+                    <th>{{getDevicePlace(Att.ID_DIVICE_IN_SYSTEM).NAME}}</th>
+                    <th>
+                            <p-button class="mx-1 w-100" size="small" (onClick)="UnDelete(dx)" variant="text"
+                            [raised]="true" label="الغاء الحذف"></p-button>
+                    </th>
+                </tr>
+            </tbody>
+        </table>
+    </p-dialog>
+    <p-dialog [(visible)]="ShowDialogEdit" [maximizable]="true" [modal]="true" [style]="{'width':'50%','height':'50%'}"
+        header="سجل التعديلات">
+        <table class="table table-sm" *ngIf="AttSelected">
+            <thead>
+                <tr>
+                    <th>تاريخ التوقيع</th>
+                    <th>يوم التوقيع</th>
+                    <th>نوع التوقيع</th>
+                    <th>اسم المكينة</th>
+                    <th>مكان التوقيع</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let AttRec of AttSelected.RecordChanges; let dx=index;">
+                    <th>{{_tools.DateTime.EditFormateData(AttRec.TIME,'yyyy/MM/DD HH:mm:ss')}}</th>
+                    <th>{{_tools.DateTime.getDayName(AttRec.TIME)}}</th>
+                    <th>{{AttRec.TYPE}}</th>
+                    <th>{{getDeviceInfo(AttRec.ID_DIVICE_IN_SYSTEM).NAME}}</th>
+                    <th>{{getDevicePlace(AttRec.ID_DIVICE_IN_SYSTEM).NAME}}</th>
+                    <th>
+                        <p-button class="mx-1 w-100" size="small" (onClick)="SelectOldEdit(AttRec)"
+                            label="اعادة التعديل"></p-button>
+                    </th>
+                </tr>
+            </tbody>
+
+        </table>
+    </p-dialog>
+    <p-dialog [(visible)]="ShowDialogForget" [maximizable]="true" [modal]="true"
+        [style]="{'width':'100%','height':'50%'}" header="النواقص المسجلة لنفس التوقيت">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>رقم التوقيع</th>
+                    <th>يوم الحضور</th>
+                    <th>يوم الانصراف</th>
+                    <th>الحضور</th>
+                    <th>الأنصراف</th>
+                    <th>تاريخ تسجل التوقيع</th>
+                    <th>مكان التوقيع</th>
+                    <th>سبب التوقيع</th>
+                    <th>معتمد من</th>
+                    <th>اسم مسجل التوقيع</th>
+                    <th>ملاحظات</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let Forg of TargetForget; let dx=index;">
+                    <th>{{Forg.ID}}</th>
+                    <th>{{_tools.DateTime.getDayName(Forg.IN)}}</th>
+                    <th>{{_tools.DateTime.getDayName(Forg.OUT)}}</th>
+                    <th>{{_tools.DateTime.EditFormateData(Forg.IN,'yyyy/MM/DD HH:mm:ss')}}</th>
+                    <th>{{_tools.DateTime.EditFormateData(Forg.OUT,'yyyy/MM/DD HH:mm:ss')}}</th>
+                    <th>{{_tools.DateTime.EditFormateData(Forg.DATE_TIME,'yyyy/MM/DD HH:mm:ss')}}</th>
+                    <th>{{getPlace(Forg.ID_PLACE).NAME}}</th>
+                    <th>{{Forg.RAISON}}</th>
+                    <th>{{Forg.RESPONSIBLY}}</th>
+                    <th>{{Forg.USER_RECORD_NAME}}</th>
+                    <th>{{Forg.NOTS}}</th>
+                    <th>
+                        <p-button (onClick)="selectForgetAtt(Forg)" class="mx-1 w-100" size="small"
+                            label="أختيار"></p-button>
+                    </th>
+                </tr>
+            </tbody>
+
+        </table>
+    </p-dialog>
+</div>

@@ -30,11 +30,13 @@ export class MultiselectComponent implements OnInit {
   @Input() Label: string = ''
   @Input() optionLabel: string = 'name'
   @Input() dataSelected: Array<any> = []
+  @Input() dataSelectedValues: Array<any> = []
   @Input() maxSelectedLabels: number = 3;
   @Input() style: any = { 'width': '100%' }
   @Input() textHeader: string = "العناصر المتاحة"
   @Input() selectedItemsLabel: string = "تم تحديد {0} عناصر"
   @Output() dataSelectedChange: EventEmitter<any> = new EventEmitter();
+  @Output() dataSelectedValuesChange: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 
@@ -44,7 +46,12 @@ export class MultiselectComponent implements OnInit {
     if (this.dataSelected == undefined) {
       this.dataSelected = [];
     }
+    if (this.dataSelectedValues == undefined) {
+      this.dataSelectedValues = [];
+    }
     this.dataSelected = selected;
+    this.dataSelectedValues=selected.map(x=>x[this.optionValue])
+    this.dataSelectedValuesChange.emit(this.dataSelectedValues)
     this.dataSelectedChange.emit(selected)
     if (this.IsInGridMode) {
       let ArraySelected = this.item[this.propertyBind]==undefined?[]:this.item[this.propertyBind] as Array<any>
@@ -83,6 +90,8 @@ export class MultiselectComponent implements OnInit {
     {
       if(this.dataSelected!=null)
       this.dataSelected =this.dataSource.filter(z=>this.dataSelected.map(x=>x[this.optionValue]).includes(z[this.optionValue]))
+      if(this.dataSelectedValues!=null)
+      this.dataSelected =this.dataSource.filter(z=>this.dataSelectedValues.includes(z[this.optionValue]))
     }
   }
 

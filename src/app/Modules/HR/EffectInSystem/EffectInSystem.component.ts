@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GetAddEditDeleteComponent } from "../../../shared/pages/get-add-edit-delete/get-add-edit-delete.component";
 import { NgIf } from '@angular/common';
 import { Column } from '../../../shared/components/dataGrid/Column';
-import { Tools } from '../../../shared/service/Tools';
+import { Tools } from '../../../shared/service/Tools.service';
 
 @Component({
   selector: 'app-EffectInSystem',
@@ -14,7 +14,7 @@ export class EffectInSystemComponent implements OnInit {
   Columns: Array<Column> = [];
   constructor(private _tools: Tools) { }
   async ngOnInit() {
-    let EffectColumns = await this._tools.getAsync("EffectColumn") as Array<any>
+    let EffectColumns = await this._tools.Network.getAsync("EffectColumn") as Array<any>
     this.Columns.push(new Column("ID", "الكود"))
     this.Columns.push(new Column("NAME", "الأسم", "text", 'text', 200))
     this.Columns.push(new Column("IS_PLUS", "مضاف علي القبض", "yes-no","none", 200))
@@ -27,7 +27,7 @@ export class EffectInSystemComponent implements OnInit {
     this.Columns[this.Columns.length - 1].columnMultiSelectDataSource = EffectColumns;
   }
   async update() {
-    let EffectColumns = await this._tools.getAsync("EffectColumn") as Array<HTMLElement>;
+    let EffectColumns = await this._tools.Network.getAsync("EffectColumn") as Array<HTMLElement>;
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = EffectColumns;
   }
 }

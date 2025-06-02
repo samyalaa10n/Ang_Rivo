@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { InputTextModule } from 'primeng/inputtext';
-import { Tools } from '../../service/Tools';
+import { Tools } from '../../service/Tools.service';
 
 @Component({
   selector: 'app-comboBox',
@@ -15,6 +15,7 @@ import { Tools } from '../../service/Tools';
 })
 export class ComboBoxComponent implements OnInit {
   @Input() selected: any = null
+  @Input() selSaveLabelInput: any = null
   @Input() optionLabel: string = ''
   @Input() optionValue: string = ''
   @Input() placeholder: string = ''
@@ -22,6 +23,7 @@ export class ComboBoxComponent implements OnInit {
   @Input() apiPathDataSource: string = ''
   @Input() Label: string = ''
   @Input() SelectedValue: any = null
+  @Input() showClear: boolean = true;
   @Input() DefaultClearValue: any = 0;
   @Input() dataSource: Array<any> = []
   @Output() selectedChange: EventEmitter<any> = new EventEmitter();
@@ -38,7 +40,7 @@ export class ComboBoxComponent implements OnInit {
   async onShow() {
     if (this.apiPathDataSource != '') {
       this.IsLoading = true;
-      let dataSource = await this._tools.getAsync(this.apiPathDataSource)
+      let dataSource = await this._tools.Network.getAsync(this.apiPathDataSource)
       this.IsLoading = false;
       if (dataSource && Array.isArray(dataSource)) {
         this.dataSource = dataSource;
@@ -47,7 +49,6 @@ export class ComboBoxComponent implements OnInit {
     }
   }
   selectedItem(item: any) {
-    debugger
     if (item && item != "") {
       this.selectedChange.emit(item);
       if (item[this.optionValue] != undefined) {

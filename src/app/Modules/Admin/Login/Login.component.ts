@@ -3,7 +3,7 @@ import { InputLabelComponent } from "../../../shared/pages/TextLabel/InputLabel.
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { Tools } from '../../../shared/service/Tools';
+import { Tools } from '../../../shared/service/Tools.service';
 import { Router } from '@angular/router';
 
 
@@ -25,11 +25,11 @@ export class LoginComponent implements OnInit {
     }
     else
     {
-      this._tools.hubConnection?.stop();
+      this._tools.Network.hubConnection?.stop();
     }
   }
   async login() {
-    this._tools.startConnection(JSON.stringify(this.logInfo));
+    this._tools.Network.startConnection(JSON.stringify(this.logInfo));
   }
 
 }

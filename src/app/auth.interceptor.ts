@@ -1,5 +1,5 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { Tools } from './shared/service/Tools';
+import { Tools } from './shared/service/Tools.service';
 import { inject } from '@angular/core';
 import { tap } from 'rxjs';
 
@@ -20,7 +20,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(clonedRequest).pipe(
     tap({
       next: (response: any) => {
-        console.log(response);
       },
       error: (error: any) => {
         console.log(error);
@@ -28,7 +27,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           {
             localStorage.removeItem("logInfo");
             _tools._router.navigate(['Login']);
-            _tools.hubConnection?.stop();
+            _tools.Network.hubConnection?.stop();
           }
         _tools.Toaster.showError(error?.error?.title || 'Unknown Error');
         if(error?.error?.detail)

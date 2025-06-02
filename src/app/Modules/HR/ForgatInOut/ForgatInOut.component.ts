@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { GetAddEditDeleteComponent } from "../../../shared/pages/get-add-edit-delete/get-add-edit-delete.component";
 import { NgIf } from '@angular/common';
-import { Tools } from '../../../shared/service/Tools';
+import { Tools } from '../../../shared/service/Tools.service';
 import { Column } from '../../../shared/components/dataGrid/Column';
 import { InputLabelComponent } from "../../../shared/pages/TextLabel/InputLabel.component";
 import { ComboBoxComponent } from "../../../shared/components/comboBox/comboBox.component";
@@ -28,30 +28,16 @@ import { DataGridComponent } from "../../../shared/components/dataGrid/dataGrid.
 })
 export class ForgatInOutComponent implements OnInit {
   @ViewChild("curdOperation") Grid!: DataGridComponent
-  MonthsDataSource = [
 
-    { name: "1-يناير", Id: 1 },
-    { name: "2-فبراير", Id: 2 },
-    { name: "3-مارس", Id: 3 },
-    { name: "4-إبريل", Id: 4 },
-    { name: "5-مايو", Id: 5 },
-    { name: "6-ينيو", Id: 6 },
-    { name: "7-يوليو", Id: 7 },
-    { name: "8-اغسطس", Id: 8 },
-    { name: "9-سبتمبر", Id: 9 },
-    { name: "10-أكتوبر", Id: 10 },
-    { name: "11-نوفمبر", Id: 11 },
-    { name: "12-ديسمبر", Id: 12 }
-  ]
   AddData: Array<any> = [];
   Year: number = 0;
   filter: string = "{}";
   selectedMonth: any = null;
   Columns: Array<Column> = [];
   StepperConfig: StepperConfiguration = new StepperConfiguration(this);
-  constructor(private _tools: Tools) {
-    this.Year = this._tools.GetNumberOfYear();
-    this.selectedMonth = this._tools.GetNumberOfMonth();
+  constructor(public _tools: Tools) {
+    this.Year = this._tools.DateTime.GetNumberOfYear();
+    this.selectedMonth = this._tools.DateTime.GetNumberOfMonth();
     this.EditFilterText()
   }
 
@@ -64,8 +50,7 @@ export class ForgatInOutComponent implements OnInit {
     if (AddMode) {
       this.Columns = [];
       this.Columns.push(new Column("ID", "رقم النظام"))
-      this.Columns.push(new Column("ID_EMPLOY", "كود الموظف", "comboBox"))
-      this.Columns.push(new Column("ID_EMPLOY", "اسم الموظف", "comboBox"))
+      this.Columns.push(new Column("ID_EMPLOY", "الموظف", "comboBox"))
       this.Columns.push(new Column("DEPART", "القسم"))
       this.Columns.push(new Column("ID_PLACE", "مكان التوفيع", 'comboBox'))
       this.Columns.push(new Column("IN", "الحضور", "date-Time"))
@@ -73,8 +58,8 @@ export class ForgatInOutComponent implements OnInit {
       this.Columns.push(new Column("RESPONSIBLY", "المدير المسؤل", "text"))
       this.Columns.push(new Column("RAISON", "السبب", "textarea"))
       this.Columns.push(new Column("NOTS", "الملاحطات","textarea"))
-      let suggestionsData = await this._tools.getAsync("Employee/Suggestions_Code_and_Name") as Array<any>
-      this.Columns[1].apiPathDataSource = "Employee/Suggestions_Code_and_Name";
+      let suggestionsData = await this._tools.Network.getAsync("Employee/Suggestions_Code_Concat_Name") as Array<any>
+      this.Columns[1].apiPathDataSource = "Employee/Suggestions_Code_Concat_Name";
       this.Columns[1].columnComboBoxDataSource = suggestionsData;
       this.Columns[1].columnComboBoxOptionLabel = "CODE";
       this.Columns[1].columnComboBoxOptionValue = "ID";
@@ -91,41 +76,25 @@ export class ForgatInOutComponent implements OnInit {
           item.DEPART = null;
         }
       }
-      this.Columns[2].apiPathDataSource = "Employee/Suggestions_Code_and_Name";
-      this.Columns[2].columnComboBoxDataSource = suggestionsData;
-      this.Columns[2].columnComboBoxOptionLabel = "NAME";
-      this.Columns[2].columnComboBoxOptionValue = "ID";
-      this.Columns[2].columnComboBoxPlaceholder = "حدد اسم الموظف"
-      this.Columns[2].columnComboBoxChange = (select, item, comboBox) => {
-        var userData = localStorage.getItem("logInfo")
-        if (userData != null) {
-          item.USER_RECORD_NAME = JSON.parse(userData).useR_NAME
-        }
-        item.ID_EMPLOY = select.ID;
-        item.DEPART = select.DEPART;
-        comboBox.onClear = () => {
-          item.ID_EMPLOY = null;
-          item.DEPART = null;
-        }
-      }
-      let Place = await this._tools.getAsync("Place") as Array<any>
-      this.Columns[4].apiPathDataSource = "Place";
-      this.Columns[4].columnComboBoxDataSource = Place;
-      this.Columns[4].columnComboBoxOptionLabel = "NAME";
-      this.Columns[4].columnComboBoxOptionValue = "ID";
-      this.Columns[4].columnComboBoxPlaceholder = "حدد مكان التوفيع"
-      this.Columns[4].columnComboBoxChange = (select, item, comboBox) => {
+     
+      let Place = await this._tools.Network.getAsync("Place") as Array<any>
+      this.Columns[3].apiPathDataSource = "Place";
+      this.Columns[3].columnComboBoxDataSource = Place;
+      this.Columns[3].columnComboBoxOptionLabel = "NAME";
+      this.Columns[3].columnComboBoxOptionValue = "ID";
+      this.Columns[3].columnComboBoxPlaceholder = "حدد مكان التوفيع"
+      this.Columns[3].columnComboBoxChange = (select, item, comboBox) => {
         item.ID_PLACE = select.ID;
         comboBox.onClear = () => {
           item.ID_PLACE = null;
         }
       }
-      this.Year = this._tools.GetNumberOfYear();
-      this.selectedMonth = this._tools.GetNumberOfMonth();
+      this.Year = this._tools.DateTime.GetNumberOfYear();
+      this.selectedMonth = this._tools.DateTime.GetNumberOfMonth();
       grid.Columns = this.Columns;
       grid.dataSource = this.AddData;
       grid.onSaveChanges = async (data) => {
-        let response = await this._tools.postAsync("ForgatInOut/AddMore", this.AddData);
+        let response = await this._tools.Network.postAsync("ForgatInOut/AddMore", this.AddData);
         if (response != null) {
           if (Array.isArray(response)) {
             this.AddData = [];
@@ -167,18 +136,18 @@ export class ForgatInOutComponent implements OnInit {
         }
       }
       grid.onDeleteItem = async (item) => {
-        let response = await this._tools.deleteAsync("ForgatInOut?Id=" + item.ID)
+        let response = await this._tools.Network.deleteAsync("ForgatInOut?Id=" + item.ID)
         if (response == true) {
           this._tools.Toaster.showInfo("تم الحذف بنجاح");
           grid.onUpdate(grid.dt);
         }
       }
-      let data = await this._tools.getAsync("ForgatInOut?filter=" + this.filter) as Array<any>;
+      let data = await this._tools.Network.getAsync("ForgatInOut?filter=" + this.filter) as Array<any>;
       if (data) {
         data.forEach(item => {
-          item.INshow = item.IN != null ? this._tools.EditFormateData(item.IN, "dd-MM-yyyy HH:mm:ss") : "";
-          item.OUTshow = item.OUT != null ? this._tools.EditFormateData(item.OUT, "dd-MM-yyyy HH:mm:ss") : "";
-          item.DATE_TIMEShow = item.DATE_TIME != null ? this._tools.EditFormateData(item.DATE_TIME, "dd-MM-yyyy HH:mm:ss") : "";
+          item.INshow = item.IN != null ? this._tools.DateTime.EditFormateData(item.IN, "HH:mm:ss YYYY-MM-DD") : "";
+          item.OUTshow = item.OUT != null ? this._tools.DateTime.EditFormateData(item.OUT, "HH:mm:ss YYYY-MM-DD") : "";
+          item.DATE_TIMEShow = item.DATE_TIME != null ? this._tools.DateTime.EditFormateData(item.DATE_TIME, "HH:mm:ss YYYY-MM-DD") : "";
         })
         grid.dataSource = data;
       }

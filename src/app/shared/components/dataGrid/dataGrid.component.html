@@ -4,40 +4,38 @@
         [scrollHeight]="scrollHeight" [rowsPerPageOptions]="rowsPerPageOptions" tableStyleClass="p-datatable-gridlines"
         [globalFilterFields]="globalFilterFields" [showGridlines]="true" [reorderableColumns]="true"
         [(selection)]="selectedItems" (selectionChange)="onSelectAllChange($event)"
-        (onRowUnselect)="onUnSelectRow($event)" (onRowSelect)="onSelectRow($event)" [columns]="selectedColumns"
+        (onRowUnselect)="onUnSelectRow($event);onGridAction({EVENT:$event,itemEdit:$event,ActonType:'UN_SELECT',COLUMN:null});" (onRowSelect)="onSelectRow($event);onGridAction({EVENT:$event,itemEdit:$event,ActonType:'SELECT',COLUMN:null})" [columns]="selectedColumns"
         [reorderableColumns]="true" [selectionMode]="selectionMode" [metaKeySelection]="singleSelectedMode"
         paginatorDropdownAppendTo="body">
         <ng-template #caption>
             <div *ngIf="AllowHeaderTemplate">
-                <div class="my-1">
+                <div>
                     <ng-content select="[header]"></ng-content>
                     <ng-content select="[btn]"></ng-content>
                 </div>
                 <div class="flex py-1">
-                    <app-multiselect class="d-inline-block my-2" [IsInGridMode]="false" *ngIf="canSelectedSomeColumns && Columns.length>0"
-                        [style]="{'width': '250px'}" display="comma" placeholder="اختر الأعمدة" [dataSource]="Columns"
-                        [(dataSelected)]="selectedColumns" optionLabel="header" optionValue="name"
-                        selectedItemsLabel="تم تحديد {0} أعمدة"></app-multiselect>
                     <p-iconfield *ngIf="AllowSearch" iconPosition="left" class="ml-auto">
-                        <p-inputicon>
-                            <i class="pi pi-search"></i>
-                        </p-inputicon>
-                        <input class="mx-1" style="width: unset;" pInputText type="text"
+                        <app-multiselect class="d-inline-block mx-2" [IsInGridMode]="false" *ngIf="canSelectedSomeColumns && Columns.length>0"
+                            [style]="{'width': '250px'}" display="comma" placeholder="اختر الأعمدة" [dataSource]="Columns"
+                            [(dataSelected)]="selectedColumns" optionLabel="header" optionValue="name"
+                            selectedItemsLabel="تم تحديد {0} أعمدة"></app-multiselect>
+                        <input class="mx-1" style="width: unset;"  pInputText type="text"
                             (input)="globalFilter(dt,$event)" placeholder="بحث" />
                         <p-button label="" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(dt)" />
+                  
                     </p-iconfield>
                 </div>
                 <ng-content select="[body]"></ng-content>
                 <div class="my-2">
-                    <p-button *ngIf="AllowUpdate" label="تحديث" severity="info" class=" font-bold mx-1"
+                    <p-button *ngIf="AllowUpdate" [variant]="'text'" [raised]="true" [size]="'small'" label="تحديث" severity="info" class=" font-bold mx-1"
                         icon="pi pi-sync" (click)="onUpdate(dt)" />
-                    <p-button *ngIf="AllowAdd" label="اضافة" severity="success" class=" font-bold mx-1"
+                    <p-button *ngIf="AllowAdd" [variant]="'text'" [raised]="true" [size]="'small'" label="اضافة" severity="success" class=" font-bold mx-1"
                         icon="pi pi-plus" (click)="AddNew(dt)" />
-                    <p-button *ngIf="AllowSave" btn class="px-1" severity="warn" label="حفظ" icon="pi pi-save"
+                    <p-button *ngIf="AllowSave" [variant]="'text'" [raised]="true" [size]="'small'" btn class="px-1" severity="warn" label="حفظ" icon="pi pi-save"
                         (click)="save()"></p-button>
-                    <p-button *ngIf="AllowDeleteSelected" severity="danger" label="حذف المحدد" class=" font-bold mx-1"
+                    <p-button *ngIf="AllowDeleteSelected" [variant]="'text'" [raised]="true" [size]="'small'" severity="danger" label="حذف المحدد" class=" font-bold mx-1"
                         icon="pi pi-trash" (click)="DeleteSelectedData()" />
-                    <p-button *ngIf="AllowExportExcel" label="تصدير" class="font-bold mx-1" icon="pi pi-file-excel"
+                    <p-button *ngIf="AllowExportExcel" [variant]="'text'" [raised]="true" [size]="'small'" label="تصدير" class="font-bold mx-1" icon="pi pi-file-excel"
                         (click)="exportExcel()" />
                     <ng-content select="[MORE_BUTTON]"></ng-content>
                 </div>
@@ -50,10 +48,10 @@
                 <th *ngIf="IsHasChild" style="width: 5rem"></th>
                 @for (column of columns; track $index) {
                 <th class="text-center " appResizableColumn [style]="'min-width:'+column.width+'px'">
-                    <div class="d-flex justify-content-center align-items-center px-2">
-                        <div [pSortableColumn]="column.name" class="p-3 text-center">
-                            <p-sortIcon [field]="column.name" />
-                            {{ column.header }}
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div [pSortableColumn]="column.name" class="d-flex justify-content-center align-items-center ">
+                            <div class="headerTr">{{ column.header }}</div>
+                            <div><p-sortIcon [field]="column.name" /></div>
                         </div>
                         <div class="me-auto">
                             @if (column.filterType=='date') {
@@ -199,11 +197,11 @@
                 <td class="text-center fixed-column px-4" *ngIf="AllowCurdOperation">
                     <ng-container  [ngTemplateOutlet]="templateBtn"
                         [ngTemplateOutletContext]="{ $implicit:item ,Grid:this}"></ng-container>
-                    <p-button severity="danger" *ngIf="AllowDelete" label="حذف" icon="pi pi-trash"
+                    <p-button severity="danger" [variant]="'text'" [raised]="true" [size]="'small'" *ngIf="AllowDelete" label="حذف" icon="pi pi-trash"
                         (click)="onDeleteItem(item)"></p-button>
-                    <p-button class="mx-2" severity="success" *ngIf="AllowEdit" label="تعديل" icon="pi pi-pen-to-square"
+                    <p-button class="mx-2" severity="success" [variant]="'text'" [raised]="true" [size]="'small'" *ngIf="AllowEdit" label="تعديل" icon="pi pi-pen-to-square"
                         (click)="onEditItem(item)"></p-button>
-                    <p-button class="mx-2 " severity="success" *ngIf="AddInherit" label="جديد" icon="pi pi-plus"
+                    <p-button class="mx-2 " severity="success" [variant]="'text'" [raised]="true" [size]="'small'" *ngIf="AddInherit" label="جديد" icon="pi pi-plus"
                         (click)="onAddInert(item)"></p-button>
                 </td>
             </tr>

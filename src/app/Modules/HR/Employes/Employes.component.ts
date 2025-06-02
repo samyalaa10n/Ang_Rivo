@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { GetAddEditDeleteComponent } from '../../../shared/pages/get-add-edit-delete/get-add-edit-delete.component';
 import { Column } from '../../../shared/components/dataGrid/Column';
-import { Tools } from '../../../shared/service/Tools';
+import { Tools } from '../../../shared/service/Tools.service';
 import { NgIf } from '@angular/common';
 import { StepperComponent } from "../../../shared/components/stepper/stepper.component";
 import { StepperConfiguration } from '../../../shared/components/stepper/stepper.configuration';
@@ -95,15 +95,15 @@ export class EmployesComponent implements OnInit {
     this.Columns.push(new Column('ID', "رقم النظام"))
     this.Columns.push(new Column('CODE', "كود الموظف"))
     this.Columns.push(new Column('NAME', "أسم الموظف"))
-    this.Places = await this._tools.getAsync("Place") as Array<any>
-    this.Managements = await this._tools.getAsync("Mangement") as Array<any>
-    this.Departs = await this._tools.getAsync("Depart") as Array<any>
+    this.Places = await this._tools.Network.getAsync("Place") as Array<any>
+    this.Managements = await this._tools.Network.getAsync("Mangement") as Array<any>
+    this.Departs = await this._tools.Network.getAsync("Depart") as Array<any>
     this._ActiveRouter.queryParamMap.subscribe({
       next: async (PRAMS) => {
         if (PRAMS.get("Type")?.includes("Edit_Item")) {
           this.ModePage = "Edit"
           if (PRAMS.get("Type")?.split("=")[1]) {
-            var response = await this._tools.getAsync(`Employee/GetById?id=${PRAMS.get("Type")?.split("=")[1]}`)
+            var response = await this._tools.Network.getAsync(`Employee/GetById?id=${PRAMS.get("Type")?.split("=")[1]}`)
             if (response) {
               if (Array.isArray(response)) {
                 this.employee = response[0]
@@ -115,7 +115,7 @@ export class EmployesComponent implements OnInit {
         else if (PRAMS.get("Type")?.includes("Add_Inherit")) {
           this.ModePage = "Add Inherit"
           if (PRAMS.get("Type")?.split("=")[1]) {
-            var response = await this._tools.getAsync(`Employee/GetById?id=${PRAMS.get("Type")?.split("=")[1]}`)
+            var response = await this._tools.Network.getAsync(`Employee/GetById?id=${PRAMS.get("Type")?.split("=")[1]}`)
             if (response) {
               if (Array.isArray(response)) {
                 this.employee = response[0];
@@ -136,7 +136,7 @@ export class EmployesComponent implements OnInit {
           this.ModePage = "EditMore"
           // this.StepperConfig.Steps[0].select();
           let ListId = PRAMS.get("Type")?.split("=")[1].split(",");
-          var response = await this._tools.getAsync(`Employee`)
+          var response = await this._tools.Network.getAsync(`Employee`)
           if (Array.isArray(response) && ListId != undefined) {
             this.selectedEmploys = response.filter(x => ListId.includes(`${x.ID}`))
             this.Employs = response.filter(x => ListId.includes(`${x.ID}`))
@@ -150,7 +150,7 @@ export class EmployesComponent implements OnInit {
     })
     this.StepperConfig.onSave = async () => {
       if (this.ModePage != "EditMore") {
-        var response = await this._tools.postAsync("Employee/AddMore", [this.employee]);
+        var response = await this._tools.Network.postAsync("Employee/AddMore", [this.employee]);
         if (response) {
           this._tools.Toaster.showSuccess("تم الحفظ بنجاح")
           switch (this.ModePage) {
@@ -188,7 +188,7 @@ export class EmployesComponent implements OnInit {
           item.OPENING_BALANCE_FOR_REGULAR = this.employee.OPENING_BALANCE_FOR_REGULAR != null ? this.employee.OPENING_BALANCE_FOR_REGULAR : item.OPENING_BALANCE_FOR_REGULAR;
         })
       }
-      var response = await this._tools.putAsync("Employee/EditMore", this.selectedEmploys);
+      var response = await this._tools.Network.putAsync("Employee/EditMore", this.selectedEmploys);
       if (response) {
         this._tools.Toaster.showSuccess("تم الحفظ بنجاح")
         this._tools._router.navigate(["Main", "Employs"])
@@ -282,7 +282,7 @@ export class EmployesComponent implements OnInit {
         }
       }
     }
-    else if (event.code == "Backspace" && this._tools.isEmpty((event.target as any).value)) {
+    else if (event.code == "Backspace" && this._tools.Validation.isEmpty((event.target as any).value)) {
       let next_el = this.el.nativeElement.querySelector(`#n_${index - 1}`) as HTMLElement
       if (next_el) {
         next_el.focus();
@@ -303,11 +303,11 @@ export class EmployesComponent implements OnInit {
   }
   async filterManagement() {
     this.employee.POSATION_ID = null;
-    this.Managements = await this._tools.getAsync("Mangement") as Array<any>
+    this.Managements = await this._tools.Network.getAsync("Mangement") as Array<any>
     this.Managements = this.Managements.filter(z => z.DEPART_ID == this.employee.DEPART_ID)
   }
   Validation_Main_EmployData(): boolean {
-    if (this._tools.isEmpty(this.employee.NAME) || this._tools.isEmpty(this.First_Name) || this._tools.isEmpty(this.second_Name) || this._tools.isEmpty(this.thirty_Name) || this._tools.isEmpty(this.forty_Name)) {
+    if (this._tools.Validation.isEmpty(this.employee.NAME) || this._tools.Validation.isEmpty(this.First_Name) || this._tools.Validation.isEmpty(this.second_Name) || this._tools.Validation.isEmpty(this.thirty_Name) || this._tools.Validation.isEmpty(this.forty_Name)) {
       this._tools.Toaster.showError("يجب ادخال اسم الموظف")
       return false;
     }
@@ -315,25 +315,25 @@ export class EmployesComponent implements OnInit {
       this._tools.Toaster.showError("يجب ادخال الأسم رباعي")
       return false;
     }
-    if (this._tools.isEmpty(this.employee.TYPE)) {
+    if (this._tools.Validation.isEmpty(this.employee.TYPE)) {
       this._tools.Toaster.showError("يجب ادخال نوع الموظف")
       return false;
     }
-    if (this._tools.isEmpty(this.employee.DATE_OF_BIRTH)) {
+    if (this._tools.Validation.isEmpty(this.employee.DATE_OF_BIRTH)) {
       this._tools.Toaster.showError("يجب ادخال تاريخ الميلاد للموظف")
       return false;
     }
 
-    if (this._tools.isEmpty(this.employee.MARITAL_STATUS)) {
+    if (this._tools.Validation.isEmpty(this.employee.MARITAL_STATUS)) {
       this._tools.Toaster.showError("يجب ادخال الحالة الاجتماعية للموظف")
       return false;
     }
 
-    if (this._tools.isEmpty(this.employee.NATIONALITY)) {
+    if (this._tools.Validation.isEmpty(this.employee.NATIONALITY)) {
       this._tools.Toaster.showError("يجب ادخال الجنسية للموظف")
       return false;
     }
-    if (this._tools.isNumbers(this.employee.NATIONAL_ID)) {
+    if (this._tools.Validation.isNumbers(this.employee.NATIONAL_ID)) {
       this._tools.Toaster.showError("يجب ادخال رقم الرقم القومي بشكل صحيح")
       return false;
     }
@@ -341,23 +341,23 @@ export class EmployesComponent implements OnInit {
       this._tools.Toaster.showError("يجب ادخال رقم الرقم القومي بشكل صحيح")
       return false;
     }
-    if (this._tools.isEmpty(this.employee.RELIGION)) {
+    if (this._tools.Validation.isEmpty(this.employee.RELIGION)) {
       this._tools.Toaster.showError("يجب ادخال الديانة للموظف")
       return false;
     }
-    if (this._tools.isEmpty(this.employee.CONSCRIPTION_POSITION)) {
+    if (this._tools.Validation.isEmpty(this.employee.CONSCRIPTION_POSITION)) {
       this._tools.Toaster.showError("يجب ادخال موقف التجنيد للموظف")
       return false;
     }
-    if (this._tools.isEmpty(this.employee.QUALIFICATION_DEGREE)) {
+    if (this._tools.Validation.isEmpty(this.employee.QUALIFICATION_DEGREE)) {
       this._tools.Toaster.showError("يجب ادخال المؤهل العلمي للموظف")
       return false;
     }
-    if (this._tools.isEmpty(this.employee.NAME_OF_ACADEMIC_QUALIFICATION)) {
+    if (this._tools.Validation.isEmpty(this.employee.NAME_OF_ACADEMIC_QUALIFICATION)) {
       this._tools.Toaster.showError("يجب ادخال اسم المؤهل العلمي للموظف")
       return false;
     }
-    if (this._tools.isNumbers(this.employee.PHONE_NUMBER)) {
+    if (this._tools.Validation.isNumbers(this.employee.PHONE_NUMBER)) {
       this._tools.Toaster.showError("يجب ادخال رقم الهاتف للموظف بشكل صحيح")
       return false;
     }
@@ -365,11 +365,11 @@ export class EmployesComponent implements OnInit {
       this._tools.Toaster.showError("يجب ادخال رقم الهاتف للموظف بشكل صحيح")
       return false;
     }
-    if (this.employee.EMAIL != null && this._tools.isEmail(this.employee.EMAIL)) {
+    if (this.employee.EMAIL != null && this._tools.Validation.isEmail(this.employee.EMAIL)) {
       this._tools.Toaster.showError("يجب ادخال البريد الالكتروني للموظف بشكل صحيح")
       return false;
     }
-    if (this._tools.isEmpty(this.employee.ADDRESS)) {
+    if (this._tools.Validation.isEmpty(this.employee.ADDRESS)) {
       this._tools.Toaster.showError("يجب ادخال العنوان للموظف")
       return false;
     }
@@ -377,39 +377,39 @@ export class EmployesComponent implements OnInit {
   }
 
   Validation_Functional_Data(): boolean {
-    if (this._tools.isEmpty(this.employee.CODE)) {
+    if (this._tools.Validation.isEmpty(this.employee.CODE)) {
       this._tools.Toaster.showError("يجب ادخال الرقم الوظيفي للموظف")
       return false
     }
-    if (this._tools.isEmpty(this.employee.DEPART_ID)) {
+    if (this._tools.Validation.isEmpty(this.employee.DEPART_ID)) {
       this._tools.Toaster.showError(`يجب ادخال القسم للموظف`)
       return false
     }
-    if (this._tools.isEmpty(this.employee.TYPE_OF_CONTRACT)) {
+    if (this._tools.Validation.isEmpty(this.employee.TYPE_OF_CONTRACT)) {
       this._tools.Toaster.showError("يجب ادخال نوع التوظيف للموظف")
       return false
     }
-    if (this._tools.isEmpty(this.employee.SUITS)) {
+    if (this._tools.Validation.isEmpty(this.employee.SUITS)) {
       this._tools.Toaster.showError("يجب ادخال البدلات للموظف")
       return false
     }
-    if (this._tools.isEmpty(this.employee.SALARY)) {
+    if (this._tools.Validation.isEmpty(this.employee.SALARY)) {
       this._tools.Toaster.showError("يجب ادخال الراتب للموظف")
       return false
     }
-    if (this._tools.isEmpty(this.employee.POSATION_ID)) {
+    if (this._tools.Validation.isEmpty(this.employee.POSATION_ID)) {
       this._tools.Toaster.showError("يجب ادخال الوظيفة للموظف")
       return false
     }
-    if (this._tools.isEmpty(this.employee.DATE_OF_APPOINTMENT)) {
+    if (this._tools.Validation.isEmpty(this.employee.DATE_OF_APPOINTMENT)) {
       this._tools.Toaster.showError("يجب ادخال الوظيفة للموظف")
       return false
     }
-    if (this._tools.isEmpty(this.employee.ASSIGNMENT_MODE)) {
+    if (this._tools.Validation.isEmpty(this.employee.ASSIGNMENT_MODE)) {
       this._tools.Toaster.showError("يجب ادخال وسيلة التوظيف للموظف")
       return false
     }
-    if (this.employee.ASSIGNMENT_MODE != "بالخدمة" && this._tools.isEmpty(this.employee.APPOINTMENT_END_DATE)) {
+    if (this.employee.ASSIGNMENT_MODE != "بالخدمة" && this._tools.Validation.isEmpty(this.employee.APPOINTMENT_END_DATE)) {
       this._tools.Toaster.showError("يجب ادخال تاريخ انتهاء التوظيف للموظف")
       return false
     }
@@ -417,27 +417,27 @@ export class EmployesComponent implements OnInit {
   }
   Validation_Insurance_Data(): boolean {
     if (this.employee.TYPE_OF_CONTRACT == "دائم") {
-      if (this._tools.isEmpty(this.employee.INSURANCE_NUMBER)) {
+      if (this._tools.Validation.isEmpty(this.employee.INSURANCE_NUMBER)) {
         this._tools.Toaster.showError("يجب ادخال رقم التأمين للموظف")
         return false;
       }
-      if (this._tools.isEmpty(this.employee.INSURANCE_COMPANY)) {
+      if (this._tools.Validation.isEmpty(this.employee.INSURANCE_COMPANY)) {
         this._tools.Toaster.showError("يجب ادخال شركة التأمين للموظف")
         return false;
       }
-      if (this._tools.isEmpty(this.employee.INSURANCE_FILE_NUMBER)) {
+      if (this._tools.Validation.isEmpty(this.employee.INSURANCE_FILE_NUMBER)) {
         this._tools.Toaster.showError("يجب ادخال رقم الملف للتأمين للموظف")
         return false;
       }
-      if (this._tools.isEmpty(this.employee.INSURANCE_SUBSCRIPTION_DATE)) {
+      if (this._tools.Validation.isEmpty(this.employee.INSURANCE_SUBSCRIPTION_DATE)) {
         this._tools.Toaster.showError("يجب ادخال تاريخ بداء الاشتراك في التأمين")
         return false;
       }
-      if (this._tools.isEmpty(this.employee.INSURANCE_AMOUNT_PER_PERSON)) {
+      if (this._tools.Validation.isEmpty(this.employee.INSURANCE_AMOUNT_PER_PERSON)) {
         this._tools.Toaster.showError("يجب ادخال مبلغ التأمين للموظف")
         return false;
       }
-      if (this._tools.isEmpty(this.employee.COMPANY_INSURANCE_AMOUNT)) {
+      if (this._tools.Validation.isEmpty(this.employee.COMPANY_INSURANCE_AMOUNT)) {
         this._tools.Toaster.showError("يجب ادخال مبلغ التأمين للشركة للموظف")
         return false;
       }
@@ -452,19 +452,19 @@ export class EmployesComponent implements OnInit {
       this._tools.Toaster.showError("يجب ادخال المكان المقيد للموظف")
       return false;
     }
-    if (this._tools.isEmpty(this.employee.METHOD_OF_TRANSITION)) {
+    if (this._tools.Validation.isEmpty(this.employee.METHOD_OF_TRANSITION)) {
       this._tools.Toaster.showError("يجب ادخال طريقة الانتقال للموظف")
       return false;
     }
-    if (this._tools.isEmpty(this.employee.EMPLOYEE_MEAL)) {
+    if (this._tools.Validation.isEmpty(this.employee.EMPLOYEE_MEAL)) {
       this._tools.Toaster.showError("يجب ادخال الوجبة الموظف للموظف")
       return false;
     }
-    if (this.employee.METHOD_OF_TRANSITION == "باص" && this._tools.isEmpty(this.employee.BUS_NAME)) {
+    if (this.employee.METHOD_OF_TRANSITION == "باص" && this._tools.Validation.isEmpty(this.employee.BUS_NAME)) {
       this._tools.Toaster.showError("يجب ادخال اسم الباص للموظف")
       return false;
     }
-    if (this.employee.TYPE_OF_CONTRACT == 'دائم' && this._tools.isEmpty(this.employee.OPENING_BALANCE_FOR_REGULAR)) {
+    if (this.employee.TYPE_OF_CONTRACT == 'دائم' && this._tools.Validation.isEmpty(this.employee.OPENING_BALANCE_FOR_REGULAR)) {
       this._tools.Toaster.showError("يجب ادخال الرصيد الافتتاحي للموظف")
       return false;
     }

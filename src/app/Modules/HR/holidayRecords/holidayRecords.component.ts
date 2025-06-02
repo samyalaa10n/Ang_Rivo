@@ -3,7 +3,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { GetAddEditDeleteComponent } from "../../../shared/pages/get-add-edit-delete/get-add-edit-delete.component";
 import { NgIf } from '@angular/common';
-import { Tools } from '../../../shared/service/Tools';
+import { Tools } from '../../../shared/service/Tools.service';
 import { Column } from '../../../shared/components/dataGrid/Column';
 import { InputLabelComponent } from "../../../shared/pages/TextLabel/InputLabel.component";
 import { ComboBoxComponent } from "../../../shared/components/comboBox/comboBox.component";
@@ -29,26 +29,7 @@ import { DataGridComponent } from "../../../shared/components/dataGrid/dataGrid.
   ]
 })
 export class HolidayRecodesComponent implements OnInit {
-  MonthsDataSource = [
-    { name: "1-يناير", Id: 1 },
-    { name: "2-فبراير", Id: 2 },
-    { name: "3-مارس", Id: 3 },
-    { name: "4-إبريل", Id: 4 },
-    { name: "5-مايو", Id: 5 },
-    { name: "6-ينيو", Id: 6 },
-    { name: "7-يوليو", Id: 7 },
-    { name: "8-اغسطس", Id: 8 },
-    { name: "9-سبتمبر", Id: 9 },
-    { name: "10-أكتوبر", Id: 10 },
-    { name: "11-نوفمبر", Id: 11 },
-    { name: "12-ديسمبر", Id: 12 }
-  ]
-  TYPES_DataSource = [
-    { name: "اعتيادي", Id: 1 },
-    { name: "عارضة", Id: 2 },
-    { name: "بالخصم", Id: 3 },
-    { name: "اخري", Id: 4 },
-  ]
+  
   @ViewChild("curdOperation") Grid!: DataGridComponent
   AddData: Array<any> = [];
   Year: number = 0;
@@ -56,9 +37,9 @@ export class HolidayRecodesComponent implements OnInit {
   selectedMonth: any = null;
   Columns: Array<Column> = [];
   StepperConfig: StepperConfiguration = new StepperConfiguration(this);
-  constructor(private _tools: Tools) {
-    this.Year = this._tools.GetNumberOfYear();
-    this.selectedMonth = this._tools.GetNumberOfMonth();
+  constructor(public _tools: Tools) {
+    this.Year = this._tools.DateTime.GetNumberOfYear();
+    this.selectedMonth = this._tools.DateTime.GetNumberOfMonth();
     this.EditFilterText()
   }
 
@@ -71,20 +52,18 @@ export class HolidayRecodesComponent implements OnInit {
     if (AddMode) {
       this.Columns = [];
       this.Columns.push(new Column("ID", "رقم النظام"))
-      this.Columns.push(new Column("ID_EMPLOY", "كود الموظف", "comboBox"))
-      this.Columns.push(new Column("ID_EMPLOY", "اسم الموظف", "comboBox"))
+      this.Columns.push(new Column("ID_EMPLOY", "الموظف", "comboBox"))
       this.Columns.push(new Column("DEPART", "القسم"))
       this.Columns.push(new Column("START", "تبداء من", "date"))
       this.Columns.push(new Column("END", "تنتهي في", "date"))
       this.Columns.push(new Column("TYPE", "نوع الأجازة", "comboBox"))
-      this.Columns.push(new Column("ID_EMPLOY_REPLACE", "كود الموظف", "comboBox"))
-      this.Columns.push(new Column("ID_EMPLOY_REPLACE", "اسم الموظف", "comboBox"))
+      this.Columns.push(new Column("ID_EMPLOY_REPLACE", "الموظف البديل", "comboBox"))
       this.Columns.push(new Column("DEPART_REP", "القسم"))
       this.Columns.push(new Column("NOTS", "الملاحطات","textarea"))
       this.Columns.push(new Column("RESPONSIBLY", "المدير المسؤل", "text"))
       this.Columns.push(new Column("USER_RECORD_NAME", "حساب مدخل البيان"))
-      let suggestionsData = await this._tools.getAsync("Employee/Suggestions_Code_and_Name") as Array<any>
-      this.Columns[1].apiPathDataSource = "Employee/Suggestions_Code_and_Name";
+      let suggestionsData = await this._tools.Network.getAsync("Employee/Suggestions_Code_Concat_Name") as Array<any>    
+      this.Columns[1].apiPathDataSource = "Employee/Suggestions_Code_Concat_Name";
       this.Columns[1].columnComboBoxDataSource = suggestionsData;
       this.Columns[1].columnComboBoxOptionLabel = "CODE";
       this.Columns[1].columnComboBoxOptionValue = "ID";
@@ -94,45 +73,30 @@ export class HolidayRecodesComponent implements OnInit {
         if (userData != null) {
           item.USER_RECORD_NAME = JSON.parse(userData).useR_NAME
         }
-        item.ID_EMPLOY = select.ID;
+        item.ID_EMPLOY = select.ID;        
+        this.Columns[6].columnComboBoxDataSource =suggestionsData.filter(x=>x.DEPART_ID==select.DEPART_ID && select.DEPART_ID!=null && item.ID_EMPLOY!=x.ID)
         item.DEPART = select.DEPART;
         comboBox.onClear = () => {
           item.ID_EMPLOY = null;
           item.DEPART = null;
+          this.Columns[6].columnComboBoxDataSource=[];
         }
       }
 
-      this.Columns[2].apiPathDataSource = "Employee/Suggestions_Code_and_Name";
-      this.Columns[2].columnComboBoxDataSource = suggestionsData;
-      this.Columns[2].columnComboBoxOptionLabel = "NAME";
-      this.Columns[2].columnComboBoxOptionValue = "ID";
-      this.Columns[2].columnComboBoxPlaceholder = "حدد اسم الموظف"
-      this.Columns[2].columnComboBoxChange = (select, item, comboBox) => {
-        var userData = localStorage.getItem("logInfo")
-        if (userData != null) {
-          item.USER_RECORD_NAME = JSON.parse(userData).useR_NAME
-        }
-        item.ID_EMPLOY = select.ID;
-        item.DEPART = select.DEPART;
-        comboBox.onClear = () => {
-          item.ID_EMPLOY = null;
-          item.DEPART = null;
-        }
-      }
+      
 
 
-      this.Columns[6].columnComboBoxDataSource = this.TYPES_DataSource;
-      this.Columns[6].columnComboBoxOptionLabel = "name";
-      this.Columns[6].columnComboBoxOptionValue = "name";
-      this.Columns[6].columnComboBoxPlaceholder = "حدد نوع الاجازة"
+      this.Columns[5].columnComboBoxDataSource = this._tools.TYPES_DataSource;
+      this.Columns[5].columnComboBoxOptionLabel = "name";
+      this.Columns[5].columnComboBoxOptionValue = "name";
+      this.Columns[5].columnComboBoxPlaceholder = "حدد نوع الاجازة"
 
 
-      this.Columns[7].apiPathDataSource = "Employee/Suggestions_Code_and_Name";
-      this.Columns[7].columnComboBoxDataSource = suggestionsData;
-      this.Columns[7].columnComboBoxOptionLabel = "CODE";
-      this.Columns[7].columnComboBoxOptionValue = "ID";
-      this.Columns[7].columnComboBoxPlaceholder = "حدد كود الموظف"
-      this.Columns[7].columnComboBoxChange = (select, item, comboBox) => {
+      
+      this.Columns[6].columnComboBoxOptionLabel = "CODE";
+      this.Columns[6].columnComboBoxOptionValue = "ID";
+      this.Columns[6].columnComboBoxPlaceholder = "حدد كود الموظف"
+      this.Columns[6].columnComboBoxChange = (select, item, comboBox) => {
         var userData = localStorage.getItem("logInfo")
         if (userData != null) {
           item.USER_RECORD_NAME = JSON.parse(userData).useR_NAME
@@ -144,30 +108,14 @@ export class HolidayRecodesComponent implements OnInit {
           item.DEPART_REP = null;
         }
       }
-      this.Columns[8].apiPathDataSource = "Employee/Suggestions_Code_and_Name";
-      this.Columns[8].columnComboBoxDataSource = suggestionsData;
-      this.Columns[8].columnComboBoxOptionLabel = "NAME";
-      this.Columns[8].columnComboBoxOptionValue = "ID";
-      this.Columns[8].columnComboBoxPlaceholder = "حدد اسم الموظف"
-      this.Columns[8].columnComboBoxChange = (select, item, comboBox) => {
-        var userData = localStorage.getItem("logInfo")
-        if (userData != null) {
-          item.USER_RECORD_NAME = JSON.parse(userData).useR_NAME
-        }
-        item.ID_EMPLOY_REPLACE = select.ID;
-        item.DEPART_REP = select.DEPART;
-        comboBox.onClear = () => {
-          item.ID_EMPLOY_REPLACE = null;
-          item.DEPART_REP = null;
-        }
-      }
+     
 
-      this.Year = this._tools.GetNumberOfYear();
-      this.selectedMonth = this._tools.GetNumberOfMonth();
+      this.Year = this._tools.DateTime.GetNumberOfYear();
+      this.selectedMonth = this._tools.DateTime.GetNumberOfMonth();
       grid.Columns = this.Columns;
       grid.dataSource = this.AddData;
       grid.onSaveChanges = async (data) => {
-        let response = await this._tools.postAsync("Holiday/AddMore", this.AddData);
+        let response = await this._tools.Network.postAsync("Holiday/AddMore", this.AddData);
         if (response != null) {
           if (Array.isArray(response)) {
             this.AddData = [];
@@ -212,19 +160,19 @@ export class HolidayRecodesComponent implements OnInit {
         }
       }
       grid.onDeleteItem = async (item) => {
-        let response = await this._tools.deleteAsync("Holiday?Id=" + item.ID)
+        let response = await this._tools.Network.deleteAsync("Holiday?Id=" + item.ID)
         if (response == true) {
           this._tools.Toaster.showInfo("تم الحذف بنجاح");
           grid.onUpdate(grid.dt);
         }
       }
-      let data = await this._tools.getAsync("Holiday?filter=" + this.filter) as Array<any>;
+      let data = await this._tools.Network.getAsync("Holiday?filter=" + this.filter) as Array<any>;
       if (data) {
         console.log(data)
         data.forEach(item => {
-          item.STARTshow = item.START != null ? this._tools.EditFormateData(item.START, "dd-MM-yyyy") : "";
-          item.ENDshow = item.END != null ? this._tools.EditFormateData(item.END, "dd-MM-yyyy") : "";
-          item.DATE_TIMEShow = item.DATE_TIME != null ? this._tools.EditFormateData(item.DATE_TIME, "dd-MM-yyyy HH:mm:ss") : "";
+          item.STARTshow = item.START != null ? this._tools.DateTime.EditFormateData(item.START, "YYYY-MM-DD") : "";
+          item.ENDshow = item.END != null ? this._tools.DateTime.EditFormateData(item.END, "YYYY-MM-DD") : "";
+          item.DATE_TIMEShow = item.DATE_TIME != null ? this._tools.DateTime.EditFormateData(item.DATE_TIME, "HH:mm:ss YYYY-MM-DD") : "";
         })
         grid.dataSource = data;
       }

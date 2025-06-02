@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './shared/Gurd/auth.guard';
+import { MainComponent } from './Modules/LayOut/Main/Main.component';
+import { LoginComponent } from './Modules/Admin/Login/Login.component';
 
 
 
@@ -8,14 +10,14 @@ export const routes: Routes = [
   {
     path: 'Login',
     title: 'تسجيل الدخول',
-    loadComponent: () => import('./Modules/Admin/Login/Login.component').then(m => m.LoginComponent)
+    component: LoginComponent
   },
   {
     path: 'Main',
     title: 'الرئيسية',
     canActivate: [authGuard],
     canActivateChild: [authGuard],
-    loadComponent: () => import('./Modules/LayOut/Main/Main.component').then(m => m.MainComponent),
+    component: MainComponent,
     children: [
       {
         path: 'Home',
@@ -123,6 +125,12 @@ export const routes: Routes = [
         path: 'shifts',
         title: 'ورديات العمل',
         loadComponent: () => import('./Modules/HR/Shifts/Shifts.component').then(m => m.ShiftsComponent)
+      }
+      ,
+      {
+        path: 'AttendanceCalculator',
+        title: 'حساب الساعات',
+        loadComponent: () => import('./Modules/HR/AttendanceCalculator/AttendanceCalculator.component').then(m => m.AttendanceCalculatorComponent)
       }
     ]
   },

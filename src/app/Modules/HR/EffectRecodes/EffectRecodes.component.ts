@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataGridComponent } from "../../../shared/components/dataGrid/dataGrid.component";
-import { Tools } from '../../../shared/service/Tools';
+import { Tools } from '../../../shared/service/Tools.service';
 import { Column } from '../../../shared/components/dataGrid/Column';
 import { ComboBoxComponent } from "../../../shared/components/comboBox/comboBox.component";
 import { DateTimeComponent } from "../../../shared/components/DateTime/DateTime.component";
@@ -22,8 +22,8 @@ export class EffectRecodesComponent implements OnInit {
   effectSearch: any = {};
   constructor(private _tools: Tools) { }
   async ngOnInit() {
-    this.effects = await this._tools.getAsync("EffectInSystem") as Array<any>
-    this.colsInfo = await this._tools.getAsync("EffectColumn") as Array<any>;
+    this.effects = await this._tools.Network.getAsync("EffectInSystem") as Array<any>
+    this.colsInfo = await this._tools.Network.getAsync("EffectColumn") as Array<any>;
   }
   ngAfterViewInit() {
     this._tools.waitExecuteFunction(100, () => {
@@ -33,7 +33,7 @@ export class EffectRecodesComponent implements OnInit {
       this.grid.AllowAdd = false;
       this.grid.onDeleteItem = async (record: any) => {
         if (record.CALCULATED == false) {
-          let result = await this._tools.deleteAsync(`Effect/DeleteEffect?id=${record.EF_ID}`, {}) as any;
+          let result = await this._tools.Network.deleteAsync(`Effect/DeleteEffect?id=${record.EF_ID}`, {}) as any;
           if (result == true) {
             this.grid.dataSource = this.grid.dataSource.filter(x => x.EF_ID != record.EF_ID)
             this.grid.dt.reset();
@@ -48,7 +48,7 @@ export class EffectRecodesComponent implements OnInit {
         }
       };
       this.grid.DeleteSelectedData = async () => {
-        let result = await this._tools.deleteAsync(`Effect/DeleteEffects`, this.grid.selectedItems.map(x => x.EF_ID)) as any;
+        let result = await this._tools.Network.deleteAsync(`Effect/DeleteEffects`, this.grid.selectedItems.map(x => x.EF_ID)) as any;
         if (result == true) {
           this._tools.Toaster.showSecondary("تم حذف المحدد بنجاح")
           this.grid.dataSource = this.grid.dataSource.filter(x => this.grid.selectedItems.includes(x) == false);
@@ -65,10 +65,10 @@ export class EffectRecodesComponent implements OnInit {
     this._tools._router.navigate(["Main", "Effects", "Add"])
   }
   async search() {
-    this.effectSearch.start = this._tools.EditData(this.effectSearch.start).toLocaleDateString("en")
-    this.effectSearch.end = this._tools.EditData(this.effectSearch.end).toLocaleDateString("en")
+    this.effectSearch.start = this._tools.DateTime.EditData(this.effectSearch.start).toLocaleDateString("en")
+    this.effectSearch.end = this._tools.DateTime.EditData(this.effectSearch.end).toLocaleDateString("en")
     this.grid.IsLoading = true;
-    let data = await this._tools.getAsync(`Effect/GetEffectsSaved?from=${this.effectSearch.start}&to=${this.effectSearch.end}&system_Effiect_ID=${this.effectSearch.TypeEffect.ID}`) as any;
+    let data = await this._tools.Network.getAsync(`Effect/GetEffectsSaved?from=${this.effectSearch.start}&to=${this.effectSearch.end}&system_Effiect_ID=${this.effectSearch.TypeEffect.ID}`) as any;
     this.grid.Columns = [];
     this.grid.Columns.push(new Column("index", "مسلسل"));
     this.grid.Columns.push(new Column("EMP_CODE", "كود الموظف"));
@@ -93,8 +93,8 @@ export class EffectRecodesComponent implements OnInit {
       record.EF_VALUE = ef.EFFECT_VALUE;
       record.CALCULATED = ef.CALCULATED;
       record.CALCULATOR_BY_HOURS = ef.CALCULATOR_BY_HOURS ? "يحسب المؤثر بالساعة" : "يحسب المؤثر بالقيمة";
-      record.EF_DATE = this._tools.EditFormateData(ef.EFFECT_DATE, "dd-MM-yyyy");
-      record.RECORD_DATE = this._tools.EditFormateData(ef.DATE_TIME, "dd-MM-yyyy hh:mm:ss");
+      record.EF_DATE = this._tools.DateTime.EditFormateData(ef.EFFECT_DATE, "YYYY-MM-DD");
+      record.RECORD_DATE = this._tools.DateTime.EditFormateData(ef.DATE_TIME, "HH:mm:ss YYYY-MM-DD");
       record.EMP_NAME = (data.EMPLOYS_DB as Array<any>).find(x => x.ID == ef.EMPLOY_ID).NAME;
       record.EMP_CODE = (data.EMPLOYS_DB as Array<any>).find(x => x.ID == ef.EMPLOY_ID).CODE;
       record.DEPART_ID = (data.EMPLOYS_DB as Array<any>).find(x => x.ID == ef.EMPLOY_ID).DEPART_ID;
@@ -102,7 +102,7 @@ export class EffectRecodesComponent implements OnInit {
       (data.COLUMNS_DB as Array<any>).forEach(col => {
         record["val_" + col.ID] = JSON.parse((ef.VALUES as Array<any>).find(x => x.EFFECT_COLUMN_ID == col.ID)?.VALUE ?? `""`)
         if (col.TYPE == 5) {
-          record["val_" + col.ID] = this._tools.EditFormateData(record["val_" + col.ID], "dd-MM-yyyy hh:mm:ss")
+          record["val_" + col.ID] = this._tools.DateTime.EditFormateData(record["val_" + col.ID], "HH:mm:ss YYYY-MM-DD")
         }
         if (col.TYPE == 6) {
           record["val_" + col.ID] = record["val_" + col.ID] == true ? "نعم" : "لا";

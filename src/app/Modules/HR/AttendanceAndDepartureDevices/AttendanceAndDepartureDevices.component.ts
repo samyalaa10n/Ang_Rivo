@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GetAddEditDeleteComponent } from "../../../shared/pages/get-add-edit-delete/get-add-edit-delete.component";
 import { Column } from '../../../shared/components/dataGrid/Column';
 import { NgIf } from '@angular/common';
-import { Tools } from '../../../shared/service/Tools';
+import { Tools } from '../../../shared/service/Tools.service';
 
 @Component({
   selector: 'app-AttendanceAndDepartureDevices',
@@ -16,7 +16,7 @@ export class AttendanceAndDepartureDevicesComponent implements OnInit {
   constructor(public _tools: Tools) { }
 
   async ngOnInit() {
-    var places = await this._tools.getAsync("Place") as Array<any>;
+    var places = await this._tools.Network.getAsync("Place") as Array<any>;
 
     this.Columns.push(new Column('ID', "الكود", "lapel", "text"))
     this.Columns.push(new Column('CODE', "رقم الكينة", "number", "numeric"))
@@ -35,7 +35,7 @@ export class AttendanceAndDepartureDevicesComponent implements OnInit {
     this.Columns[5].columnComboBoxDataSource = places;
   }
   async update() {
-    var places = await this._tools.getAsync("Place") as Array<any>;
+    var places = await this._tools.Network.getAsync("Place") as Array<any>;
     this.Columns[5].columnComboBoxOptionLabel = "NAME"
     this.Columns[5].columnComboBoxOptionValue = "ID"
     this.Columns[5].columnComboBoxPlaceholder = "مكان الجهاز"

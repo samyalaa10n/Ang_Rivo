@@ -75,11 +75,11 @@
             <app-InputLabel placeholder="وقت تطبيق المؤثر" class="d-block mt-5">
               <div pInputText class="py-5">
                 <app-InputLabel placeholder="من شهر المؤثر" class="d-inline-block mx-2">
-                  <p-inputNumber [useGrouping]="false" [min]="_tools.GetNumberOfMonth()" max="12"
+                  <p-inputNumber [useGrouping]="false" [min]="_tools.DateTime.GetNumberOfMonth()" max="12"
                     [(ngModel)]="effectSelected.EFFECT_INFO.EFFECT_DATE_MONTH_FROM" placeholder="01/..."></p-inputNumber>
                 </app-InputLabel>
                 <app-InputLabel placeholder="من سنة المؤثر" class="d-inline-block mx-2">
-                  <p-inputNumber [useGrouping]="false" [min]="_tools.GetNumberOfYear()" [max]="_tools.GetNumberOfYear()+5"
+                  <p-inputNumber [useGrouping]="false" [min]="_tools.DateTime.GetNumberOfYear()" [max]="_tools.DateTime.GetNumberOfYear()+5"
                     [(ngModel)]="effectSelected.EFFECT_INFO.EFFECT_DATE_YEAR_FROM" placeholder="2024/..."></p-inputNumber>
                 </app-InputLabel>
                 <app-InputLabel placeholder="عدد الشهور" width="800px" class="d-inline-block mx-2">

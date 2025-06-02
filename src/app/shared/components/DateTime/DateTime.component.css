@@ -1,14 +1,14 @@
-::ng-deep .app-date [pinputtext]{
+.app-date ::ng-deep .app-date [pinputtext]{
     width: 100% !important;
     padding: 15PX;
 }
-::ng-deep .app-date .p-datepicker{
+.app-date ::ng-deep .app-date .p-datepicker{
     width: 100% !important;
 }
-::ng-deep .p-datepicker:has(.p-datepicker-input-icon-container) .p-datepicker-input{
+.app-date ::ng-deep .p-datepicker:has(.p-datepicker-input-icon-container) .p-datepicker-input{
   text-align: center !important;
 }
-::ng-deep .p-datepicker-panel {
+.app-date ::ng-deep .p-datepicker-panel {
     max-width: 500px !important;
     min-width: unset !important;
     direction: rtl !important;

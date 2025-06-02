@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { NaveComponent } from '../Nave/Nave.component';
-import { Tools } from '../../../shared/service/Tools';
+import { Tools } from '../../../shared/service/Tools.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     var userData = localStorage.getItem("logInfo")
     if (userData != null) {
-      this._tools._LoginName=JSON.parse(userData).useR_NAME
+      this._tools.Network._LoginName=JSON.parse(userData).useR_NAME
     }
   }
   openNave() {

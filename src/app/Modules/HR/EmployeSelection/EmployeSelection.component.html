@@ -11,13 +11,9 @@
 
 <ng-template #body>
   <div class="d-flex justify-content-start align-items-center column-gap-2">
-    <app-InputLabel placeholder="كود الموظف" class="d-inline-block my-3">
-      <p-autocomplete placeholder="بحث ..." [suggestions]="filteredData" emptyMessage="لا يوجد"
+    <app-InputLabel placeholder="الموظف" class="d-inline-block my-3">
+      <p-autocomplete [forceSelection]="true" placeholder="بحث ..." [suggestions]="filteredData" emptyMessage="لا يوجد"
         (onSelect)="Selected($event)" (completeMethod)="filterEmploy($event,'CODE')" optionLabel="CODE" />
-    </app-InputLabel>
-    <app-InputLabel placeholder="اسم الموظف" class="d-inline-block my-3">
-      <p-autocomplete placeholder="بحث ..." [suggestions]="filteredData" emptyMessage="لا يوجد"
-        (onSelect)="Selected($event)" (completeMethod)="filterEmploy($event,'NAME')" optionLabel="NAME" />
     </app-InputLabel>
   </div>
 

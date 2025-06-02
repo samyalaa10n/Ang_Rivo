@@ -1,4 +1,4 @@
-<div class="app-date" [ngStyle]="{'width': showTime?'200px':'unset'}" >
+<div class="app-date" >
     <p-datePicker
     [placeholder]="placeholder"
     [dateFormat]="dateFormat" 
@@ -6,10 +6,10 @@
     [timeOnly]="showTimeOnly" 
     [maxDate]="maxDate" 
     [minDate]="minDate"  
-    [showTime]="true"
     [showButtonBar]="true" 
     [showTime]="showTime" 
     [view]="view" 
+    [showOnFocus]="showOnFocus"
     iconDisplay="input" [(ngModel)]="selectedDate"
-    (ngModelChange)="change($event)"  (onClear)="clear()" (onClearClick)="clear()"  dateFormat="dd-mm-yy"  appendTo="body" [showIcon]="true"  [showOnFocus]="false"  ></p-datePicker> 
+    (ngModelChange)="change($event)"  (onClear)="clear()" (onClearClick)="clear()"  dateFormat="dd-mm-yy"  appendTo="body" [showIcon]="true"    ></p-datePicker> 
 </div>  

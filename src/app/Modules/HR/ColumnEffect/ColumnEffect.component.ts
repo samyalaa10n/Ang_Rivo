@@ -25,7 +25,7 @@ export class ColumnEffectComponent implements OnInit {
   Columns_Setting: Column[] = [];
   
   private readonly INITIAL_CONFIGURATION = {
-    API_CALLING: "Employee/Suggestions_Code_and_Name",
+    API_CALLING: "Employee/Suggestions_Code_Concat_Name",
     FOCUS_PROPERTY: "CODE",
     calculatedByHours: false,
     FORCE_VALUE: false,

@@ -4,9 +4,8 @@ import { IftaLabelModule } from 'primeng/iftalabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ComboBoxComponent } from "../../components/comboBox/comboBox.component";
 import { NgIf } from '@angular/common';
-import { DataGridComponent } from "../../components/dataGrid/dataGrid.component";
 import { DateTimeComponent } from "../../components/DateTime/DateTime.component";
-import { Tools } from '../../service/Tools';
+import { Tools } from '../../service/Tools.service';
 import { MultiselectComponent } from "../../components/multiselect/multiselect.component";
 @Component({
   selector: 'app-InputLabel',
@@ -28,7 +27,7 @@ export class InputLabelComponent implements OnInit {
     if(this.Effect)
       {
         if (this.Effect.TYPE == 1 || this.Effect.TYPE == 2 || this.Effect.TYPE == 3 || this.Effect.TYPE == 9) {
-          this.apiData = await this._tools.getAsync(this.Effect.CONFIGURATION.API_CALLING) as Array<any>
+          this.apiData = await this._tools.Network.getAsync(this.Effect.CONFIGURATION.API_CALLING) as Array<any>
         }
       }
   }

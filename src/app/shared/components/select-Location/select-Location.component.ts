@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { LocationService } from '../../service/LocationService';
+import { LocationService } from '../../service/Location.service';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 

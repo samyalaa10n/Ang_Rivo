@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4201",
-    "build": "ng build",
+    "build": "ng build --configuration production",
+    "build:secure": "ng build  --configuration production && node obfuscate.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:R.App.F": "node dist/r.app.f/server/server.mjs"
@@ -37,6 +38,7 @@
     "file-saver": "^2.0.5",
     "leaflet": "^1.9.4",
     "lodash": "^4.17.21",
+    "luxon": "^3.6.1",
     "moment": "^2.30.1",
     "primeicons": "^7.0.0",
     "primeng": "^19.0.9",
@@ -54,6 +56,7 @@
     "@types/jasmine": "~5.1.0",
     "@types/leaflet": "^1.9.16",
     "@types/lodash": "^4.17.15",
+    "@types/luxon": "^3.6.2",
     "@types/node": "^18.18.0",
     "jasmine-core": "~5.4.0",
     "karma": "~6.4.0",

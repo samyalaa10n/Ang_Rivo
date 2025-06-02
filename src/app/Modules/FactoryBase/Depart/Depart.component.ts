@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GetAddEditDeleteComponent } from "../../../shared/pages/get-add-edit-delete/get-add-edit-delete.component";
 import { Column } from '../../../shared/components/dataGrid/Column';
-import { Tools } from '../../../shared/service/Tools';
+import { Tools } from '../../../shared/service/Tools.service';
 import { NgIf } from '@angular/common';
 import { DataGridComponent } from '../../../shared/components/dataGrid/dataGrid.component';
 import { MultiselectComponent } from '../../../shared/components/multiselect/multiselect.component';
@@ -18,7 +18,7 @@ export class DepartComponent implements OnInit {
   Columns: Array<Column> = [];
   constructor(private _tools: Tools) { }
   async ngOnInit() {
-    let companies = await this._tools.getAsync("Company") as Array<any>;
+    let companies = await this._tools.Network.getAsync("Company") as Array<any>;
     this.Columns.push(new Column('ID', "الكود", "lapel", "text"))
     this.Columns.push(new Column('NAME', "الأسم", "text", "text", 400))
     this.Columns.push(new Column('COMPANY_ID', "الشركة", "comboBox", "comboBox", 200));
@@ -35,7 +35,7 @@ export class DepartComponent implements OnInit {
     // this.Columns[this.Columns.length - 1].columnMultiSelectpropertyBind = "In_POSATIONS";
   }
   async update() {
-    let companies = await this._tools.getAsync("Company") as Array<any>;
+    let companies = await this._tools.Network.getAsync("Company") as Array<any>;
     this.Columns[2].columnComboBoxDataSource = companies;
   }
   configTable(grid: DataGridComponent) {

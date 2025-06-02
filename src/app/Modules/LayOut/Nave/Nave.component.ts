@@ -4,7 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { SidebarModule } from 'primeng/sidebar'
 import { MenuModule } from 'primeng/menu'
 import { MenuItem } from 'primeng/api';
-import { Tools } from '../../../shared/service/Tools';
+import { Tools } from '../../../shared/service/Tools.service';
 import { DrawerModule } from 'primeng/drawer';
 import { PanelMenuModule } from 'primeng/panelmenu';
 @Component({
@@ -166,7 +166,7 @@ export class NaveComponent implements OnInit {
                 label: 'حساب ساعات العمل',
                 icon: 'pi pi-database',
                 command: (event) => {
-                  this._router.navigate(['Main', 'Employes']);
+                  this._router.navigate(['Main', 'AttendanceCalculator']);
                 },
               }
             ]

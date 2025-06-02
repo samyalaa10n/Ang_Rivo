@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, input } from '@angular/core';
 import { DataGridComponent } from '../../../shared/components/dataGrid/dataGrid.component';
-import { Tools } from '../../../shared/service/Tools';
+import { Tools } from '../../../shared/service/Tools.service';
 import { ComboBoxComponent } from "../../../shared/components/comboBox/comboBox.component";
 import { Column } from '../../../shared/components/dataGrid/Column';
 import { DialogModule } from "primeng/dialog"
@@ -31,8 +31,8 @@ export class EmployeSelectionComponent implements OnInit {
   @ViewChild('comboBox') comboBox!: ComboBoxComponent
   constructor(private _tools: Tools) { }
   async ngOnInit() {
-    this.Departs = await this._tools.getAsync("Depart") as Array<any>
-    this.suggestionsData = await this._tools.getAsync("Employee/Suggestions_Code_and_Name") as Array<any>
+    this.Departs = await this._tools.Network.getAsync("Depart") as Array<any>
+    this.suggestionsData = await this._tools.Network.getAsync("Employee/Suggestions_Code_Concat_Name") as Array<any>
   }
   ngAfterViewInit() {
     this._tools.waitExecuteFunction(100, () => {
@@ -103,7 +103,7 @@ export class EmployeSelectionComponent implements OnInit {
     this.selectedEmploysChange.emit(this.selectedEmploys);
   }
   async SelectedChange(selected: any) {
-    let employesSelectes = await this._tools.getAsync(`Employee/GetEmployesByDepartId?DepartId=${selected.ID}`) as Array<any>
+    let employesSelectes = await this._tools.Network.getAsync(`Employee/GetEmployesByDepartId?DepartId=${selected.ID}`) as Array<any>
     if (employesSelectes) {
       employesSelectes.forEach(x => x.DEPART = selected.NAME)
       this.grid.dataSource = employesSelectes;
@@ -113,12 +113,7 @@ export class EmployeSelectionComponent implements OnInit {
   filterEmploy(event: any, optionLabel: string) {
     let filtered: any[] = [];
     let query = event.query;
-    for (let i = 0; i < (this.suggestionsData as any[]).length; i++) {
-      let item = (this.suggestionsData as any[])[i];
-      if (item[optionLabel].toLowerCase().indexOf(query.toLowerCase()) == 0) {
-        filtered.push(item);
-      }
-    }
+    filtered= this.suggestionsData.filter(x=>x[optionLabel].includes(query))
     this.filteredData = filtered;
     this.selectedEmploysChange.emit(this.selectedEmploys);
   }

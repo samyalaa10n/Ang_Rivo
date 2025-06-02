@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { Tools } from '../../service/Tools';
+import { Tools } from '../../service/Tools.service';
 import { DataGridComponent } from "../../components/dataGrid/dataGrid.component";
 import { Column } from '../../components/dataGrid/Column';
 import { HttpClientModule } from '@angular/common/http';
@@ -49,7 +49,7 @@ export class GetAddEditDeleteComponent implements OnInit {
       this.grid.onUpdate = (e) => this.Update(e);
       this.grid.dataKey = "ID";
       this.grid.IsLoading = true;
-      this._tools.getAsync(this.GetApiPage==""?this.ApiPage:this.GetApiPage).then((data: any) => {
+      this._tools.Network.getAsync(this.GetApiPage==""?this.ApiPage:this.GetApiPage).then((data: any) => {
         this.grid.IsLoading = false;
         this.grid.dataSource = data
       })
@@ -61,7 +61,7 @@ export class GetAddEditDeleteComponent implements OnInit {
     this.grid.dt.reset();
   }
   async saveChanges(dataSaved: any = null) {
-    let data: any = await this._tools.putAsync(this.ApiPage + '/EditMore', dataSaved,this.FilterInEdit)
+    let data: any = await this._tools.Network.putAsync(this.ApiPage + '/EditMore', dataSaved,this.FilterInEdit)
     if (data) {
       if (Array.isArray(data)) {
         this._tools.Toaster.showSuccess("تم التحديث بنجاح");
@@ -80,7 +80,7 @@ export class GetAddEditDeleteComponent implements OnInit {
   }
   async Update(table: Table) {
     table.loading = true;
-    let data: any = await this._tools.getAsync(this.GetApiPage==""?this.ApiPage:this.GetApiPage)
+    let data: any = await this._tools.Network.getAsync(this.GetApiPage==""?this.ApiPage:this.GetApiPage)
     if (data) {
       this.grid.dataSource = data
       this.onUpdate.emit(data)

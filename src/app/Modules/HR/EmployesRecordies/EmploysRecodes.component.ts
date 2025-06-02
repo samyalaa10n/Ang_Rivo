@@ -1,5 +1,5 @@
 import { Component, OnInit, Type } from '@angular/core';
-import { Tools } from '../../../shared/service/Tools';
+import { Tools } from '../../../shared/service/Tools.service';
 import { DataGridComponent } from "../../../shared/components/dataGrid/dataGrid.component";
 import { Column } from '../../../shared/components/dataGrid/Column';
 import { CustomColumnDirective } from '../../../shared/components/dataGrid/CustomColumn.directive';
@@ -11,7 +11,7 @@ import { NgIf } from '@angular/common';
   selector: 'app-EmploysRecodes',
   templateUrl: './EmploysRecodes.component.html',
   styleUrls: ['./EmploysRecodes.component.css'],
-  imports: [DataGridComponent, CustomColumnDirective, ButtonModule, DialogModule,NgIf]
+  imports: [DataGridComponent, CustomColumnDirective, ButtonModule, DialogModule, NgIf]
 })
 export class EmploysRecodesComponent implements OnInit {
   Columns: Array<Column> = [];
@@ -26,9 +26,9 @@ export class EmploysRecodesComponent implements OnInit {
   constructor(private _tools: Tools) { }
 
   async ngOnInit() {
-    this.Places = await this._tools.getAsync("Place") as Array<any>
-    this.Managements = await this._tools.getAsync("Mangement") as Array<any>
-    this.Departs = await this._tools.getAsync("Depart") as Array<any>
+    this.Places = await this._tools.Network.getAsync("Place") as Array<any>
+    this.Managements = await this._tools.Network.getAsync("Mangement") as Array<any>
+    this.Departs = await this._tools.Network.getAsync("Depart") as Array<any>
     this.Columns.push(new Column('FILES', "تحميل الملفات", "custom"))
     this.Columns.push(new Column('ID', "رقم النظام"))
     this.Columns.push(new Column('CODE', "كود الموظف", "text"))
@@ -42,7 +42,7 @@ export class EmploysRecodesComponent implements OnInit {
 
     this.Columns.push(new Column('DATE_OF_BIRTH', "تاريخ الميلاد"))
     this.Columns[this.Columns.length - 1].Style_Show = (VALUE) => {
-      return this._tools.EditFormateData(VALUE, "dd/MM/yyyy")
+      return this._tools.DateTime.EditFormateData(VALUE, "YYYY-MM-DD")
     };
     this.Columns.push(new Column('MARITAL_STATUS', "الحالة الأجتماعية", "comboBox"))
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = [{ name: 'أعزب', id: 1 }, { name: 'متزوج', id: 2 }, { name: 'مطلق', id: 3 }, { name: 'أرمل', id: 4 }];
@@ -75,13 +75,13 @@ export class EmploysRecodesComponent implements OnInit {
     this.Columns.push(new Column('SUITS', "قيمة البدلات", "numberWithFraction"))
     this.Columns.push(new Column('DATE_OF_APPOINTMENT', "تاريخ التعين"))
     this.Columns[this.Columns.length - 1].Style_Show = (VALUE) => {
-      return this._tools.EditFormateData(VALUE, "dd/MM/yyyy")
+      return this._tools.DateTime.EditFormateData(VALUE, "YYYY-MM-DD ")
     };
     this.Columns.push(new Column('ASSIGNMENT_MODE', "وضع التعين"))
     this.Columns.push(new Column('APPOINTMENT_END_DATE', "تاريخ انتهاء التعين"))
     this.Columns[this.Columns.length - 1].Style_Show = (VALUE) => {
       if (VALUE) {
-        return this._tools.EditFormateData(VALUE, "dd/MM/yyyy")
+        return this._tools.DateTime.EditFormateData(VALUE, "YYYY-MM-DD")
       }
       return ""
     };
@@ -91,7 +91,7 @@ export class EmploysRecodesComponent implements OnInit {
     this.Columns.push(new Column('INSURANCE_SUBSCRIPTION_DATE', "تاريخ الاشتراك في التأمين"))
     this.Columns[this.Columns.length - 1].Style_Show = (VALUE) => {
       if (VALUE) {
-        return this._tools.EditFormateData(VALUE, "dd/MM/yyyy")
+        return this._tools.DateTime.EditFormateData(VALUE, "YYYY-MM-DD")
       }
       return ""
     };
@@ -103,7 +103,7 @@ export class EmploysRecodesComponent implements OnInit {
     this.Columns.push(new Column('EMPLOYEE_MEAL', "وجبة الموظف"))
     this.Columns.push(new Column('OPENING_BALANCE_FOR_REGULAR', "رصيد الأفتتاحي لأعتيادي", "numberWithFraction"))
 
-    let data = await this._tools.getAsync("Employee") as Array<any>
+    let data = await this._tools.Network.getAsync("Employee") as Array<any>
     if (data != null) {
       this.Employees = data;
     }
@@ -113,7 +113,7 @@ export class EmploysRecodesComponent implements OnInit {
   }
   Config(dataGrid: DataGridComponent) {
     dataGrid.onUpdate = async () => {
-      let data = await this._tools.getAsync("Employee") as Array<any>
+      let data = await this._tools.Network.getAsync("Employee") as Array<any>
       if (data != null) {
         this.Employees = data;
       }
@@ -135,14 +135,14 @@ export class EmploysRecodesComponent implements OnInit {
     }
     dataGrid.onDeleteItem = async (item) => {
       item.ROW_NUMBER = 0
-      let data = await this._tools.putAsync("Employee/EditMore", [item]) as Array<any>
+      let data = await this._tools.Network.putAsync("Employee/EditMore", [item]) as Array<any>
       if (data) {
         this._tools.Toaster.showInfo("تم حذف الموظف بنجاج")
         dataGrid.onUpdate(dataGrid.dt);
       }
     }
     dataGrid.onSaveChanges = async (editData) => {
-      let data = await this._tools.putAsync("Employee/EditMore", editData) as Array<any>
+      let data = await this._tools.Network.putAsync("Employee/EditMore", editData) as Array<any>
       if (data) {
         this._tools.Toaster.showSuccess("تم تحديث البيانات بنجاج")
       }
@@ -151,7 +151,7 @@ export class EmploysRecodesComponent implements OnInit {
       dataGrid.selectedItems.forEach(item => {
         item.ROW_NUMBER = 0
       });
-      let data = await this._tools.putAsync("Employee/EditMore", dataGrid.selectedItems) as Array<any>
+      let data = await this._tools.Network.putAsync("Employee/EditMore", dataGrid.selectedItems) as Array<any>
       if (data) {
         this._tools.Toaster.showInfo("تم حذف الموظف بنجاج")
         dataGrid.onUpdate(dataGrid.dt);
@@ -159,11 +159,9 @@ export class EmploysRecodesComponent implements OnInit {
     }
   }
   GetFile(e: any) {
-    this._tools.onFileChange(e)
-    this._tools.onFileEndImport = (data) => {
+    this._tools.Excel.ExcelFileChange(e,(json: Array<any>) => {
       let source: Array<any> = [];
-
-      data.forEach(item => {
+      json.forEach(item => {
         let employee: any = {
           "ID": 0,
           "ROW_NUMBER": -1,
@@ -227,27 +225,25 @@ export class EmploysRecodesComponent implements OnInit {
           }
         })
         source.push(employee)
-      })
+      });
       this.importedDataColumns = this._tools.cloneObject(this.Columns.filter(c => c.name != "FILES"))
       this.importedData = source
       this.showExcelDialog = true;
-     
-    }
+    });
   }
   configImportExcelData(grid: DataGridComponent) {
     grid.onSaveChanges = async (editData: Array<any>) => {
       editData.forEach(item => {
         item.ROW_NUMBER = -1
       });
-      let data = await this._tools.putAsync("Employee/EditMore", editData) as Array<any>
+      let data = await this._tools.Network.putAsync("Employee/EditMore", editData) as Array<any>
       if (data) {
         this.showExcelDialog = false;
         this._tools.Toaster.showSuccess("تم  استيراد البيانات بنجاج")
       }
     }
   }
-  editMore(grid:DataGridComponent)
-  {
-    this._tools._router.navigate(["Main", "Employs", "Control"], { queryParams: { Type: 'Edit_selected_Items=' + grid.selectedItems.map(x=>x.ID).join(",").toString() } })
+  editMore(grid: DataGridComponent) {
+    this._tools._router.navigate(["Main", "Employs", "Control"], { queryParams: { Type: 'Edit_selected_Items=' + grid.selectedItems.map(x => x.ID).join(",").toString() } })
   }
 }

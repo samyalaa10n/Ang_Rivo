@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { DataGridComponent } from "./shared/components/dataGrid/dataGrid.component";
 import { PrimeNG } from 'primeng/config'
-import { Tools } from './shared/service/Tools';
+import { Tools } from './shared/service/Tools.service';
 import { ToasterComponent } from "./shared/components/Toaster/Toaster.component";
 import { DatePipe } from '@angular/common';
 import { LoadingComponent } from './shared/components/Loading/Loading.component';
@@ -21,7 +21,7 @@ export class AppComponent {
   }
   ngOnInit() {
 
-    this.primeng.setTranslation(this._tools.Date_Data);
+    this.primeng.setTranslation(this._tools.DateTime.Date_Data);
 
     this.primeng.zIndex = {
       modal: 1100,    // dialog, sidebar
@@ -29,7 +29,7 @@ export class AppComponent {
       menu: 1000,     // overlay menus
       tooltip: 1100   // tooltip
     };
-    this._tools._dateFormat=this._dateFormat;
+    this._tools.DateTime._dateFormat=this._dateFormat;
   }
   selectData() {
   }

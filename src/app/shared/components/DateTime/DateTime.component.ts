@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@ang
 import { FormsModule } from '@angular/forms';
 import { DatePickerModule } from 'primeng/datepicker';
 import { FloatLabel } from 'primeng/floatlabel';
-import { Tools } from '../../service/Tools';
+import { Tools } from '../../service/Tools.service';
 import { NgStyle } from '@angular/common';
 import { CalendarModule, LocaleSettings } from 'primeng/calendar';
 
@@ -11,16 +11,19 @@ import { CalendarModule, LocaleSettings } from 'primeng/calendar';
   templateUrl: './DateTime.component.html',
   styleUrls: ['./DateTime.component.css'],
   standalone: true,
-  imports: [DatePickerModule, FormsModule, NgStyle,CalendarModule]
+  imports: [DatePickerModule, FormsModule, NgStyle, CalendarModule]
 })
 export class DateTimeComponent implements OnInit {
 
   @Input() maxDate: Date | null = null;
   @Input() minDate: Date | null = null;
   @Input() dateFormat: string = "";
+  @Input() saveTempInput: any = null;
   @Input() hourFormat: string = "24";
   @Input() selectedDate: any = null
   @Input() showTime: boolean = false
+  @Input() showOnFocus: boolean = false
+  @Input() selectOnFocus: boolean = false
   @Input() showTimeOnly: boolean = false
   @Input() forceMaxOrEqualDay: boolean = false
   @Input() view: 'date' | 'month' | 'year' = "date"
@@ -29,19 +32,27 @@ export class DateTimeComponent implements OnInit {
   constructor(private _tools: Tools, private el: ElementRef<HTMLElement>) { }
 
   ngOnInit() {
-
+    if (this.saveTempInput) {
+      this.selectedDate = this._tools.DateTime.getDataFromJson(this._tools.getInputLabel(this.saveTempInput))
+      this.ngOnChanges()
+      this.change(this.selectedDate)
+    }
+  }
+  ngAfterViewInit() {
+    if (this.selectOnFocus) {
+      this._tools.waitExecuteFunction(100, () => {
+        let input = this.el.nativeElement.querySelector("[pinputtext]") as HTMLElement
+        input.addEventListener("focus", (e) => {
+          (input as any).select();
+        })
+      });
+    }
   }
   ngOnChanges() {
-    // if (this.showTimeOnly) {
-    //   if (this.selectedDate.HOUR != null) {
-    //     this.selectedDate = this.getTimeFromValue(this.selectedDate);
-    //     return;
-    //   }
-    // }
     if (this.showTime || this.showTimeOnly) {
       if (typeof this.selectedDate == "string") {
         //2025-04-23T18:23:00
-        this.selectedDate = this._tools.getDataFromJson(this.selectedDate);
+        this.selectedDate = this._tools.DateTime.getDataFromJson(this.selectedDate);
       }
       else {
         this.selectedDate = this.selectedDate;
@@ -56,12 +67,9 @@ export class DateTimeComponent implements OnInit {
   }
   change(e: Date) {
     if (e != null) {
-      // if (this.showTimeOnly) {
-      //   this.selectedDateChange.emit(this.getValueFromTime(e));
-      //   return;
-      // }
+      if (this.saveTempInput != null) this._tools.saveInputInLabel(this.saveTempInput, e)
       if (this.showTime || this.showTimeOnly) {
-        this.selectedDateChange.emit(this._tools.getValueJsonWithGMT(e, 3))
+        this.selectedDateChange.emit(this._tools.DateTime.getValueJsonWithGMT(e))
         return;
       }
       let text = new Date(e).toLocaleDateString("EN") + " GMT";
