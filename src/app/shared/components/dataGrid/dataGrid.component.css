@@ -91,6 +91,7 @@
     border-radius: 0px;
     border       : none;
     text-align   : center;
+   
 }
 
 .app-grid ::ng-deep .p-button-icon,
@@ -136,6 +137,7 @@
     text-align   : start;
     box-shadow   : unset !important;
     border-radius: 0px !important;
+    min-width: 100px !important;
 }
 
 .app-grid ::ng-deep th {

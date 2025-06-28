@@ -60,83 +60,161 @@ export class RevisionAttendanceComponent implements OnInit {
     this.AttSelected = Att;
     this.ShowDialogEdit = true;
   }
-  CheckerAttendance() {
-    for (let index = 0; index < this.Attendance.length - 1; index++) {
+  // التحقق من التكرار في أنواع البصمات
+  validateDuplicateTypes() {
+    for (let index = 0; index < this.Attendance.length; index++) {
       const AttIn = this.Attendance[index];
       const AttOut = this.Attendance[index + 1];
-
-      // تحقق من تكرار نفس النوع
       if (AttIn && AttOut) {
         if (AttIn.TYPE == AttOut.TYPE) {
           AttOut.ERROR = true;
           AttOut.MESSAGE = "يوجد تكرار في نوع البصمة";
-          continue; // تجاهل هذا الزوج
         } else {
           AttOut.ERROR = false;
           AttOut.MESSAGE = "";
         }
       }
+    }
+  }
+  // تجهيز أوقات الشيفت مقارنة بالحضور والانصراف
+  prepareShiftTimes(shift: any, actualIn: any, actualOut: any) {
+    let shiftIn = this._tools.DateTime.convertDataToMoment(shift.IN);
+    let shiftOut = this._tools.DateTime.convertDataToMoment(shift.OUT);
 
-      // حساب عدد الساعات
-      if (!AttIn?.ERROR && !AttOut?.ERROR && AttIn.TYPE === "c/in" && AttOut.TYPE === "c/out") {
-        const inTimeNum = this._tools.DateTime.convertDateToNumber(AttIn.TIME);
-        const outTimeNum = this._tools.DateTime.convertDateToNumber(AttOut.TIME);
-        const diff = outTimeNum - inTimeNum;
+    shiftIn.set({ date: actualIn.date(), month: actualIn.month(), year: actualIn.year() });
+    shiftOut.set({ date: actualOut.date(), month: actualOut.month(), year: actualOut.year() });
 
-        AttIn.TotalHoursWithNumber = diff;
-        AttIn.HOURS = this._tools.DateTime.convertNumberToTimeString(diff);
-        AttOut.HOURS = "";
+    if (shift.TYPE === "ليلية") {
+      if (actualIn.hour() < 6) shiftIn.subtract(1, "day");
+      if (actualOut.hour() < 6) shiftOut.subtract(1, "day");
+    }
 
-        // حساب الشفت
-        let placeId = AttIn.ID_PLACE ?? this.getDevicePlace(AttIn.ID_DIVICE_IN_SYSTEM).ID;
-        let shift = (this.Data.SHIFTS as Array<any>).find(s =>
-          this._tools.DateTime.inRange(s.REANG_START, AttIn.TIME, s.REANG_END) && s.PLACE_ID == placeId
-        );
-
-        AttIn.LATE = null;
-        if (shift) {
-          AttIn.Shift = shift.ID;
-          let shiftInMoment = this._tools.DateTime.convertDataToMoment(shift.IN);
-          let actualInMoment = this._tools.DateTime.convertDataToMoment(AttIn.TIME);
-
-          shiftInMoment.set({
-            date: actualInMoment.date(),
-            month: actualInMoment.month(),
-            year: actualInMoment.year(),
-          });
-
-          const shiftInNum = this._tools.DateTime.convertDateToNumber(shiftInMoment.toDate());
-          const timeDiff = inTimeNum - shiftInNum;
-
-          if (timeDiff > 0) {
-            // في تأخير
-            let lateTime = this._tools.DateTime.convertNumberToTime(timeDiff);
-            if (lateTime.HOUR != 0 || lateTime.MINUTE > shift.LATE_AFTER_MINT) {
-              AttIn.LATE = this._tools.DateTime.TimeToString(lateTime);
-            } else if (shift.TYPE === "ليلية") {
-              // تأخير خاص لليلية
-              let midnight = actualInMoment.clone().set({ hour: 0, minute: 0, second: 0 });
-              let midnightNum = this._tools.DateTime.convertDateToNumber(midnight.toDate());
-              let late = this._tools.DateTime.convertNumberToTime(midnightNum - inTimeNum);
-              AttIn.LATE = this._tools.DateTime.TimeToString(late);
-            }
-          }
-
-        } else {
-          AttIn.LATE = null;
-          AttIn.Shift = 0;
-        }
-
+    return { shiftIn, shiftOut };
+  }
+  // معالجة التأخير والمبكر للحضور
+  handleLateAndEarlyIn(AttIn: any, actualIn: any, shiftIn: any, shift: any) {
+    const shiftInNum = this._tools.DateTime.convertDateToNumber(shiftIn.toDate());
+    const actualInNum = this._tools.DateTime.convertDateToNumber(actualIn.toDate());
+    if (actualInNum > shiftInNum) {
+      let late = this._tools.DateTime.convertNumberToTime(actualInNum - shiftInNum);
+      if (late.HOUR === 0 && late.MINUTE <= shift.LATE_AFTER_MINT) {
+        actualIn = shiftIn.clone();
+        AttIn.TIME = shiftIn.toISOString();
+        this.addChangeRecord(AttIn)
       } else {
-        // هناك خطأ
-        AttIn.TotalHoursWithNumber = 0;
-        AttIn.HOURS = "";
-        AttOut.HOURS = "";
+        AttIn.LATE = this._tools.DateTime.TimeToString(late);
+      }
+    }
+    if (actualInNum < shiftInNum) {
+      let early = this._tools.DateTime.convertNumberToTime(shiftInNum - actualInNum);
+      if (early.HOUR === 0 && early.MINUTE <= shift.EARLY_BEFORE_MINT) {
+        actualIn = shiftIn.clone();
+        AttIn.TIME = shiftIn.toISOString();
+        this.addChangeRecord(AttIn)
+      } else {
+        AttIn.EARLY = this._tools.DateTime.TimeToString(early);
+      }
+    }
+
+    return actualIn;
+  }
+  // معالجة الانصراف المبكر والإضافي
+  handleEarlyLeaveAndOvertime(AttOut: any, actualOut: any, shiftOut: any, shift: any) {
+    const shiftOutNum = this._tools.DateTime.convertDateToNumber(shiftOut.toDate());
+    const actualOutNum = this._tools.DateTime.convertDateToNumber(actualOut.toDate());
+
+    if (actualOutNum < shiftOutNum) {
+      let earlyLeave = this._tools.DateTime.convertNumberToTime(shiftOutNum - actualOutNum);
+      if (earlyLeave.HOUR === 0 && earlyLeave.MINUTE <= 0) {
+        // actualOut = shiftOut.clone();
+        // AttOut.TIME = shiftOut.toISOString();
+      } else {
+        AttOut.EARLY_LEAVE = this._tools.DateTime.TimeToString(earlyLeave);
+      }
+    }
+
+    if (actualOutNum > shiftOutNum) {
+      let overTime = this._tools.DateTime.convertNumberToTime(actualOutNum - shiftOutNum);
+      if (overTime.HOUR === 0 && overTime.MINUTE <= shift.ADTIONAFTER) {
+        actualOut = shiftOut.clone();
+        AttOut.TIME = shiftOut.toISOString();
+        this.addChangeRecord(AttOut)
+      } else {
+        AttOut.OVERTIME = this._tools.DateTime.TimeToString(overTime);
+      }
+    }
+
+    return actualOut;
+  }
+  // معالجة الحضور والانصراف مع احتساب التأخير والمبكر والإضافي
+  processAttendancePair(AttIn: any, AttOut: any) {
+    let actualIn = this._tools.DateTime.convertDataToMoment(AttIn.TIME);
+    let actualOut = this._tools.DateTime.convertDataToMoment(AttOut.TIME);
+
+    AttIn.LATE = null;
+    AttIn.EARLY = null;
+    AttOut.OVERTIME = null;
+    AttOut.EARLY_LEAVE = null;
+    let shift = null;
+    if (AttIn.Shift == 0 || AttIn.Shift == undefined) {
+      shift = (this.Data.SHIFTS as Array<any>).find(x => this._tools.DateTime.inRange(x.REANG_START, AttIn.TIME, x.REANG_END) && x.PLACE_ID == (AttIn?.ID_PLACE != null ? AttIn.ID_PLACE : this.getDevicePlace(AttIn.ID_DIVICE_IN_SYSTEM).ID));
+    }
+    else {
+      shift = (this.Data.SHIFTS as Array<any>).find(x => x.ID == AttIn.Shift);
+    }
+    if (!shift) {
+      AttIn.Shift = 0;
+      const attInTimeNumber = this._tools.DateTime.convertDateToNumber(actualIn.toDate());
+      const attOutTimeNumber = this._tools.DateTime.convertDateToNumber(actualOut.toDate());
+      AttIn.TotalHoursWithNumber = attOutTimeNumber - attInTimeNumber;
+      AttIn.HOURS = this._tools.DateTime.convertNumberToTimeString(attOutTimeNumber - attInTimeNumber);
+      AttOut.HOURS = "";
+      return;
+    }
+
+    AttIn.Shift = shift.ID;
+
+    const { shiftIn, shiftOut } = this.prepareShiftTimes(shift, actualIn, actualOut);
+
+    actualIn = this.handleLateAndEarlyIn(AttIn, actualIn, shiftIn, shift);
+    actualOut = this.handleEarlyLeaveAndOvertime(AttOut, actualOut, shiftOut, shift);
+
+    const attInTimeNumber = this._tools.DateTime.convertDateToNumber(actualIn.toDate());
+    const attOutTimeNumber = this._tools.DateTime.convertDateToNumber(actualOut.toDate());
+
+    AttIn.TotalHoursWithNumber = attOutTimeNumber - attInTimeNumber;
+    AttIn.HOURS = this._tools.DateTime.convertNumberToTimeString(attOutTimeNumber - attInTimeNumber);
+    AttOut.HOURS = "";
+  }
+  CheckerAttendance() {
+    this.validateDuplicateTypes();
+    let IsRightCount = 0;
+    for (let index = 0; index < this.Attendance.length; index++) {
+      const AttIn = this.Attendance[index];
+      const AttOut = this.Attendance[index + 1];
+
+      if (!AttIn?.ERROR && !AttOut?.ERROR && AttIn?.TYPE === "c/in" && AttOut?.TYPE === "c/out") {
+        this.processAttendancePair(AttIn, AttOut);
+        IsRightCount++;
+        if (IsRightCount % 2 == 0) {
+          AttIn.classColor = true
+          AttOut.classColor = true
+          AttIn.classColor2 = false;
+          AttOut.classColor2 = false;
+        }
+        else {
+          AttIn.classColor2 = true
+          AttOut.classColor2 = true
+          AttIn.classColor = false;
+          AttOut.classColor = false;
+        }
+      } else {
+        if (AttIn) AttIn.TotalHoursWithNumber = 0;
+        if (AttIn) AttIn.HOURS = "";
+        if (AttOut) AttOut.HOURS = "";
       }
     }
   }
-
-
   onChangeAttendance(Att: any, event: any) {
     if (Att.TIME != null) {
       if (typeof Att.TIME == "string") {
@@ -149,7 +227,6 @@ export class RevisionAttendanceComponent implements OnInit {
 
       this.addChangeRecord(Att)
     }
-
     if (this.AttSelected?.FORGET_ID != null) this.AttSelected.FORGET_ID = undefined;
     this.CheckerAttendance()
   }
@@ -192,6 +269,7 @@ export class RevisionAttendanceComponent implements OnInit {
     this.AttSelected.FORGET_ID = Forg.ID;
     this.AttSelected.ID_PLACE = Forg.ID_PLACE;
     this.ShowDialogForget = false;
+    this.AttSelected.Shift = (this.Data.SHIFTS as Array<any>).find(x => x.PLACE_ID == Forg.ID_PLACE)?.ID;
     this.addChangeRecord(this.AttSelected)
     this.CheckerAttendance();
 
@@ -312,6 +390,30 @@ export class RevisionAttendanceComponent implements OnInit {
     if (old == null) {
       let nAtt = this._tools.cloneObject(Att);
       (Att.RecordChanges as Array<any>).push(nAtt);
+    }
+  }
+  setTrColor(Att: any, Tr: HTMLElement) {
+    Tr.classList.remove("bgTIn")
+    Tr.classList.remove("bgTrOut")
+    Tr.classList.remove("bg2TIn")
+    Tr.classList.remove("bg2TrOut")
+    if ((Att.IsAdded == false || Att.IsAdded == undefined ) && (Att.ERROR==false || Att.ERROR==undefined)) {
+      if (Att.classColor) {
+        if (Att.TYPE == 'c/in') {
+          Tr.classList.add("bgTIn")
+        }
+        if (Att.TYPE == 'c/out') {
+          Tr.classList.add("bgTrOut")
+        }
+      }
+      if (Att.classColor2) {
+        if (Att.TYPE == 'c/in') {
+          Tr.classList.add("bg2TIn")
+        }
+        if (Att.TYPE == 'c/out') {
+          Tr.classList.add("bg2TrOut")
+        }
+      }
     }
   }
 }

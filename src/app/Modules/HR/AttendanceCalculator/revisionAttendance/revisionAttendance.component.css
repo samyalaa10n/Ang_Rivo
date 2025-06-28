@@ -59,10 +59,41 @@
     display: none !important;
 }
 
-.MyTable ::ng-deep .p-iconwrapper {
+.MyTable ::ng-deep .app-date .p-iconwrapper {
     display: none !important;
+}
+.MyTable ::ng-deep .p-select-clear-icon{
+    left: -20px !important;
+
 }
 
 .MyTable .app-date {
     width: 100% !important;
+}
+
+.MyTable .bgTIn {
+    background-color: #d6dce4 !important;
+    border-top      : 2px solid black !important;
+    border-left     : 2px solid black !important;
+    border-right    : 2px solid black !important;
+}
+
+.MyTable .bgTrOut {
+    background-color: #d6dce4 !important;
+    border-bottom   : 2px solid black !important;
+    border-left     : 2px solid black !important;
+    border-right    : 2px solid black !important;
+}
+.MyTable .bg2TIn {
+    background-color: rgb(217, 255, 240) !important;
+    border-top      : 2px solid black !important;
+    border-left     : 2px solid black !important;
+    border-right    : 2px solid black !important;
+}
+
+.MyTable .bg2TrOut {
+    background-color: rgb(217, 255, 240) !important;
+    border-bottom   : 2px solid black !important;
+    border-left     : 2px solid black !important;
+    border-right    : 2px solid black !important;
 }

@@ -80,6 +80,9 @@ export class SomeEmployRuleComponent implements OnInit {
       this.Columns.push(new Column("OUTDay", "يوم"))
       this.Columns.push(new Column("LATE_AFTER_MINT", "التأخير من بعد ( بالدقيقة )", "number", "numeric"))
       this.Columns.push(new Column("EARLY_BEFORE_MINT", "المبكر من قبل ( بالدقيقة )", "number", "numeric"))
+      this.Columns.push(new Column("ADTIONAFTER", "الأضافي من بعد (بالدقيقة)","number","numeric"));
+      this.Columns.push(new Column("COUNTLATEBEFORMINES", "عدد التأخير المسموح بها","number","numeric"));
+      this.Columns.push(new Column("COUNTOUTERLYBEFORMINES", "عدد الاذونات المسموح بها","number","numeric"));
       let suggestionsData = await this._tools.Network.getAsync("Employee/Suggestions_Code_Concat_Name") as Array<any>
       this.Columns[1].apiPathDataSource = "Employee/Suggestions_Code_Concat_Name";
       this.Columns[1].columnComboBoxDataSource = suggestionsData;
@@ -136,6 +139,9 @@ export class SomeEmployRuleComponent implements OnInit {
       this.Columns.push(new Column("OUTshow", "الأنصراف"))
       this.Columns.push(new Column("LATE_AFTER_MINT", "التأخير من بعد ( بالدقيقة )"))
       this.Columns.push(new Column("EARLY_BEFORE_MINT", "المبكر من قبل ( بالدقيقة )"))
+      this.Columns.push(new Column("ADTIONAFTER", "الأضافي من بعد (بالدقيقة)"));
+      this.Columns.push(new Column("COUNTLATEBEFORMINES", "عدد التأخير المسموح بها"));
+      this.Columns.push(new Column("COUNTOUTERLYBEFORMINES", "عدد الاذونات المسموح بها"));
       grid.Columns = this.Columns;
       grid.AllowUpdate = true;
       grid.AllowAdd = false;

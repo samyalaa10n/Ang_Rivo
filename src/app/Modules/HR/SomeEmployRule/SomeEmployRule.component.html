@@ -6,7 +6,7 @@
       <ng-template  [appCustomColumn]="G_Target" let-item>
         <p-button class="mx-2" (onClick)="addNext(item,G_Target)"  label="اليوم التالي"  icon="pi pi-arrow-down"></p-button>
       </ng-template>
-      <app-dataGrid #G_Target  (onGridLoaded)="gridLoaded($event,true)"></app-dataGrid>
+      <app-dataGrid #G_Target  [paginator]="false" (onGridLoaded)="gridLoaded($event,true)"></app-dataGrid>
     </div>
   </ng-template>
   <ng-template stepConfig Header="عرض المواعيد"  [isViewMode]="true">

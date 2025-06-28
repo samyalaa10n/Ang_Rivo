@@ -33,7 +33,8 @@
         </thead>
         <tbody>
             <ng-container *ngFor="let Att of Attendance;  let dx=index;">
-                <tr class="position-relative" [ngClass]="{'bg-info': Att.IsAdded,'bg-warning':Att.ERROR}">
+                <tr #tr class="position-relative"  [ngClass]="{'bg-info': Att.IsAdded,'bg-warning':Att.ERROR}">
+                    {{setTrColor(Att,tr)}}
                     <td class="text-center" >{{_tools.DateTime.getDayName(Att.DATETIME)}}</td>
                     <td class="text-center"><app-DateTime [showOnFocus]="true"  class="d-inline-block " placeholder="اختر التاريخ" [(selectedDate)]="Att.DATETIME" (selectedDateChange)="onChangeAttendance(Att,$event)"></app-DateTime></td>
                     <td class="text-center"><app-DateTime [selectOnFocus]="true" class="d-inline-block " placeholder="اختر الوقت" [showTimeOnly]="true" [showTime]="true" [(selectedDate)]="Att.TIME" (selectedDateChange)="onChangeAttendance(Att,$event)"></app-DateTime></td>
@@ -43,11 +44,11 @@
                     <td class="text-center">
                         <div *ngIf="Att.TYPE =='c/in'">
                             <div *ngIf="Att.LATE"><span>تأخير : </span> <span>{{Att.LATE}}</span></div>
-                            <div><span>مبكر : </span></div>
+                            <div *ngIf="Att.EARLY"><span>مبكر : </span> <span>{{Att.EARLY}}</span></div>
                         </div>
                         <div *ngIf="Att.TYPE =='c/out'">
-                            <div><span>اضافي : </span></div>
-                            <div><span>اذن : </span></div>
+                            <div *ngIf="Att.OVERTIME"><span>أضافي : </span> <span>{{Att.OVERTIME}}</span></div>
+                            <div *ngIf="Att.EARLY_LEAVE"><span>اذن : </span> <span>{{Att.EARLY_LEAVE}}</span></div>
                         </div>
                     </td>
                     <td *ngIf="!Att.IsAdded" class="text-center">{{getDeviceInfo(Att.ID_DIVICE_IN_SYSTEM).NAME}}</td>
@@ -59,7 +60,7 @@
                             optionValue="ID" [dataSource]="Data.PLACES"></app-comboBox>
                     </td>
                     <td >
-                        <app-comboBox *ngIf="Att.TYPE=='c/in'" placeholder="اسم الشفت" optionLabel="NAME" optionValue="ID" [(SelectedValue)]="Att.Shift" [dataSource]="Data.SHIFTS"></app-comboBox>
+                        <app-comboBox *ngIf="Att.TYPE=='c/in'" placeholder="اسم الشفت" optionLabel="NAME" optionValue="ID" [(SelectedValue)]="Att.Shift" (SelectedValueChange)="onChangeAttendance(Att,$event)" [dataSource]="Data.SHIFTS"></app-comboBox>
                     </td>
                     <td>
                         <span *ngIf="Att.ERROR"

@@ -96,6 +96,7 @@ export class DataGridComponent implements OnInit {
   @Input() AllowDelete: boolean = true;
   @Input() StopAllButtons: boolean = false;
   @Input() AllowCurdOperation: boolean = true;
+  @Input() paginator: boolean = true;
   @Input() AllowEdit: boolean = false;
   @Input() AddInherit: boolean = false;
   @Input() AllowUpdate: boolean = false;

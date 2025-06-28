@@ -3,7 +3,7 @@
 <app-stepper [Configuration]="StepperConfig">
   <ng-template stepConfig Header="ادخال النواقص" [isViewMode]="true" >
     <div dir="rtl">
-      <app-dataGrid  (onGridLoaded)="gridLoaded($event,true)"></app-dataGrid>
+      <app-dataGrid [paginator]="false"  (onGridLoaded)="gridLoaded($event,true)"></app-dataGrid>
     </div>
   </ng-template>
   <ng-template stepConfig Header="عرض النواقص"  [isViewMode]="true">

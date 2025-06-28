@@ -30,10 +30,11 @@ export class ShiftsComponent implements OnInit {
     this.Columns.push(new Column("REANG_END", "وقت نهاية الشفت","Time","date"));
     this.Columns.push(new Column("IN", "وقت الحضور","Time","date"));
     this.Columns.push(new Column("OUT", "وقت الانصراف","Time","date"));
-    this.Columns.push(new Column("LATE_AFTER_MINT", "المبكر من قبل (بالدقيقة)","number","numeric"));
-    this.Columns.push(new Column("EARLY_BEFORE_MINT", "التأخير من بعد (بالدقيقة)","number","numeric"));
-    this.Columns.push(new Column("countLateBeforMines", "عدد التأخير المسموح بها","number","numeric"));
-    this.Columns.push(new Column("countOutErlyBeforMines", "عدد الاذونات المسموح بها","number","numeric"));
+    this.Columns.push(new Column("EARLY_BEFORE_MINT", "المبكر من قبل (بالدقيقة)","number","numeric"));
+    this.Columns.push(new Column("LATE_AFTER_MINT", "التأخير من بعد (بالدقيقة)","number","numeric"));
+    this.Columns.push(new Column("ADTIONAFTER", "الأضافي من بعد (بالدقيقة)","number","numeric"));
+    this.Columns.push(new Column("COUNTLATEBEFORMINES", "عدد التأخير المسموح بها","number","numeric"));
+    this.Columns.push(new Column("COUNTOUTERLYBEFORMINES", "عدد الاذونات المسموح بها","number","numeric"));
   }
 
 }
