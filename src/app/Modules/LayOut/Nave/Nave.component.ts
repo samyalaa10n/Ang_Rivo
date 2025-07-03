@@ -141,13 +141,13 @@ export class NaveComponent implements OnInit {
                   this._router.navigate(['Main', 'shifts']);
                 },
               },
-              {
-                label: 'مواعيد خاصة',
-                icon: 'pi pi-database',
-                command: (event) => {
-                  this._router.navigate(['Main', 'SomeEmployRule']);
-                },
-              },
+              // {
+              //   label: 'مواعيد خاصة',
+              //   icon: 'pi pi-database',
+              //   command: (event) => {
+              //     this._router.navigate(['Main', 'SomeEmployRule']);
+              //   },
+              // },
               {
                 label: 'الأجازات',
                 icon: 'pi pi-database',
