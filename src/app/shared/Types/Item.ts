@@ -1,0 +1,1 @@
+export type Item = { ID: number, NAME: string, CATEGORY: number,ROW_NUMBER:number, UNIT: string, TYPE: string, PRICE_GET: number, PRICE_SEAL: number, NOTS: string }

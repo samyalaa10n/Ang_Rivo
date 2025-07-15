@@ -11,7 +11,7 @@ import { CalendarModule, LocaleSettings } from 'primeng/calendar';
   templateUrl: './DateTime.component.html',
   styleUrls: ['./DateTime.component.css'],
   standalone: true,
-  imports: [DatePickerModule, FormsModule, NgStyle, CalendarModule]
+  imports: [DatePickerModule, FormsModule, CalendarModule]
 })
 export class DateTimeComponent implements OnInit {
 

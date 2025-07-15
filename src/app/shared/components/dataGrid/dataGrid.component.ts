@@ -36,7 +36,7 @@ import { DateTimeComponent } from "../DateTime/DateTime.component";
     ToggleSwitchModule,
     CheckboxModule,
     InputNumberModule,
-    IconField, InputIcon, InputTextModule, NgIf, MultiselectComponent, ComboBoxComponent, NgTemplateOutlet,
+    IconField, InputTextModule, NgIf, MultiselectComponent, ComboBoxComponent, NgTemplateOutlet,
     DateTimeComponent
   ]
 })
@@ -99,7 +99,7 @@ export class DataGridComponent implements OnInit {
   @Input() paginator: boolean = true;
   @Input() AllowEdit: boolean = false;
   @Input() AddInherit: boolean = false;
-  @Input() AllowUpdate: boolean = false;
+  @Input() AllowUpdate: boolean = true;
   @Input() AllowSearch: boolean = true;
   @Input() scrollHeight: string = "flex"
   @Input() ManyRowsInShow: number = 10;
@@ -264,14 +264,16 @@ export class DataGridComponent implements OnInit {
    
   }
   async AddNew(table: Table) {
-    if (this.dataSource == undefined) {
-      this.dataSource = [];
-    }
-    if (this.dataSource.find(x => Object.entries(x).length == 0) == null) {
-      this.dataSource.push({ ID: (this.dataSource.length + 1) * -1 })
-      this.IsLoading = true;
-      table.reset();
-      this.selectLastInput();
+    if (this.AllowAdd) {
+      if (this.dataSource == undefined) {
+        this.dataSource = [];
+      }
+      if (this.dataSource.find(x => Object.entries(x).length == 0) == null) {
+        this.dataSource.push({ ID: (this.dataSource.length + 1) * -1 })
+        this.IsLoading = true;
+        table.reset();
+        this.selectLastInput();
+      }
     }
   }
   clear(table: Table) {
@@ -303,8 +305,12 @@ export class DataGridComponent implements OnInit {
     this.dataSource.push(nItem)
   }
   onGridAction(Action: GridAction) {
-    this.onRenderItemSource(Action.itemEdit,this.dataSource.indexOf(Action.itemEdit))
+    this.GridActionFunc(Action)
     this.GridAction.emit(Action);
+    this.onRenderItemSource(Action.itemEdit,this.dataSource.indexOf(Action.itemEdit))
+  }
+  GridActionFunc(Action: GridAction) {
+
   }
 
   selectLastInput() {
@@ -331,8 +337,29 @@ export class DataGridComponent implements OnInit {
     })
 
   }
+
   async pInputTextKeyDown(e: KeyboardEvent, inputText: any, item: any) {
+
+    let MoveDown=()=>{
+      let cell = (e.target as HTMLElement)?.parentElement?.parentElement;
+      window.getSelection()?.removeAllRanges();
+      let Row = (e.target as HTMLElement)?.parentElement?.parentElement?.parentElement;
+      let CollectRows = (e.target as HTMLElement)?.parentElement?.parentElement?.parentElement?.parentElement;
+      if (CollectRows && Row && cell) {
+        let indexRow = Array.from(CollectRows.children).indexOf(Row);
+        let Indexcell = Array.from(Row.children).indexOf(cell);
+        if ((indexRow + 1) < Array.from(CollectRows.children).length) {
+          let NewTarget = (CollectRows.children[indexRow + 1].children[Indexcell]?.children[0]?.children[0] as HTMLElement);
+          if (NewTarget) {     
+            NewTarget.scroll({ behavior: 'smooth' });
+            this._tools.waitExecuteFunction(200,()=>{(NewTarget as any).select()})
+          }
+        }
+      }
+    }
+
     if (e.code == "Enter" && inputText.value != null && inputText.value != "") {
+      MoveDown();
       this.AddNew(this.dt)
     }
     else if (e.code == "NumpadEnter") {
@@ -357,6 +384,6 @@ export class DataGridComponent implements OnInit {
 export interface GridAction {
   EVENT: any,
   itemEdit: any,
-  ActonType: "CLICK" | "KEYUP" | "SELECT"|"UN_SELECT",
-  COLUMN: Column|null
+  ActonType: "CLICK" | "KEYUP" | "SELECT" | "UN_SELECT" | "ngModelChange",
+  COLUMN: Column | null
 }

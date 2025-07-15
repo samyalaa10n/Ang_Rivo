@@ -185,8 +185,93 @@ export class NaveComponent implements OnInit {
               this._router.navigate(['Main', 'Companies']);
             },
           },
-         
+
         ]
+      }
+      ,
+      {
+        label: 'المخازن',
+        icon: 'pi pi-database',
+        items: [
+          {
+            label: 'المخازن',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'WareHouses']);
+            },
+          },
+          {
+            label: 'التصنيفات',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'Category']);
+            },
+          },
+          {
+            label: 'الأصناف',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'Items']);
+            },
+          }
+        ]
+      }
+      ,
+      {
+        label: 'المبيعات',
+        icon: 'pi pi-database',
+        items: [
+          {
+            label: 'العملاء',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'Customer']);
+            },
+          },
+          {
+            label: 'الفواتير',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'Customer']);
+            },
+          }
+          ,
+          {
+            label: 'الطلبيات',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'Requstes', { ID: 0 }]);
+            },
+          }
+        ]
+      },
+      {
+        label: 'الحسابات',
+        icon: 'pi pi-database',
+        items: [
+          {
+            label: 'قائمة الحسابات',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'Accounts']);
+            },
+          },
+          {
+            label: 'انواع العمليات',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'AccountTypeOperations']);
+            },
+          },
+          {
+            label: 'عمليات محاسبية',
+            icon: 'pi pi-database',
+          }
+        ]
+      },
+      {
+        label: 'التقارير',
+        icon: 'pi pi-database',
       }
     ]
 

@@ -6,21 +6,23 @@ import { Tools } from './shared/service/Tools.service';
 import { ToasterComponent } from "./shared/components/Toaster/Toaster.component";
 import { DatePipe } from '@angular/common';
 import { LoadingComponent } from './shared/components/Loading/Loading.component';
+import { PrintComponent } from "./shared/components/print/print.component";
+import { PrintService } from './shared/service/Print.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ToasterComponent, LoadingComponent],
+  imports: [RouterOutlet, ToasterComponent, LoadingComponent, PrintComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   providers: [DatePipe],
 })
 export class AppComponent {
+  
   title = 'R.App.F';
   constructor(private primeng: PrimeNG, private _tools: Tools,private _dateFormat: DatePipe) {
 
   }
   ngOnInit() {
-
     this.primeng.setTranslation(this._tools.DateTime.Date_Data);
 
     this.primeng.zIndex = {

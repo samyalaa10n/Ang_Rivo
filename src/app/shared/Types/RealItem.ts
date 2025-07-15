@@ -1,0 +1,1 @@
+export type RealItem = { ID: number,ROW_NUMBER:number, ITEM_ID: number, NAME: string,CATEGORY:string, UNIT: string, TYPE: string, MAIN_PRICE: number, PRICE: number, COUNT: number, TOTAL_COUNT: number }

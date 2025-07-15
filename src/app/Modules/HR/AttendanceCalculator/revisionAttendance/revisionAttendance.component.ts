@@ -60,6 +60,13 @@ export class RevisionAttendanceComponent implements OnInit {
     this.AttSelected = Att;
     this.ShowDialogEdit = true;
   }
+  saveData() {
+    localStorage.setItem("testSave", JSON.stringify(this.Attendance))
+  }
+  GetItem() {
+    let data = localStorage.getItem("testSave");
+    if (data) this.Attendance =  JSON.parse(data)
+  }
   // التحقق من التكرار في أنواع البصمات
   validateDuplicateTypes() {
     for (let index = 0; index < this.Attendance.length; index++) {
@@ -295,7 +302,7 @@ export class RevisionAttendanceComponent implements OnInit {
     nAdd.RecordChanges = [this._tools.cloneObject(nAdd)];
     nAdd.TYPE = "c/in"
     Att.CompleteAtt = nAdd;
-    nAdd.CompleteAtt = Att;
+    nAdd.CompleteAtt = this._tools.cloneObject(Att);
     nAdd.IsAdded = true
     nAdd.Shift = 0;
     nAdd.ID_Place = this.getDevicePlace(nAdd.ID_DIVICE_IN_SYSTEM).ID
@@ -397,7 +404,7 @@ export class RevisionAttendanceComponent implements OnInit {
     Tr.classList.remove("bgTrOut")
     Tr.classList.remove("bg2TIn")
     Tr.classList.remove("bg2TrOut")
-    if ((Att.IsAdded == false || Att.IsAdded == undefined ) && (Att.ERROR==false || Att.ERROR==undefined)) {
+    if ((Att.IsAdded == false || Att.IsAdded == undefined) && (Att.ERROR == false || Att.ERROR == undefined)) {
       if (Att.classColor) {
         if (Att.TYPE == 'c/in') {
           Tr.classList.add("bgTIn")

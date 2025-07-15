@@ -4,9 +4,10 @@
         [scrollHeight]="scrollHeight" [rowsPerPageOptions]="rowsPerPageOptions" tableStyleClass="p-datatable-gridlines"
         [globalFilterFields]="globalFilterFields" [showGridlines]="true" [reorderableColumns]="true"
         [(selection)]="selectedItems" (selectionChange)="onSelectAllChange($event)"
-        (onRowUnselect)="onUnSelectRow($event);onGridAction({EVENT:$event,itemEdit:$event,ActonType:'UN_SELECT',COLUMN:null});" (onRowSelect)="onSelectRow($event);onGridAction({EVENT:$event,itemEdit:$event,ActonType:'SELECT',COLUMN:null})" [columns]="selectedColumns"
-        [reorderableColumns]="true" [selectionMode]="selectionMode" [metaKeySelection]="singleSelectedMode"
-        paginatorDropdownAppendTo="body">
+        (onRowUnselect)="onUnSelectRow($event);onGridAction({EVENT:$event,itemEdit:$event,ActonType:'UN_SELECT',COLUMN:null});"
+        (onRowSelect)="onSelectRow($event);onGridAction({EVENT:$event,itemEdit:$event,ActonType:'SELECT',COLUMN:null})"
+        [columns]="selectedColumns" [reorderableColumns]="true" [selectionMode]="selectionMode"
+        [metaKeySelection]="singleSelectedMode" paginatorDropdownAppendTo="body">
         <ng-template #caption>
             <div *ngIf="AllowHeaderTemplate">
                 <div>
@@ -15,28 +16,32 @@
                 </div>
                 <div class="flex py-1">
                     <p-iconfield *ngIf="AllowSearch" iconPosition="left" class="ml-auto">
-                        <app-multiselect class="d-inline-block mx-2" [IsInGridMode]="false" *ngIf="canSelectedSomeColumns && Columns.length>0"
-                            [style]="{'width': '250px'}" display="comma" placeholder="اختر الأعمدة" [dataSource]="Columns"
+                        <app-multiselect class="d-inline-block mx-2" [IsInGridMode]="false"
+                            *ngIf="canSelectedSomeColumns && Columns.length>0" [style]="{'width': '250px'}"
+                            display="comma" placeholder="اختر الأعمدة" [dataSource]="Columns"
                             [(dataSelected)]="selectedColumns" optionLabel="header" optionValue="name"
                             selectedItemsLabel="تم تحديد {0} أعمدة"></app-multiselect>
-                        <input class="mx-1" style="width: unset;"  pInputText type="text"
-                            (input)="globalFilter(dt,$event)" placeholder="بحث" />
-                        <p-button label="" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(dt)" />
-                  
+                        <div class="d-flex justify-content-center align-items-center">
+                            <input class="mx-1 form-control" style="width: unset;" type="text"
+                                (input)="globalFilter(dt,$event)" placeholder="بحث" />
+                            <p-button label="" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(dt)" />
+                        </div>
+
                     </p-iconfield>
                 </div>
                 <ng-content select="[body]"></ng-content>
                 <div class="my-2">
-                    <p-button *ngIf="AllowUpdate" [variant]="'text'" [raised]="true" [size]="'small'" label="تحديث" severity="info" class=" font-bold mx-1"
-                        icon="pi pi-sync" (click)="onUpdate(dt)" />
-                    <p-button *ngIf="AllowAdd" [variant]="'text'" [raised]="true" [size]="'small'" label="اضافة" severity="success" class=" font-bold mx-1"
-                        icon="pi pi-plus" (click)="AddNew(dt)" />
-                    <p-button *ngIf="AllowSave" [variant]="'text'" [raised]="true" [size]="'small'" btn class="px-1" severity="warn" label="حفظ" icon="pi pi-save"
-                        (click)="save()"></p-button>
-                    <p-button *ngIf="AllowDeleteSelected" [variant]="'text'" [raised]="true" [size]="'small'" severity="danger" label="حذف المحدد" class=" font-bold mx-1"
-                        icon="pi pi-trash" (click)="DeleteSelectedData()" />
-                    <p-button *ngIf="AllowExportExcel" [variant]="'text'" [raised]="true" [size]="'small'" label="تصدير" class="font-bold mx-1" icon="pi pi-file-excel"
-                        (click)="exportExcel()" />
+                    <p-button *ngIf="AllowUpdate" [variant]="'text'" [raised]="true" [size]="'small'" label="تحديث"
+                        severity="info" class=" font-bold mx-1" icon="pi pi-sync" (click)="onUpdate(dt)" />
+                    <p-button *ngIf="AllowAdd" [variant]="'text'" [raised]="true" [size]="'small'" label="اضافة"
+                        severity="success" class=" font-bold mx-1" icon="pi pi-plus" (click)="AddNew(dt)" />
+                    <p-button *ngIf="AllowSave" [variant]="'text'" [raised]="true" [size]="'small'" btn class="px-1"
+                        severity="warn" label="حفظ" icon="pi pi-save" (click)="save()"></p-button>
+                    <p-button *ngIf="AllowDeleteSelected" [variant]="'text'" [raised]="true" [size]="'small'"
+                        severity="danger" label="حذف المحدد" class=" font-bold mx-1" icon="pi pi-trash"
+                        (click)="DeleteSelectedData()" />
+                    <p-button *ngIf="AllowExportExcel" [variant]="'text'" [raised]="true" [size]="'small'" label="تصدير"
+                        class="font-bold mx-1" icon="pi pi-file-excel" (click)="exportExcel()" />
                     <ng-content select="[MORE_BUTTON]"></ng-content>
                 </div>
             </div>
@@ -44,7 +49,8 @@
         <ng-template #header let-columns>
             <tr>
                 <th *ngIf="canReOrder" style="width: 6rem"></th>
-                <th *ngIf="canSelectRow" style="width: 4rem ;text-align: center;"><p-tableHeaderCheckbox *ngIf="!singleSelectedMode" /></th>
+                <th *ngIf="canSelectRow" style="width: 4rem ;text-align: center;"><p-tableHeaderCheckbox
+                        *ngIf="!singleSelectedMode" /></th>
                 <th *ngIf="IsHasChild" style="width: 5rem"></th>
                 @for (column of columns; track $index) {
                 <th class="text-center " appResizableColumn [style]="'min-width:'+column.width+'px'">
@@ -116,15 +122,14 @@
                     }
                     @case ("text") {
                     <input class="inputText" pInputText type="text" #text placeholder="كتابة ... "
-                        (keydown)="pInputTextKeyDown($event,text,item)"
-                        (keyup)="onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"
-                        [(ngModel)]="item[column.name]" />
+                        [(ngModel)]="item[column.name]" (keydown)="pInputTextKeyDown($event,text,item)"
+                        (keyup)="onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})" />
                     }
                     @case ("yes-no") {
                     <label for="ny" class="mx-2">{{column.header}}</label>
-                    <p-checkbox id="ny"
+                    <p-checkbox id="ny" [(ngModel)]="item[column.name]"
                         (onChange)="onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"
-                        [(ngModel)]="item[column.name]" [binary]="true" />
+                        [binary]="true" />
                     <!-- <p-toggleswitch [(ngModel)]="item[column.name]" /> -->
                     <!-- <p-togglebutton [(ngModel)]="item[column.name]" onLabel="نعم" offLabel="لا" styleClass="w-24" /> -->
                     }
@@ -139,21 +144,21 @@
                         (selectedDateChange)="onSelectColumnData(item,$event,column);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"></app-DateTime>
                     }
                     @case ("Time") {
-                        <app-DateTime placeholder="كتابة ... " hourFormat="" [(selectedDate)]="item[column.name]"   [showTimeOnly]="true"
-                            [maxDate]="column.columnMaxDate" [minDate]="column.columnMinDate"
-                            (selectedDateChange)="onSelectColumnData(item,$event,column);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"></app-DateTime>
-                        }
+                    <app-DateTime placeholder="كتابة ... " hourFormat="" [(selectedDate)]="item[column.name]"
+                        [showTimeOnly]="true" [maxDate]="column.columnMaxDate" [minDate]="column.columnMinDate"
+                        (selectedDateChange)="onSelectColumnData(item,$event,column);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"></app-DateTime>
+                    }
                     @case ("number") {
                     <p-inputnumber [(ngModel)]="item[column.name]"
-                        (onKeyDown)="pInputTextKeyDown($event,{value:'1'},item);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"
-                        mode="decimal" />
+                        (ngModelChange)="onGridAction({EVENT:$event,itemEdit:item,ActonType:'ngModelChange',COLUMN:column})"
+                        (onKeyDown)="pInputTextKeyDown($event,{value:'1'},item)" mode="decimal" />
                     <!-- <p-datepicker [showButtonBar]="true" [(ngModel)]="item[column.name]" dateFormat="dd/mm/yy"
                         appendTo="body" [showIcon]="true" inputId="buttondisplay" [showOnFocus]="true" /> -->
                     }
                     @case ("numberWithFraction") {
                     <p-inputnumber [(ngModel)]="item[column.name]" [minFractionDigits]="0" [maxFractionDigits]="3"
-                        (onKeyDown)="pInputTextKeyDown($event,{value:'1'},item);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"
-                        mode="decimal" />
+                        (ngModelChange)="onGridAction({EVENT:$event,itemEdit:item,ActonType:'ngModelChange',COLUMN:column})"
+                        (onKeyDown)="pInputTextKeyDown($event,{value:'1'},item)" mode="decimal" />
                     <!-- <p-datepicker [showButtonBar]="true" [(ngModel)]="item[column.name]" dateFormat="dd/mm/yy"
                             appendTo="body" [showIcon]="true" inputId="buttondisplay" [showOnFocus]="true" /> -->
                     }
@@ -195,14 +200,15 @@
                 </td>
                 }
                 <td class="text-center fixed-column px-4" *ngIf="AllowCurdOperation">
-                    <ng-container  [ngTemplateOutlet]="templateBtn"
+                    <ng-container [ngTemplateOutlet]="templateBtn"
                         [ngTemplateOutletContext]="{ $implicit:item ,Grid:this}"></ng-container>
-                    <p-button severity="danger" [variant]="'text'" [raised]="true" [size]="'small'" *ngIf="AllowDelete" label="حذف" icon="pi pi-trash"
-                        (click)="onDeleteItem(item)"></p-button>
-                    <p-button class="mx-2" severity="success" [variant]="'text'" [raised]="true" [size]="'small'" *ngIf="AllowEdit" label="تعديل" icon="pi pi-pen-to-square"
+                    <p-button severity="danger" [variant]="'text'" [raised]="true" [size]="'small'" *ngIf="AllowDelete"
+                        label="حذف" icon="pi pi-trash" (click)="onDeleteItem(item)"></p-button>
+                    <p-button class="mx-2" severity="success" [variant]="'text'" [raised]="true" [size]="'small'"
+                        *ngIf="AllowEdit" label="تعديل" icon="pi pi-pen-to-square"
                         (click)="onEditItem(item)"></p-button>
-                    <p-button class="mx-2 " severity="success" [variant]="'text'" [raised]="true" [size]="'small'" *ngIf="AddInherit" label="جديد" icon="pi pi-plus"
-                        (click)="onAddInert(item)"></p-button>
+                    <p-button class="mx-2 " severity="success" [variant]="'text'" [raised]="true" [size]="'small'"
+                        *ngIf="AddInherit" label="جديد" icon="pi pi-plus" (click)="onAddInert(item)"></p-button>
                 </td>
             </tr>
         </ng-template>

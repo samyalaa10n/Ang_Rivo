@@ -13,4 +13,6 @@
     min-width: unset !important;
     direction: rtl !important;
 }
-
+::ng-deep .p-datepicker{
+    width: 100% !important;
+}

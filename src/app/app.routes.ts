@@ -85,11 +85,6 @@ export const routes: Routes = [
         loadComponent: () => import('./Modules/HR/Effect/Effect.component').then(m => m.EffectComponent)
       },
       {
-        path: 'Accounts',
-        title: 'الحسابات',
-        loadComponent: () => import('./Modules/Admin/Account/Account.component').then(m => m.AccountComponent)
-      },
-      {
         path: 'Users',
         title: 'المستخدمين',
         loadComponent: () => import('./Modules/Admin/User/User.component').then(m => m.UserComponent)
@@ -131,6 +126,49 @@ export const routes: Routes = [
         path: 'AttendanceCalculator',
         title: 'حساب الساعات',
         loadComponent: () => import('./Modules/HR/AttendanceCalculator/AttendanceCalculator.component').then(m => m.AttendanceCalculatorComponent)
+      }
+      ,
+      {
+        path: 'WareHouses',
+        title: 'المخازن',
+        loadComponent: () => import('./Modules/WareHouse/WareHouses/WareHouses.component').then(m => m.WareHousesComponent)
+      }
+      ,
+      {
+        path: 'Category',
+        title: 'التصنيفات',
+        loadComponent: () => import('./Modules/WareHouse/Category/Category.component').then(m => m.CategoryComponent)
+      }
+      ,
+      {
+        path: 'Items',
+        title: 'الأصناف',
+        loadComponent: () => import('./Modules/WareHouse/Items/Items.component').then(m => m.ItemsComponent)
+      }
+      ,
+      {
+        path: 'Customer',
+        title: 'العملاء',
+        loadComponent: () => import('./Modules/Seals/Customer/Customer.component').then(m => m.CustomerComponent)
+      }
+      ,
+      {
+        path: 'Requstes',
+        data: { ID: 0 },
+        title: 'الطلبيات',
+        loadComponent: () => import('./Modules/Seals/Requstes/Requstes.component').then(m => m.RequstesComponent)
+      }
+      ,
+      {
+        path: 'Accounts',
+        title: 'الحسابات',
+        loadComponent: () => import('./Modules/Accounts/Accounts/Accounts.component').then(m => m.AccountsComponent)
+      }
+      ,
+      {
+        path: 'AccountTypeOperations',
+        title: 'انواع العمليات المحاسبية',
+        loadComponent: () => import('./Modules/Accounts/AccountTypeOperations/AccountTypeOperations.component').then(m => m.AccountTypeOperationsComponent)
       }
     ]
   },

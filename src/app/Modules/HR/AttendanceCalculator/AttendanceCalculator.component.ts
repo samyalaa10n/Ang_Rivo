@@ -18,7 +18,7 @@ import { CustomColumnDirective } from '../../../shared/components/dataGrid/Custo
   selector: 'app-AttendanceCalculator',
   templateUrl: './AttendanceCalculator.component.html',
   styleUrls: ['./AttendanceCalculator.component.css'],
-  imports: [CustomColumnDirective,DialogModule, InputLabelComponent, DateTimeComponent, ButtonModule, MultiselectComponent, NgIf, NgFor, AccordionModule, CalculateDayComponent, InputTextModule, RevisionAttendanceComponent, DataGridComponent,NgClass]
+  imports: [CustomColumnDirective,DialogModule, InputLabelComponent, DateTimeComponent, ButtonModule, MultiselectComponent, NgIf, NgFor, AccordionModule, CalculateDayComponent, InputTextModule, RevisionAttendanceComponent, DataGridComponent]
 })
 export class AttendanceCalculatorComponent implements OnInit {
   @ViewChildren("CalcDay") CalcDays! :QueryList<CalculateDayComponent>

@@ -1,0 +1,29 @@
+<app-dataGrid  (onGridLoaded)="onGridLoaded($event)"  (RenderItemSource)="RenderItemSource($event)"  (GridAction)="GridAction($event)" [(dataSource)]="ITEMS_INPUT" [StopAllButtons]="true"  >
+  <div header>
+    <h4 class="my-2" >أصناف الطلبية</h4>
+    <div class="row my-2">
+      <div class="col-12 my-2">
+        <app-multiselect class="mx-2" [(dataSelected)]="CategorySelected" (dataSelectedChange)="SelectCategory()"  placeholder="التصنيف" optionLabel="NAME" optionValue="ID" [dataSource]="Category" ></app-multiselect>        
+      </div>
+      <div class="col-12 col-lg-4 my-2" >
+        <p-autocomplete (onKeyUp)="Enter($event,2)" #StepInput1 class="d-block w-100" [forceSelection]="true" placeholder="اسم الصنف" [suggestions]="filteredData" emptyMessage="لا يوجد"
+        (onSelect)="Selected($event)" (completeMethod)="filterEmploy($event)" optionLabel="NAME" />
+      </div>
+      <div class="col-12 col-lg-4 my-2 " >
+        <app-InputLabel placeholder="السعر في الطلبية">
+          <p-inputNumber #StepInput2 (onKeyDown)="Enter($event,3)" [(ngModel)]="SelectedItem.PRICE"></p-inputNumber>
+        </app-InputLabel>
+      </div>
+      <div class="col-12 col-lg-4 my-2" >
+        <app-InputLabel placeholder="الكمية">
+          <p-inputNumber #StepInput3 (onKeyDown)="Enter($event,4)"  [(ngModel)]="SelectedItem.COUNT"></p-inputNumber>
+        </app-InputLabel>
+      </div>
+      <div class="col-12 my-2">
+        <p-button #StepInput4 [raised]="true" (onClick)="SetItem()" label="اضافة" class="font-bold mx-1" icon="pi pi-plus" />
+      </div>
+    </div>
+  </div>
+  <p-button btn [raised]="true" (onClick)="Claer()" severity="danger" label="تفريغ البيانات" class="font-bold mx-1" />
+  <p-button btn [raised]="true" (onClick)="Back()"  label="الغاء التفريغ" class="font-bold mx-1"  />
+</app-dataGrid>

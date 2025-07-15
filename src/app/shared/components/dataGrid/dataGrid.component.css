@@ -138,6 +138,7 @@
     box-shadow   : unset !important;
     border-radius: 0px !important;
     min-width: 100px !important;
+    width: 100% !important;
 }
 
 .app-grid ::ng-deep th {

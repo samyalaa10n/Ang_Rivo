@@ -23,6 +23,7 @@ export class ComboBoxComponent implements OnInit {
   @Input() apiPathDataSource: string = ''
   @Input() Label: string = ''
   @Input() SelectedValue: any = null
+  @Input() NormalStyle: boolean = false
   @Input() showClear: boolean = true;
   @Input() DefaultClearValue: any = 0;
   @Input() dataSource: Array<any> = []

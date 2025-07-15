@@ -8,10 +8,15 @@
         </app-InputLabel>
         <span class="p-2 mx-2 border border-1">عدد الأمضائات : {{Attendance.length}}</span>
         <span class="p-2 mx-2 border border-1"> اجمالي ساعات العمل: {{getTotalHours()}}</span>
+
     </div>
     <div class="p-2">
         <p-button class="mx-1 w-100" size="small" (onClick)="ShowDeleted()" variant="text" [raised]="true"
             severity="danger" label="عرض الأمضائات الملغية"></p-button>
+        <p-button class="mx-1 w-100" size="small" (onClick)="saveData()" variant="text" [raised]="true"
+            label="حفظ"></p-button>
+        <p-button class="mx-1 w-100" size="small" (onClick)="GetItem()" variant="text" [raised]="true"
+            label="عرض"></p-button>
     </div>
 </div>
 <div dir="rtl" *ngIf="DataLoaded" class="position-relative overflow-scroll MyTable-Height">
@@ -33,12 +38,19 @@
         </thead>
         <tbody>
             <ng-container *ngFor="let Att of Attendance;  let dx=index;">
-                <tr #tr class="position-relative"  [ngClass]="{'bg-info': Att.IsAdded,'bg-warning':Att.ERROR}">
+                <tr #tr class="position-relative" [ngClass]="{'bg-info': Att.IsAdded,'bg-warning':Att.ERROR}">
                     {{setTrColor(Att,tr)}}
-                    <td class="text-center" >{{_tools.DateTime.getDayName(Att.DATETIME)}}</td>
-                    <td class="text-center"><app-DateTime [showOnFocus]="true"  class="d-inline-block " placeholder="اختر التاريخ" [(selectedDate)]="Att.DATETIME" (selectedDateChange)="onChangeAttendance(Att,$event)"></app-DateTime></td>
-                    <td class="text-center"><app-DateTime [selectOnFocus]="true" class="d-inline-block " placeholder="اختر الوقت" [showTimeOnly]="true" [showTime]="true" [(selectedDate)]="Att.TIME" (selectedDateChange)="onChangeAttendance(Att,$event)"></app-DateTime></td>
-                    <td *ngIf="!Att.IsAdded" class="text-center"><app-comboBox [showClear]="false" placeholder="اختر نوع التوقيع" class="d-inline-block" optionLabel="name"  [(SelectedValue)]="Att.TYPE" (SelectedValueChange)="onChangeAttendance(Att,$event)" optionValue="name" [dataSource]="[{name:'c/in'},{name:'c/out'}]"></app-comboBox></td>
+                    <td class="text-center">{{_tools.DateTime.getDayName(Att.DATETIME)}}</td>
+                    <td class="text-center"><app-DateTime [showOnFocus]="true" class="d-inline-block "
+                            placeholder="اختر التاريخ" [(selectedDate)]="Att.DATETIME"
+                            (selectedDateChange)="onChangeAttendance(Att,$event)"></app-DateTime></td>
+                    <td class="text-center"><app-DateTime [selectOnFocus]="true" class="d-inline-block "
+                            placeholder="اختر الوقت" [showTimeOnly]="true" [showTime]="true" [(selectedDate)]="Att.TIME"
+                            (selectedDateChange)="onChangeAttendance(Att,$event)"></app-DateTime></td>
+                    <td *ngIf="!Att.IsAdded" class="text-center"><app-comboBox [showClear]="false"
+                            placeholder="اختر نوع التوقيع" class="d-inline-block" optionLabel="name"
+                            [(SelectedValue)]="Att.TYPE" (SelectedValueChange)="onChangeAttendance(Att,$event)"
+                            optionValue="name" [dataSource]="[{name:'c/in'},{name:'c/out'}]"></app-comboBox></td>
                     <td *ngIf="Att.IsAdded" class="text-center">{{Att.TYPE}}</td>
                     <td class="text-center">{{Att.HOURS}}</td>
                     <td class="text-center">
@@ -59,8 +71,11 @@
                             [(SelectedValue)]="Att.ID_PLACE" (SelectedValueChange)="onChangeAttendance(Att,$event)"
                             optionValue="ID" [dataSource]="Data.PLACES"></app-comboBox>
                     </td>
-                    <td >
-                        <app-comboBox *ngIf="Att.TYPE=='c/in'" placeholder="اسم الشفت" optionLabel="NAME" optionValue="ID" [(SelectedValue)]="Att.Shift" (SelectedValueChange)="onChangeAttendance(Att,$event)" [dataSource]="Data.SHIFTS"></app-comboBox>
+                    <td>
+                        <app-comboBox *ngIf="Att.TYPE=='c/in'" placeholder="اسم الشفت" optionLabel="NAME"
+                            optionValue="ID" [(SelectedValue)]="Att.Shift"
+                            (SelectedValueChange)="onChangeAttendance(Att,$event)"
+                            [dataSource]="Data.SHIFTS"></app-comboBox>
                     </td>
                     <td>
                         <span *ngIf="Att.ERROR"
@@ -108,7 +123,7 @@
                     <th>{{getDeviceInfo(Att.ID_DIVICE_IN_SYSTEM).NAME}}</th>
                     <th>{{getDevicePlace(Att.ID_DIVICE_IN_SYSTEM).NAME}}</th>
                     <th>
-                            <p-button class="mx-1 w-100" size="small" (onClick)="UnDelete(dx)" variant="text"
+                        <p-button class="mx-1 w-100" size="small" (onClick)="UnDelete(dx)" variant="text"
                             [raised]="true" label="الغاء الحذف"></p-button>
                     </th>
                 </tr>
