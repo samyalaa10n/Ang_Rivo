@@ -206,12 +206,21 @@ export class NaveComponent implements OnInit {
             command: (event) => {
               this._router.navigate(['Main', 'Category']);
             },
-          },
+          }
+          ,
           {
             label: 'الأصناف',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'Items']);
+            },
+          }
+          ,
+          {
+            label: 'العمليات المخزنية',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'OperationList']);
             },
           }
         ]
@@ -232,7 +241,7 @@ export class NaveComponent implements OnInit {
             label: 'الفواتير',
             icon: 'pi pi-database',
             command: (event) => {
-              this._router.navigate(['Main', 'Customer']);
+              this._router.navigate(['Main', 'InvoiceList']);
             },
           }
           ,
@@ -240,7 +249,7 @@ export class NaveComponent implements OnInit {
             label: 'الطلبيات',
             icon: 'pi pi-database',
             command: (event) => {
-              this._router.navigate(['Main', 'Requstes', { ID: 0 }]);
+              this._router.navigate(['Main', 'RequstesList'])
             },
           }
         ]

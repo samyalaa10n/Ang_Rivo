@@ -1,3 +1,3 @@
 import { RealItem } from "./RealItem";
 
-export type RequestOrder ={ID:number,ROW_NUMBER:number,CUSTOMER_NAME?:string,PAYMENT_NAME?:string, PAYMENT_TYPE:number, CUSTOMER: number, NOTS: string, DESCOUND_PERCENT: number, PRICE_AFTER_DESCOUND: number, DEPOST: number, SEND_DATE: Date, RESAVE_DATE: Date, ITEMS: Array<RealItem> } 
+export type RequestOrder ={ID:number,ROW_NUMBER:number,TOTAL?:number, TOTAL_AFTER_DEPOST?:number,CUSTOMER_NAME?:string,PAYMENT_NAME?:string, PAYMENT_TYPE:number, CUSTOMER: number, NOTS: string, DESCOUND_PERCENT: number, PRICE_AFTER_DESCOUND: number, DEPOST: number, SEND_DATE: Date, RESAVE_DATE: Date, ITEMS: Array<RealItem> } 

@@ -2,6 +2,7 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { PrintOptions } from '../../interface/PrintOptions ';
 import { DatePipe, NgIf } from '@angular/common';
 import { PrintService } from '../../service/Print.service';
+import { Tools } from '../../service/Tools.service';
 
 @Component({
   selector: 'app-print',
@@ -31,7 +32,7 @@ export class PrintComponent implements OnInit {
     headerContent: '',
     footerContent: ''
   };
-  constructor(public _sevicePrint:PrintService){
+  constructor(public _sevicePrint:PrintService,private _tools:Tools){
     _sevicePrint.printComponent=this;
   }
   ngOnInit() {
@@ -127,7 +128,6 @@ export class PrintComponent implements OnInit {
     const printWindow = window.open('', '_blank');
     if (printWindow) {
       const printOptions = { ...this.defaultOptions, ...options };
-      
       printWindow.document.write(`
         <html dir="rtl">
           <head>
@@ -158,10 +158,12 @@ export class PrintComponent implements OnInit {
           </body>
         </html>
       `);
-      
-      printWindow.document.close();
-      printWindow.print();
-      printWindow.close();
+      this._tools.waitExecuteFunction(100,()=>{
+        printWindow.document.close();
+        printWindow.print();
+        printWindow.close();
+      })
+
     }
   }
 }

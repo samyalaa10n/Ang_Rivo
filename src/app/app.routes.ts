@@ -131,19 +131,33 @@ export const routes: Routes = [
       {
         path: 'WareHouses',
         title: 'المخازن',
-        loadComponent: () => import('./Modules/WareHouse/WareHouses/WareHouses.component').then(m => m.WareHousesComponent)
+        loadComponent: () => import('./Modules/Inventory/WareHouses/WareHouses.component').then(m => m.WareHousesComponent)
       }
       ,
       {
         path: 'Category',
         title: 'التصنيفات',
-        loadComponent: () => import('./Modules/WareHouse/Category/Category.component').then(m => m.CategoryComponent)
+        loadComponent: () => import('./Modules/Inventory/Category/Category.component').then(m => m.CategoryComponent)
       }
       ,
       {
         path: 'Items',
         title: 'الأصناف',
-        loadComponent: () => import('./Modules/WareHouse/Items/Items.component').then(m => m.ItemsComponent)
+        loadComponent: () => import('./Modules/Inventory/Items/Items.component').then(m => m.ItemsComponent)
+      }
+      ,
+      {
+        path: 'OperationList',
+        title: 'العمليات المخزنية',
+  
+        loadComponent: () => import('./Modules/Inventory/OperationList/OperationList.component').then(m => m.OperationListComponent)
+      }
+      ,
+      {
+        path: 'Operation',
+        data: { ID: 0 },
+        title: 'عملية مخزنية',
+        loadComponent: () => import('./Modules/Inventory/Operation/Operation.component').then(m => m.OperationComponent)
       }
       ,
       {
@@ -153,10 +167,30 @@ export const routes: Routes = [
       }
       ,
       {
+        path: 'InvoiceList',
+        title: 'الفواتير',
+        loadComponent: () => import('./Modules/Seals/InvoiceList/InvoiceList.component').then(m => m.InvoiceListComponent)
+      }
+      ,
+      {
+        path: 'Invoice',
+        data: { ID: 0 },
+        title: 'فاتورة',
+        loadComponent: () => import('./Modules/Seals/Invoice/Invoice.component').then(m => m.InvoiceComponent)
+      }
+      ,
+      {
         path: 'Requstes',
         data: { ID: 0 },
         title: 'الطلبيات',
         loadComponent: () => import('./Modules/Seals/Requstes/Requstes.component').then(m => m.RequstesComponent)
+      }
+      ,
+      {
+        path: 'RequstesList',
+        data: { ID: 0 },
+        title: 'الطلبيات',
+        loadComponent: () => import('./Modules/Seals/RequstesList/RequstesList.component').then(m => m.RequstesListComponent)
       }
       ,
       {

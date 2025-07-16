@@ -30,9 +30,9 @@ export class TDateTime {
   GetNumberOfYear(): number {
     return this.EditData(new Date()).getFullYear();
   }
-  EditData(dateTime: Date): Date {
-    if (dateTime instanceof Date) return new Date(dateTime.toLocaleDateString("en") + ' GMT')
-    else if (typeof dateTime == "string") return new Date(dateTime + ' GMT')
+  EditData(dateTime: Date,GMT:any=''): Date {
+    if (dateTime instanceof Date) return new Date(dateTime.toLocaleDateString("en") + ' GMT+'+GMT)
+    else if (typeof dateTime == "string") return new Date(dateTime + ' GMT+'+GMT)
     return new Date()
   }
   convertNumberToData(_number: any): Date {

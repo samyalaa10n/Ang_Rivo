@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, output } from '@angular/core';
 import { DataGridComponent } from "../../components/dataGrid/dataGrid.component";
 import { MultiselectComponent } from "../../components/multiselect/multiselect.component";
 import { AutoComplete } from "primeng/autocomplete";
@@ -10,6 +10,7 @@ import { Tools } from '../../service/Tools.service';
 import { FormsModule } from '@angular/forms';
 import { RealItem } from '../../Types/RealItem';
 import { Item } from '../../Types/Item';
+import { NgIf } from '@angular/common';
 
 type SelectItem = { ID: number, NAME: string }
 
@@ -17,7 +18,7 @@ type SelectItem = { ID: number, NAME: string }
   selector: 'app-InputFastItems',
   templateUrl: './InputFastItems.component.html',
   styleUrls: ['./InputFastItems.component.css'],
-  imports: [DataGridComponent, MultiselectComponent, AutoComplete, InputLabelComponent, InputNumber, Button, FormsModule]
+  imports: [NgIf, DataGridComponent, MultiselectComponent, AutoComplete, InputLabelComponent, InputNumber, Button, FormsModule]
 })
 export class InputFastItemsComponent implements OnInit {
 
@@ -30,11 +31,13 @@ export class InputFastItemsComponent implements OnInit {
   CategorySelected: Array<SelectItem> = [];
   suggestionsData: Array<SelectItem> = [];
   filteredData: Array<SelectItem> = [];
-  SelectedItem: RealItem = { NAME: "", ID: 0, COUNT: 0, ITEM_ID: 0, MAIN_PRICE: 0, PRICE: 0, UNIT: "", TYPE: "", TOTAL_COUNT: 0, ROW_NUMBER: -1,CATEGORY:'' };
+  SelectedItem: RealItem = { NAME: "", ID: 0, COUNT: 0, ITEM_ID: 0, MAIN_PRICE: 0, PRICE: 0, UNIT: "", TYPE: "", TOTAL_COUNT: 0, ROW_NUMBER: -1, CATEGORY: '' };
   ITEMS: Array<Item> = [];
   oldData: Array<RealItem> = [];
+  ItemsRecorded: Array<RealItem> = [];
   @Input() ITEMS_INPUT: Array<RealItem> = [];
-  @Output() ITEMS_INPUTChange: EventEmitter<any> = new EventEmitter<any>();
+  @Input() showPrice: boolean = true;
+  @Input() Header: string = 'أصناف الطلبية';
   constructor(private _tools: Tools) { }
   async ngOnInit() {
     await this.GetOldData();
@@ -44,21 +47,22 @@ export class InputFastItemsComponent implements OnInit {
     this.Category = await this._tools.Network.getAsync("Category") as Array<any>;
     this.ITEMS = await this._tools.Network.getAsync("Items") as Array<any>;
     if (this.ITEMS_INPUT.length > 0) {
-      let ItemsSelect=this.ITEMS.filter(item => this.ITEMS_INPUT.map(real_item => real_item.ITEM_ID).includes(item.ID))
-      this.CategorySelected = this.Category.filter(cat =>ItemsSelect.map(z => z.CATEGORY).includes(cat.ID));
+      let ItemsSelect = this.ITEMS.filter(item => this.ITEMS_INPUT.map(real_item => real_item.ITEM_ID).includes(item.ID))
+      this.CategorySelected = this.Category.filter(cat => ItemsSelect.map(z => z.CATEGORY).includes(cat.ID));
       console.log(this.CategorySelected)
       this.SelectCategory();
     }
   }
   ngOnChanges() {
-    this.OutData();
+    if (this.ITEMS_INPUT.filter(x => x.ID > 0).length > 0) {
+      this.ItemsRecorded = this._tools.cloneObject(this.ITEMS_INPUT.filter(x => x.ID > 0));
+    }
   }
-  async Update() {
+  async UpdateOnSave() {
+    this.ItemsRecorded = this._tools.cloneObject(this.ITEMS_INPUT);
     this.Category = await this._tools.Network.getAsync("Category") as Array<any>;
     this.ITEMS = await this._tools.Network.getAsync("Items") as Array<any>;
-    console.log(this.ITEMS_INPUT)
     this.reSelect()
-    this.OutData();
   }
   onGridLoaded(grid: DataGridComponent) {
     grid.AllowUpdate = true;
@@ -69,24 +73,20 @@ export class InputFastItemsComponent implements OnInit {
   }
   reSelect() {
     this.ITEMS_INPUT.forEach(item => { this.oldData.push(this._tools.cloneObject(item)) });
-    this.ITEMS_INPUT = this.ITEMS.filter(z => this.CategorySelected.map(X => X.ID).includes(z.CATEGORY)).map(m_Item => { return { ID: this.ITEMS_INPUT.find(x => x.ITEM_ID == m_Item.ID)?.ID ?? -1, ITEM_ID: m_Item.ID, NAME: m_Item.NAME, UNIT: m_Item.UNIT, TYPE: m_Item.TYPE, MAIN_PRICE: m_Item.PRICE_SEAL, PRICE: this.getLastElemnt(m_Item.ID)?.PRICE ?? m_Item.PRICE_SEAL, COUNT: this.getLastElemnt(m_Item.ID)?.COUNT ?? 0, TOTAL_COUNT: 0, ROW_NUMBER: this.ITEMS_INPUT.find(x => x.ITEM_ID == m_Item.ID) != null ? 1 : -1,CATEGORY:this.Category.find(z=>z.ID==m_Item.CATEGORY)?.NAME??'' } });
+    this.ITEMS_INPUT = this.ITEMS.filter(z => this.CategorySelected.map(X => X.ID).includes(z.CATEGORY)).map(m_Item => { return { ID: this.ITEMS_INPUT.find(x => x.ITEM_ID == m_Item.ID)?.ID ?? -1, ITEM_ID: m_Item.ID, NAME: m_Item.NAME, UNIT: m_Item.UNIT, TYPE: m_Item.TYPE, MAIN_PRICE: m_Item.PRICE_SEAL, PRICE: this.getLastElemnt(m_Item.ID)?.PRICE ?? m_Item.PRICE_SEAL, COUNT: this.getLastElemnt(m_Item.ID)?.COUNT ?? 0, TOTAL_COUNT: 0, ROW_NUMBER: this.ITEMS_INPUT.find(x => x.ITEM_ID == m_Item.ID) != null ? 1 : -1, CATEGORY: this.Category.find(z => z.ID == m_Item.CATEGORY)?.NAME ?? '' } });
     this.suggestionsData = this.ITEMS_INPUT.map(x => { return { NAME: ` ${x.ITEM_ID} - ${x.NAME}`, ID: x.ITEM_ID } });
-    this.OutData();
   }
   getLastElemnt(ITEM_ID: number): RealItem | null {
     return this.oldData.filter(x => x.ITEM_ID == ITEM_ID)[this.oldData.filter(x => x.ITEM_ID == ITEM_ID).length - 1]
   }
   SelectCategory() {
     this.reSelect()
-    this.OutData();
   }
   RenderItemSource(e: { item: RealItem }) {
     e.item.TOTAL_COUNT = e.item.COUNT * e.item.PRICE;
-    this.OutData();
   }
   GridAction(e: { itemEdit: RealItem }) {
     e.itemEdit.TOTAL_COUNT = e.itemEdit.COUNT * e.itemEdit.PRICE;
-    this.OutData();
   }
   Enter(e: KeyboardEvent, next: number) {
     if (e.key == "Enter") {
@@ -110,9 +110,9 @@ export class InputFastItemsComponent implements OnInit {
       selected.COUNT = this.SelectedItem.COUNT;
       selected.PRICE = this.SelectedItem.PRICE;
       this.GridAction({ itemEdit: selected });
+      this._tools.Toaster.showInfo("تم التسجيل")
+      this.next(1)
     }
-
-    this.next(1)
   }
   next(number: number) {
     window.getSelection()?.removeAllRanges();
@@ -121,9 +121,13 @@ export class InputFastItemsComponent implements OnInit {
       element = (this.StepInput1.el?.nativeElement as HTMLElement)?.children[0]?.children[0] as HTMLInputElement;
     }
     else if (number == 2) {
+      if (!this.showPrice) {
+        this.next(3)
+      }
       element = (this.StepInput2.el?.nativeElement as HTMLElement)?.children[0] as HTMLInputElement;
     }
     else if (number == 3) {
+
       element = (this.StepInput3.el?.nativeElement as HTMLElement)?.children[0] as HTMLInputElement;
     }
     else if (number == 4) {
@@ -140,19 +144,40 @@ export class InputFastItemsComponent implements OnInit {
       this.ITEMS_INPUT.forEach(item => { this.oldData.push(this._tools.cloneObject(item)) });
     }
     this.ITEMS_INPUT.forEach(item => { item.COUNT = 0; this.ITEMS.find(x => x.ID == item.ITEM_ID)?.PRICE_SEAL })
-    this.OutData();
   }
   Back() {
     this.ITEMS_INPUT.forEach(item => { console.log(this.getLastElemnt(item.ITEM_ID)); item.COUNT = this.getLastElemnt(item.ITEM_ID)?.COUNT ?? 0; item.PRICE = this.getLastElemnt(item.ITEM_ID)?.PRICE ?? 0; });
-    this.OutData();
   }
-  OutData() {
+  GeneratRequestItems(): Array<RealItem> {
+    let DataOutPut: Array<RealItem> = [];
     this.ITEMS_INPUT.forEach(item => {
       item.ROW_NUMBER = item.ID;
       if (item.COUNT == 0) {
         item.ROW_NUMBER = 0;
       }
+      if (!this.CategorySelected.map(x => x.ID).includes(this.ITEMS.find(x => x.ID == item.ITEM_ID)?.CATEGORY ?? 0)) {
+        item.ROW_NUMBER = 0;
+      }
+      DataOutPut.push(this._tools.cloneObject(item))
     });
-    this.ITEMS_INPUTChange.emit(this.ITEMS_INPUT)
+    this.ItemsRecorded.forEach(item => {
+      if (this.ITEMS_INPUT.find(x => x.ITEM_ID == item.ITEM_ID) == null) {
+        item.ROW_NUMBER = 0;
+        item.NAME = this.ITEMS.find(x => x.ID == item.ITEM_ID)?.NAME ?? ''
+        DataOutPut.push(this._tools.cloneObject(item));
+      }
+    })
+
+
+    let distincit: Array<RealItem> = [];
+    DataOutPut.forEach(item => {
+      if (distincit.find(x => x.ITEM_ID == item.ITEM_ID) == null) {
+        distincit.push(item);
+      }
+    })
+    DataOutPut = distincit;
+    console.log(DataOutPut)
+    return DataOutPut;
   }
+
 }

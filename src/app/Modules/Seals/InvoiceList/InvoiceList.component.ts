@@ -1,22 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { ComboBoxComponent } from "../../../shared/components/comboBox/comboBox.component";
-import { DateTimeComponent } from "../../../shared/components/DateTime/DateTime.component";
 import { Button } from "primeng/button";
+import { ComboBoxComponent } from "../../../shared/components/comboBox/comboBox.component";
+import { InputLabelComponent } from "../../../shared/pages/TextLabel/InputLabel.component";
+import { DateTimeComponent } from "../../../shared/components/DateTime/DateTime.component";
 import { DataGridComponent } from "../../../shared/components/dataGrid/dataGrid.component";
+import { Column } from '../../../shared/components/dataGrid/Column';
+import { RequestOrder } from '../../../shared/Types/Request';
 import { Tools } from '../../../shared/service/Tools.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PrintService } from '../../../shared/service/Print.service';
-import { RequestOrder } from '../../../shared/Types/Request';
-import { InputLabelComponent } from "../../../shared/pages/TextLabel/InputLabel.component";
-import { Column } from '../../../shared/components/dataGrid/Column';
 
 @Component({
-  selector: 'app-RequstesList',
-  templateUrl: './RequstesList.component.html',
-  styleUrls: ['./RequstesList.component.css'],
-  imports: [ComboBoxComponent, DateTimeComponent, Button, DataGridComponent, InputLabelComponent]
+  selector: 'app-InvoiceList',
+  templateUrl: './InvoiceList.component.html',
+  styleUrls: ['./InvoiceList.component.css'],
+  imports: [Button, ComboBoxComponent, InputLabelComponent, DateTimeComponent, DataGridComponent]
 })
-export class RequstesListComponent implements OnInit {
+export class InvoiceListComponent implements OnInit {
   Customers: Array<any> = []
   Columns: Array<Column> = []
   Request: { CUSTOMER: number, START: Date, END: Date } = { CUSTOMER: 0, START: new Date(), END: new Date() }
@@ -42,7 +42,7 @@ export class RequstesListComponent implements OnInit {
     this.Columns.push(new Column('TOTAL_AFTER_DEPOST', ' السعر المتبقي', "lapel", "numeric"))
   }
   AddNew() {
-    this._router.navigate(['Main', 'Requstes'], { queryParams: { ID: `0` } })
+    this._router.navigate(['Main', 'Invoice'], { queryParams: { ID: `0` } })
   }
   async GetData() {
     let Req = this._tools.cloneObject(this.Request);
@@ -69,7 +69,8 @@ export class RequstesListComponent implements OnInit {
     dataGrid.AllowEdit=true;
     dataGrid.canSelectRow=false;
     dataGrid.onEditItem=(item:RequestOrder)=>{
-      this._router.navigate(['Main', 'Requstes'],{queryParams:{ID:item.ID}})
+      this._router.navigate(['Main', 'Invoice'],{queryParams:{ID:item.ID}})
     }
   }
+
 }
