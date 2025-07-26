@@ -21,7 +21,10 @@ export class RequstesListComponent implements OnInit {
   Columns: Array<Column> = []
   Request: { CUSTOMER: number, START: Date, END: Date } = { CUSTOMER: 0, START: new Date(), END: new Date() }
   RequestLest: Array<RequestOrder> = [];
-  constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _printService: PrintService, private _router: Router) { }
+  constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _printService: PrintService, private _router: Router) { 
+    this.Request.START.setDate(1);
+    this.Request.END =_tools.DateTime.convertDataToMoment(this.Request.START).add(30,"day").toDate();
+  }
 
   async ngOnInit() {
     this.Customers = await this._tools.Network.getAsync<any>('Customer');

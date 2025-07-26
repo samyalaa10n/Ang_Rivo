@@ -1,24 +1,22 @@
-<div dir="rtl" class="header-app  text-white bg-dark px-2 flex-wrap ">
-  <div class="d-flex justify-content-center align-items-center my-auto">
+
+  
+<nav dir="rtl" class="navbar navbar-expand-lg bg-dark ">
+  <div class="container-fluid">
     <p-button size="small" class="fs-4" icon="pi pi-align-justify " (onClick)="openNave()" aria-label="Save" />
-    <div class="container-fluid d-flex align-items-center">
-      <span class="title">
-        اسم المنظومة
-      </span>
-      <div class="me-auto d-flex align-items-center h-100">
-        <span>
-          الاشعارات
-          <i class="pi pi-bell"></i>
-        </span>
-        <span class="me-3">
-          {{this._tools.Network._LoginName}}
-          <i class="pi pi-user"></i>
-        </span>
-        <span class="me-4" (click)="logOut()">
+    <a class="navbar-brand text-white" routerLink="/Main/Home" routerLinkActive="router-link-active" >سويت ماجيك</a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item mx-2">
+          <a class="nav-link text-white">  {{this._tools.Network._LoginName}}
+          <i class="pi pi-user"></i></a>
+        </li>
+      </ul>
+      <div class="d-flex" >
+        <div class="btn btn-dark me-4" (click)="logOut()">
           تسجيل الخروج
           <i dir="rtl" class="pi pi-power-off"></i>
-        </span>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</nav>

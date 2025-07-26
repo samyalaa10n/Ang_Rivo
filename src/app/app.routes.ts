@@ -149,7 +149,7 @@ export const routes: Routes = [
       {
         path: 'OperationList',
         title: 'العمليات المخزنية',
-  
+
         loadComponent: () => import('./Modules/Inventory/OperationList/OperationList.component').then(m => m.OperationListComponent)
       }
       ,
@@ -161,9 +161,27 @@ export const routes: Routes = [
       }
       ,
       {
+        path: 'Season',
+        title: 'المواسم',
+        loadComponent: () => import('./Modules/Seals/Season/Season.component').then(m => m.SeasonComponent)
+      }
+      ,
+      {
         path: 'Customer',
         title: 'العملاء',
         loadComponent: () => import('./Modules/Seals/Customer/Customer.component').then(m => m.CustomerComponent)
+      }
+      ,
+      {
+        path: 'SpecialPrice',
+        title: 'اسعار خاصة',
+        loadComponent: () => import('./Modules/Seals/SpeciaPrice/SpeciaPrice.component').then(m => m.SpeciaPriceComponent)
+      }
+      ,
+      {
+        path: 'SpecialDescound',
+        title: 'نسب خصم خاصة',
+        loadComponent: () => import('./Modules/Seals/SpecialDescound/SpecialDescound.component').then(m => m.SpecialDescoundComponent)
       }
       ,
       {
@@ -188,10 +206,10 @@ export const routes: Routes = [
       ,
       {
         path: 'RequstesList',
-        data: { ID: 0 },
         title: 'الطلبيات',
         loadComponent: () => import('./Modules/Seals/RequstesList/RequstesList.component').then(m => m.RequstesListComponent)
       }
+
       ,
       {
         path: 'Accounts',
@@ -204,8 +222,35 @@ export const routes: Routes = [
         title: 'انواع العمليات المحاسبية',
         loadComponent: () => import('./Modules/Accounts/AccountTypeOperations/AccountTypeOperations.component').then(m => m.AccountTypeOperationsComponent)
       }
+      ,
+      {
+        path: 'AccountOperationList',
+        title: 'القيود المحاسبية',
+        loadComponent: () => import('./Modules/Accounts/AccountOperationList/AccountOperationList.component').then(m => m.AccountOperationListComponent)
+      }
+      ,
+      {
+        path: 'AccountOperation',
+        data: { ID: 0 },
+        title: 'قيد محاسبي',
+        loadComponent: () => import('./Modules/Accounts/AccountOperation/AccountOperation.component').then(m => m.AccountOperationComponent)
+      }
+      ,
+      {
+        path: 'Report',
+        title: 'التقارير',
+        loadComponent: () => import('./Modules/Report/Report.component').then(m => m.ReportComponent)
+      }
+
     ]
+  }
+  ,
+  {
+    path: 'Show_QR',
+    data: { TEXT: '', TYPE: '' },
+    title: 'عرض',
+    loadComponent: () => import('./shared/pages/Show_QR_Code/Show_QR_Code.component').then(m => m.Show_QR_CodeComponent)
   },
-  { path: '**', redirectTo: 'Main', pathMatch: 'full' }
+  { path: '**', redirectTo: 'Main/Home', pathMatch: 'full' }
 ];
 

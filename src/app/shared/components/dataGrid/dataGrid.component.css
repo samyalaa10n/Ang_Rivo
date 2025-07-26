@@ -60,7 +60,7 @@
 }
 
 .fixed-column {
-    position        : sticky;
+    position        : static;
     left            : 0px;
     background-color: #f1f5f9 !important;
     z-index         : 20;

@@ -1,7 +1,7 @@
 <div dir="rtl">
   <div class="row" >
     <p-button  [raised]="true" (onClick)="AddNew()" severity="info"
-      label="طلبية جديدة" icon="pi pi-plus" class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
+      label="إنشاء فاتورة" icon="pi pi-plus" class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
     <div class="col-12 col-lg-3 my-2">
        <app-comboBox  [dataSource]="Customers" optionValue="ID" optionLabel="NAME" placeholder="العميل" apiPathDataSource="Customer" [(SelectedValue)]="Request.CUSTOMER" class="form-control"></app-comboBox>
     </div>
@@ -22,7 +22,7 @@
     </div>
   </div>
   <div class="my-3">
-    <app-dataGrid [(dataSource)]="RequestLest" (onGridLoaded)="GridLoaded($event)" (RenderItemSource)="RenderItem($event)" [Columns]="Columns" ></app-dataGrid>
+    <app-dataGrid [(dataSource)]="InvoiceList" (onGridLoaded)="GridLoaded($event)" (RenderItemSource)="RenderItem($event)" [Columns]="Columns" ></app-dataGrid>
   </div>
 </div>
 

@@ -1,2 +1,2 @@
 
-<app-get-add-edit-delete *ngIf="Columns.length>0" [Columns]="Columns" (onUpdate)="update()"  ApiPage="Items" header="الأصناف" ></app-get-add-edit-delete>
+<app-get-add-edit-delete *ngIf="Columns.length>0" [Columns]="Columns" (onUpdate)="update()" (onConfigGrid)="onConfigGrid($event)"  ApiPage="Items" header="الأصناف" ></app-get-add-edit-delete>

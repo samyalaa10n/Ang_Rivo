@@ -36,6 +36,9 @@ export class Column {
 
         return value
     }
+    DynamicShow(Item: any): string {
+        return "";
+    }
     templateColumn!: TemplateRef<any>
-
+    InShow:boolean=true;
 }

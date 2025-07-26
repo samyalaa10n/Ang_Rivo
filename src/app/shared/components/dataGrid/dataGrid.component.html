@@ -7,6 +7,7 @@
         (onRowUnselect)="onUnSelectRow($event);onGridAction({EVENT:$event,itemEdit:$event,ActonType:'UN_SELECT',COLUMN:null});"
         (onRowSelect)="onSelectRow($event);onGridAction({EVENT:$event,itemEdit:$event,ActonType:'SELECT',COLUMN:null})"
         [columns]="selectedColumns" [reorderableColumns]="true" [selectionMode]="selectionMode"
+        
         [metaKeySelection]="singleSelectedMode" paginatorDropdownAppendTo="body">
         <ng-template #caption>
             <div *ngIf="AllowHeaderTemplate">
@@ -42,6 +43,10 @@
                         (click)="DeleteSelectedData()" />
                     <p-button *ngIf="AllowExportExcel" [variant]="'text'" [raised]="true" [size]="'small'" label="تصدير"
                         class="font-bold mx-1" icon="pi pi-file-excel" (click)="exportExcel()" />
+                    <p-button *ngIf="AllowImportExcel"  [variant]="'text'" [raised]="true" [size]="'small'" label="استيراد ملف"
+                        class="font-bold mx-1 " icon="pi pi-file-import" (click)="importExcel()" />
+                    <p-button class="mx-2" severity="primary" [variant]="'text'" [raised]="true" [size]="'small'"
+                        *ngIf="AllowPrint" label="طباعة" icon="pi pi-print" (click)="onPrint(dt)"></p-button>
                     <ng-content select="[MORE_BUTTON]"></ng-content>
                 </div>
             </div>
@@ -53,7 +58,8 @@
                         *ngIf="!singleSelectedMode" /></th>
                 <th *ngIf="IsHasChild" style="width: 5rem"></th>
                 @for (column of columns; track $index) {
-                <th class="text-center " appResizableColumn [style]="'min-width:'+column.width+'px'">
+                <th *ngIf="column.InShow" class="text-center " appResizableColumn
+                    [style]="'min-width:'+column.width+'px'">
                     <div class="d-flex justify-content-center align-items-center">
                         <div [pSortableColumn]="column.name" class="d-flex justify-content-center align-items-center ">
                             <div class="headerTr">{{ column.header }}</div>
@@ -90,7 +96,9 @@
                 </th>
                 }
                 <th *ngIf="AllowCurdOperation" class="fixed-column px-2">
-
+                    <div class="d-flex justify-content-center align-items-center">
+                        <p-button [text]="!isPine" icon="pi pi-thumbtack" (onClick)="pinColumn()" ></p-button>
+                    </div>
                 </th>
             </tr>
         </ng-template>
@@ -112,12 +120,15 @@
                 </td>
                 @for (column of columns; track $index)
                 {
-                <td class="text-center">
+                <td class="text-center" *ngIf="column.InShow">
                     @switch (column.columnType) {
                     @case ("lapel") {
                     <ng-container *ngIf="item[column.name]!=null && item[column.name]!=undefined">
-                        {{column.Style_Show(item[column.name])}}
-
+                        {{column.Style_Show(item[column.name],item)}}
+                        {{column.DynamicShow(item)}}
+                    </ng-container>
+                    <ng-container *ngIf="column.DynamicShow(item)!=''">
+                        {{column.DynamicShow(item)}}
                     </ng-container>
                     }
                     @case ("text") {
@@ -199,7 +210,7 @@
                     }
                 </td>
                 }
-                <td class="text-center fixed-column px-4" *ngIf="AllowCurdOperation">
+                <td class="text-center fixed-column px-4"  *ngIf="AllowCurdOperation">
                     <ng-container [ngTemplateOutlet]="templateBtn"
                         [ngTemplateOutletContext]="{ $implicit:item ,Grid:this}"></ng-container>
                     <p-button severity="danger" [variant]="'text'" [raised]="true" [size]="'small'" *ngIf="AllowDelete"
@@ -207,8 +218,12 @@
                     <p-button class="mx-2" severity="success" [variant]="'text'" [raised]="true" [size]="'small'"
                         *ngIf="AllowEdit" label="تعديل" icon="pi pi-pen-to-square"
                         (click)="onEditItem(item)"></p-button>
-                    <p-button class="mx-2 " severity="success" [variant]="'text'" [raised]="true" [size]="'small'"
+                    <p-button class="mx-2 " severity="info" [variant]="'text'" [raised]="true" [size]="'small'"
+                        *ngIf="AllowShow" label="عرض" icon="pi pi-eye" (click)="onShowItem(item)"></p-button>
+                    <p-button class="mx-2" severity="success" [variant]="'text'" [raised]="true" [size]="'small'"
                         *ngIf="AddInherit" label="جديد" icon="pi pi-plus" (click)="onAddInert(item)"></p-button>
+                    <p-button class="mx-2" severity="primary" [variant]="'text'" [raised]="true" [size]="'small'"
+                        *ngIf="AllowPrintItem" label="طباعة" icon="pi pi-print" (click)="onPrintItem(item)"></p-button>
                 </td>
             </tr>
         </ng-template>

@@ -12,7 +12,8 @@ import { PanelMenuModule } from 'primeng/panelmenu';
   templateUrl: './Nave.component.html',
   styleUrls: ['./Nave.component.css'],
   standalone: true,
-  imports: [DrawerModule, ButtonModule, MenuModule, PanelMenuModule]
+  imports: [DrawerModule, ButtonModule, MenuModule, PanelMenuModule],
+  providers:[PanelMenuModule,DrawerModule]
 })
 export class NaveComponent implements OnInit {
   showNave: boolean = false;
@@ -21,6 +22,16 @@ export class NaveComponent implements OnInit {
   constructor(private _tools: Tools, private _router: Router, private el: ElementRef<HTMLElement>) { }
 
   ngOnInit() {
+    this._tools._LinkComponent.subscribe({
+      next: (value) => {
+        if (value == "open") {
+          this.openNave();
+        }
+        if (value == "close") {
+          this.closeNave();
+        }
+      }
+    })
     this.items = [
       {
         label: 'التحكم في النظام',
@@ -231,6 +242,27 @@ export class NaveComponent implements OnInit {
         icon: 'pi pi-database',
         items: [
           {
+            label: 'بيانات المواسم',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'Season']);
+            },
+          },
+          {
+            label: 'نسب خصم لعملاء مميزين',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'SpecialDescound']);
+            },
+          },
+          {
+            label: 'اسعار خاصة لعملاء مميزين',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'SpecialPrice']);
+            },
+          },
+          {
             label: 'العملاء',
             icon: 'pi pi-database',
             command: (event) => {
@@ -273,19 +305,39 @@ export class NaveComponent implements OnInit {
             },
           },
           {
-            label: 'عمليات محاسبية',
+            label: 'قيود محاسبية',
             icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'AccountOperationList']);
+            },
           }
         ]
       },
       {
+
         label: 'التقارير',
         icon: 'pi pi-database',
+        command: (event) => {
+          this._router.navigate(['Main', 'Report']);
+        },
+      }
+      ,
+      {
+
+        label: 'تسجيل خروج',
+        icon: 'pi pi-power-off',
+        command: (event) => {
+          localStorage.removeItem("logInfo")
+          this._router.navigate(['Login'])
+        },
       }
     ]
 
   }
   closeNave() {
     this.showNave = false
+  }
+  openNave() {
+    this.showNave = true
   }
 }

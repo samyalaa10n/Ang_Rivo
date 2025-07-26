@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Tools } from '../../../shared/service/Tools.service';
+import { NaveComponent } from '../Nave/Nave.component';
 
 @Component({
   selector: 'app-Home',
@@ -6,10 +8,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./Home.component.css']
 })
 export class HomeComponent implements OnInit {
-
-  constructor() { }
+  constructor(public _tools: Tools) { }
 
   ngOnInit() {
   }
-
+  ngAfterViewInit() {
+  }
 }

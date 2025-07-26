@@ -38,6 +38,7 @@ export class InputFastItemsComponent implements OnInit {
   @Input() ITEMS_INPUT: Array<RealItem> = [];
   @Input() showPrice: boolean = true;
   @Input() Header: string = 'أصناف الطلبية';
+  @Input() ShowMode: boolean=false;
   constructor(private _tools: Tools) { }
   async ngOnInit() {
     await this.GetOldData();

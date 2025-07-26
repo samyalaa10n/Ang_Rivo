@@ -13,13 +13,13 @@ export class PrintComponent implements OnInit {
   @Input() showControls: boolean = true;
   @Input() showOptions: boolean = true;
   @Input() options: PrintOptions = {};
-  
+
   @ViewChild('printContent', { static: true }) printContent!: ElementRef;
-  
+
   isLoading: boolean = false;
   currentDate: Date = new Date();
   previewContent: string = '';
-  
+
   // Default options
   defaultOptions: PrintOptions = {
     title: '',
@@ -32,8 +32,9 @@ export class PrintComponent implements OnInit {
     headerContent: '',
     footerContent: ''
   };
-  constructor(public _sevicePrint:PrintService,private _tools:Tools){
-    _sevicePrint.printComponent=this;
+  constructor(public _sevicePrint: PrintService, private _tools: Tools) {
+    _sevicePrint.printComponent = this;
+    _tools.printService.printComponent = this;
   }
   ngOnInit() {
     this.options = { ...this.defaultOptions, ...this.options };
@@ -41,7 +42,7 @@ export class PrintComponent implements OnInit {
 
   print(): void {
     this.isLoading = true;
-    
+
     setTimeout(() => {
       this.applyPrintStyles();
       window.print();
@@ -95,7 +96,7 @@ export class PrintComponent implements OnInit {
         ${this.options.customStyles || ''}
       }
     `;
-    
+
     document.head.appendChild(style);
   }
 
@@ -111,21 +112,27 @@ export class PrintComponent implements OnInit {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = element.innerHTML;
     tempDiv.className = 'print-content';
-    
+
     document.body.appendChild(tempDiv);
-    
+
     if (options) {
       this.options = { ...this.defaultOptions, ...options };
       this.applyPrintStyles();
     }
-    
+
     window.print();
     document.body.removeChild(tempDiv);
     this.removePrintStyles();
   }
 
-  printHTML(html: string, options?: PrintOptions): void {
-    const printWindow = window.open('', '_blank');
+  printHTML(html: string, inMyWindow: boolean, options?: PrintOptions): void {
+    var printWindow: any = null;
+    if (inMyWindow) {
+      printWindow = window;
+    }
+    else {
+      printWindow = window.open('', '_blank');
+    }
     if (printWindow) {
       const printOptions = { ...this.defaultOptions, ...options };
       printWindow.document.write(`
@@ -158,10 +165,9 @@ export class PrintComponent implements OnInit {
           </body>
         </html>
       `);
-      this._tools.waitExecuteFunction(100,()=>{
+      this._tools.waitExecuteFunction(100, () => {
         printWindow.document.close();
         printWindow.print();
-        printWindow.close();
       })
 
     }

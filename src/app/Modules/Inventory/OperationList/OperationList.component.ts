@@ -23,7 +23,10 @@ export class OperationListComponent implements OnInit {
   Columns: Array<Column> = []
   Request: { WAREHOUSE: number, START: Date, END: Date } = { WAREHOUSE: 0, START: new Date(), END: new Date() }
   OperationLest: Array<OperationOrder> = [];
-  constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _printService: PrintService, private _router: Router) { }
+  constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _printService: PrintService, private _router: Router) { 
+    this.Request.START.setDate(1);
+    this.Request.END =_tools.DateTime.convertDataToMoment(this.Request.START).add(30,"day").toDate();
+  }
 
   async ngOnInit() {
     this.WareHouses = await this._tools.Network.getAsync<any>('WareHouse');
@@ -51,8 +54,8 @@ export class OperationListComponent implements OnInit {
   }
   RenderItem(e: { item: OperationOrder }) {
     e.item.DATE_TIME = this._tools.DateTime.getDataFromJson(e.item.DATE_TIME as any)
-    e.item.WAREHOUSE_GET_NAME = this.WareHouses.find(Z => Z.ID == e.item.WAREHOUSE_GET_ID)?.NAME ?? '';
-    e.item.WAREHOUSE_ADDED_NAME = this.WareHouses.find(Z => Z.ID == e.item.WAREHOUSE_ADDED_ID)?.NAME ?? '';
+    e.item.WAREHOUSE_ADDED_NAME = this.WareHouses.find(Z => Z.ID == e.item.WAREHOUSE_1)?.NAME ?? '';
+    e.item.WAREHOUSE_GET_NAME = this.WareHouses.find(Z => Z.ID == e.item.WAREHOUSE_2)?.NAME ?? '';
   }
   GridLoaded(dataGrid: DataGridComponent) {
     dataGrid.AllowUpdate = false;
@@ -60,9 +63,9 @@ export class OperationListComponent implements OnInit {
     dataGrid.AllowDeleteSelected = false;
     dataGrid.AllowSave = false;
     dataGrid.AllowAdd = false;
-    dataGrid.AllowEdit = true;
+    dataGrid.AllowShow = true;
     dataGrid.canSelectRow = false;
-    dataGrid.onEditItem = (item: RequestOrder) => {
+    dataGrid.onShowItem = (item: RequestOrder) => {
       this._router.navigate(['Main', 'Operation'], { queryParams: { ID: item.ID } })
     }
   }

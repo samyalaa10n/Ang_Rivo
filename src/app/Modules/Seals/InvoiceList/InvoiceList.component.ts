@@ -9,6 +9,7 @@ import { RequestOrder } from '../../../shared/Types/Request';
 import { Tools } from '../../../shared/service/Tools.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PrintService } from '../../../shared/service/Print.service';
+import { InvoiceOrder } from '../../../shared/Types/InvoiceOrder';
 
 @Component({
   selector: 'app-InvoiceList',
@@ -20,26 +21,25 @@ export class InvoiceListComponent implements OnInit {
   Customers: Array<any> = []
   Columns: Array<Column> = []
   Request: { CUSTOMER: number, START: Date, END: Date } = { CUSTOMER: 0, START: new Date(), END: new Date() }
-  RequestLest: Array<RequestOrder> = [];
-  constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _printService: PrintService, private _router: Router) { }
+  InvoiceList: Array<InvoiceOrder> = [];
+  constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _printService: PrintService, private _router: Router) {
+    this.Request.START.setDate(1);
+    this.Request.END =_tools.DateTime.convertDataToMoment(this.Request.START).add(30,"day").toDate();
+   }
 
   async ngOnInit() {
     this.Customers = await this._tools.Network.getAsync<any>('Customer');
-    this.Columns.push(new Column('ID', 'رقم الطلبية', "lapel"))
+    this.Columns.push(new Column('ID', 'رقم الفاتورة', "lapel"))
     this.Columns.push(new Column('CUSTOMER_NAME', 'اسم العميل', "lapel"))
-    this.Columns.push(new Column('SEND_DATE', ' تاريخ الأرسال', "lapel", "date"))
+    this.Columns.push(new Column('DATE_TIME', ' تاريخ الفاتورة', "lapel", "date"))
     this.Columns[this.Columns.length - 1].Style_Show = (value) => {
       return this._tools.DateTime.EditFormateData(value);
     }
-    this.Columns.push(new Column('RESAVE_DATE', ' تاريخ التسليم', "lapel", "date"))
-    this.Columns[this.Columns.length - 1].Style_Show = (value) => {
-      return this._tools.DateTime.EditFormateData(value);
-    }
-    this.Columns.push(new Column('TOTAL', 'السعر ', "lapel", "numeric"))
+    this.Columns.push(new Column('TOTAL', 'المبلغ ', "lapel", "numeric"))
     this.Columns.push(new Column('DESCOUND_PERCENT', 'نسبة الخصم ', "lapel", "numeric"))
-    this.Columns.push(new Column('PRICE_AFTER_DESCOUND', 'السعر بعد الخصم ', "lapel", "numeric"))
-    this.Columns.push(new Column('DEPOST', 'العربون ', "lapel", "numeric"))
-    this.Columns.push(new Column('TOTAL_AFTER_DEPOST', ' السعر المتبقي', "lapel", "numeric"))
+    this.Columns.push(new Column('PRICE_AFTER_DESCOUND', 'المبلغ بعد الخصم ', "lapel", "numeric"))
+    this.Columns.push(new Column('PAYMENT', 'المدفوع ', "lapel", "numeric"))
+    this.Columns.push(new Column('TOTAL_AFTER_PAYMENT', ' المبلغ المتبقي', "lapel", "numeric"))
   }
   AddNew() {
     this._router.navigate(['Main', 'Invoice'], { queryParams: { ID: `0` } })
@@ -48,16 +48,15 @@ export class InvoiceListComponent implements OnInit {
     let Req = this._tools.cloneObject(this.Request);
     Req.START = this._tools.DateTime.EditData(this.Request.START, 3).toLocaleString("en")
     Req.END = this._tools.DateTime.EditData(this.Request.END, 3).toLocaleString("en")
-    this.RequestLest = await this._tools.Network.getAsync<any>('Requstes?filter=' + JSON.stringify(Req))
+    this.InvoiceList = await this._tools.Network.getAsync<any>('Invoices?filter=' + JSON.stringify(Req))
 
   }
-  RenderItem(e: { item: RequestOrder }) {
-    e.item.SEND_DATE=this._tools.DateTime.getDataFromJson(e.item.SEND_DATE as any)
-    e.item.RESAVE_DATE=this._tools.DateTime.getDataFromJson(e.item.RESAVE_DATE as any)
+  RenderItem(e: { item: InvoiceOrder }) {
+    e.item.DATE_TIME=this._tools.DateTime.getDataFromJson(e.item.DATE_TIME as any)
     e.item.CUSTOMER_NAME = this.Customers.find(Z=>Z.ID==e.item.CUSTOMER)?.NAME??'';
     e.item.TOTAL = e.item.ITEMS.reduce((num, item) => { return num += (item.COUNT * item.PRICE) }, 0);
     e.item.PRICE_AFTER_DESCOUND = e.item.TOTAL - (e.item.TOTAL * (e.item.DESCOUND_PERCENT / 100));
-    e.item.TOTAL_AFTER_DEPOST=e.item.PRICE_AFTER_DESCOUND-e.item.DEPOST;
+    e.item.TOTAL_AFTER_PAYMENT=e.item.PRICE_AFTER_DESCOUND-e.item.PAYMENT;
   }
   GridLoaded(dataGrid:DataGridComponent)
   {

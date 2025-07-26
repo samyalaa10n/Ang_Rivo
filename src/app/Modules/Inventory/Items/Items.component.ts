@@ -12,18 +12,18 @@ import { GetAddEditDeleteComponent } from "../../../shared/pages/get-add-edit-de
   imports: [NgIf, GetAddEditDeleteComponent]
 })
 export class ItemsComponent implements OnInit {
-
+  Category: Array<any> = [];
   Columns: Array<Column> = [];
   constructor(private _tools: Tools) { }
   async ngOnInit() {
-    let Category = await this._tools.Network.getAsync("Category") as Array<any>;
+    this.Category = await this._tools.Network.getAsync("Category") as Array<any>;
     this.Columns.push(new Column("ID", "رقم الصنف"))
     this.Columns.push(new Column("NAME", "الأسم", "text"))
     this.Columns.push(new Column("CATEGORY", "التصنيف", "comboBox"))
     this.Columns[this.Columns.length - 1].columnComboBoxOptionLabel = "NAME";
     this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "ID";
     this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "اختر التصنيف"
-    this.Columns[this.Columns.length - 1].columnComboBoxDataSource = Category;
+    this.Columns[this.Columns.length - 1].columnComboBoxDataSource = this.Category;
     this.Columns.push(new Column("UNIT", "الوحدة", "text"))
     this.Columns.push(new Column("TYPE", "نوع الصنف", "comboBox"))
     this.Columns[this.Columns.length - 1].columnComboBoxOptionLabel = "NAME";
@@ -36,6 +36,36 @@ export class ItemsComponent implements OnInit {
   }
 
   async update() {
-    this.Columns[this.Columns.length - 1].columnComboBoxDataSource = await this._tools.Network.getAsync("Category") as Array<any>;
+    this.Category = await this._tools.Network.getAsync("Category") as Array<any>;
+    this.Columns[2].columnComboBoxDataSource = this.Category
+  }
+  onConfigGrid(config: DataGridComponent) {
+    config.AllowImportExcel = true;
+    config.IsHasChild = true;
+    config.onLoadedChildDataGrid = (pernt, child, row) => {
+      child.StopAllButtons = true;
+      child.paginator = false;
+      this._tools.waitExecuteFunction(100, () => { child.AllowExportExcel = true; })
+      child.Columns.push(new Column("IN_DATE", "تاريخ التغير", "lapel"))
+      child.Columns[child.Columns.length - 1].Style_Show = (VALUE) => {
+        return this._tools.DateTime.EditFormateData(VALUE, "DD-MM-yyyy")
+      }
+      child.Columns.push(new Column("ID", "كود السجل"))
+      child.Columns.push(new Column("NAME", "الأسم", "lapel"))
+      child.Columns.push(new Column("CATEGORY", "التصنيف", "lapel"))
+      child.Columns[child.Columns.length - 1].Style_Show = (VALUE) => {
+        return this.Category.find(x => x.ID == VALUE)?.NAME ?? ''
+      }
+      child.Columns.push(new Column("UNIT", "الوحدة", "lapel"))
+      child.Columns.push(new Column("TYPE", "نوع الصنف", "lapel"))
+      child.Columns.push(new Column("PRICE_GET", "سعر الشراء", "lapel"))
+      child.Columns.push(new Column("PRICE_SEAL", "سعر البيع", "lapel"))
+      child.Columns.push(new Column("NOTS", "الملاحظات", "lapel"))
+      child.Columns=child.Columns;
+      child.dataSource = row?.ITEM_HESTORY ?? [];
+      child.dataSource = child.dataSource.sort((Item2, Item1) => {
+        return Item1.ID > Item2.ID ? 1 : -1;
+      })
+    }
   }
 }

@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { DatePickerModule } from 'primeng/datepicker';
 import { FloatLabel } from 'primeng/floatlabel';
 import { Tools } from '../../service/Tools.service';
-import { NgStyle } from '@angular/common';
+import { NgIf, NgStyle } from '@angular/common';
 import { CalendarModule, LocaleSettings } from 'primeng/calendar';
 
 @Component({
@@ -11,7 +11,7 @@ import { CalendarModule, LocaleSettings } from 'primeng/calendar';
   templateUrl: './DateTime.component.html',
   styleUrls: ['./DateTime.component.css'],
   standalone: true,
-  imports: [DatePickerModule, FormsModule, CalendarModule]
+  imports: [DatePickerModule, FormsModule, CalendarModule,NgIf]
 })
 export class DateTimeComponent implements OnInit {
 
@@ -23,13 +23,15 @@ export class DateTimeComponent implements OnInit {
   @Input() selectedDate: any = null
   @Input() showTime: boolean = false
   @Input() showOnFocus: boolean = false
+  @Input() ShowMode: boolean = false
+  @Input() ShowModeFormat: string = "YYYY-MM-DD"
   @Input() selectOnFocus: boolean = false
   @Input() showTimeOnly: boolean = false
   @Input() forceMaxOrEqualDay: boolean = false
   @Input() view: 'date' | 'month' | 'year' = "date"
   @Input() placeholder: string = "أكتب التاريخ ..."
   @Output() selectedDateChange: EventEmitter<any> = new EventEmitter()
-  constructor(private _tools: Tools, private el: ElementRef<HTMLElement>) { }
+  constructor(public _tools: Tools, private el: ElementRef<HTMLElement>) { }
 
   ngOnInit() {
     if (this.saveTempInput) {

@@ -1,5 +1,6 @@
 <div dir="rtl">
-  <p-button  [raised]="true" [routerLink]="['/Main/InvoiceList']" routerLinkActive="router-link-active"  severity="info" label="رجوع الي قائمة الطلبات" icon="pi pi-arrow-right" class=" btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
+  <p-button [raised]="true" [routerLink]="['/Main/InvoiceList']" routerLinkActive="router-link-active" severity="info"
+    label="رجوع الي قائمة الفواتير" icon="pi pi-arrow-right" class=" btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
   <div class="row justify-content-center my-3">
     <div class="col-12 col-xl-10">
 
@@ -42,26 +43,40 @@
           <div class="card shadow-sm border-0 h-100">
             <div class="card-body p-4">
 
-               <!-- Type Selection -->
-               <div class="row mb-4  my-4">
+              <!-- Type Selection -->
+              <div class="row mb-4  my-4">
                 <div class="col-12">
-                    <div class="form-floating">
-                        <app-comboBox [NormalStyle]="true"
-                            [dataSource]="[{ID:1,NAME:'اضافة'},{ID:2,NAME:'سحب'},{ID:3,NAME:'تحويل'}]"
-                            optionValue="ID" optionLabel="NAME"
-                            [(SelectedValue)]="Invoice.TYPE" class="form-control"></app-comboBox>
-                        <label class="text-muted">
-                            <i class="pi pi-database me-2"></i>نوع العملية
-                        </label>
-                    </div>
+                  <div class="form-floating">
+                    <app-comboBox [NormalStyle]="true" [dataSource]="[{ID:1,NAME:'بيع'},{ID:2,NAME:'ارتجاع'}]"
+                      optionValue="ID" optionLabel="NAME" [(SelectedValue)]="Invoice.TYPE"
+                      class="form-control"></app-comboBox>
+                    <label class="text-muted">
+                      <i class="pi pi-database me-2"></i>نوع العملية
+                    </label>
+                  </div>
                 </div>
-            </div>
+              </div>
+              <!-- WareHouses add Selection -->
+              <div class="row mb-4  my-4" *ngIf="Invoice.TYPE>0">
+                <div class="col-12">
+                  <div class="form-floating">
+                    <app-comboBox [NormalStyle]="true" [dataSource]="WareHouses" optionValue="ID" optionLabel="NAME"
+                      apiPathDataSource="WareHouse" [(SelectedValue)]="Invoice.WAREHOUSE" (SelectedValueChange)="GetDataRecordedStock()"
+                      class="form-control"></app-comboBox>
+                    <label class="text-muted">
+                      <i class="pi pi-database me-2"></i>
+                      <span *ngIf="Invoice.TYPE==1">من مخزن</span>
+                      <span *ngIf="Invoice.TYPE==2">الي مخزن</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
               <!-- Customer Selection -->
               <div class="row mb-4  my-4">
                 <div class="col-12">
                   <div class="form-floating">
                     <app-comboBox [NormalStyle]="true" [dataSource]="Customers" optionValue="ID" optionLabel="NAME"
-                      apiPathDataSource="Customer" [(SelectedValue)]="Invoice.CUSTOMER"
+                      apiPathDataSource="Customer" [(SelectedValue)]="Invoice.CUSTOMER" (SelectedValueChange)="GetDataRecordedStock()"
                       class="form-control"></app-comboBox>
                     <label class="text-muted">
                       <i class="pi pi-user me-2"></i>العميل
@@ -76,7 +91,7 @@
                   <div class="form-floating">
                     <app-DateTime [(selectedDate)]="Invoice.DATE_TIME" class="form-control"></app-DateTime>
                     <label class="text-muted">
-                      <i class="pi pi-calendar me-2"></i>تاريخ الأستلام
+                      <i class="pi pi-calendar me-2"></i>تاريخ الفاتورة
                     </label>
                   </div>
                 </div>
@@ -95,8 +110,8 @@
                 </div>
                 <div class="col-12 col-md-6" *ngIf="Invoice.PAYMENT">
                   <div class="form-floating">
-                    <app-comboBox [NormalStyle]="true" apiPathDataSource="AccountType" [dataSource]="AccountTypes"
-                      [(SelectedValue)]="Invoice.PAYMENT_TYPE" optionLabel="NAME" optionValue="ID"
+                    <app-comboBox [NormalStyle]="true"  [dataSource]="GetAccountTypesActive()"
+                      [(SelectedValue)]="Invoice.PAYMENT_TYPE"  optionLabel="NAME" optionValue="ID"
                       placeholder="طريقة الدفع" class="form-control"></app-comboBox>
                     <label class="text-muted">
                       <i class="pi pi-credit-card me-2"></i>طريقة الدفع
@@ -158,7 +173,7 @@
                       <div
                         class="d-flex justify-content-between align-items-center p-3 bg-info bg-opacity-10 rounded border border-info border-opacity-25">
                         <span class="text-info">المتبقي بعد الدفع:</span>
-                        <span class="fw-bold text-info">{{TotalAfterDepost()}}</span>
+                        <span class="fw-bold text-info">{{TotalAfterPayment()}}</span>
                       </div>
                     </div>
                   </div>
@@ -193,11 +208,11 @@
           <div class="card shadow-sm border-0">
             <div class="card-header bg-light border-0">
               <h5 class="mb-0 fw-bold text-secondary">
-                <i class="pi pi-list me-2"></i>عناصر الفاتورة
+                <i class="pi pi-list me-2"></i>اصناف الفاتورة
               </h5>
             </div>
             <div class="card-body">
-              <app-InputFastItems #InputFastItems [ITEMS_INPUT]="Invoice.ITEMS"
+              <app-InputFastItems Header="اصناف الفاتورة" #InputFastItems 
                 (OnGridLoaded)="GridLoaded($event)"></app-InputFastItems>
             </div>
           </div>
@@ -217,7 +232,8 @@
             <p-button *ngIf=" this.Invoice.ID>0" [raised]="true" (onClick)="AddNew()" severity="info"
               label="فاتورة جديدة" icon="pi pi-plus" class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
             <p-button *ngIf=" this.Invoice.ID>0" [raised]="true" (onClick)="AddInhert()" severity="info"
-              label="فاتورة جديدة بنفس البيانات" icon="pi pi-plus" severity="info" class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
+              label="فاتورة جديدة بنفس البيانات" icon="pi pi-plus" severity="info"
+              class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
           </div>
         </div>
       </div>

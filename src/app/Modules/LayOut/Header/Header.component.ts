@@ -2,17 +2,16 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { NaveComponent } from '../Nave/Nave.component';
 import { Tools } from '../../../shared/service/Tools.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-Header',
   templateUrl: './Header.component.html',
   styleUrls: ['./Header.component.css'],
   standalone: true,
-  imports: [ButtonModule]
+  imports: [ButtonModule,RouterLink]
 })
 export class HeaderComponent implements OnInit {
-  @Input('Nave') _Nave!: NaveComponent
   constructor(public _tools: Tools, private _router: Router) { }
 
   ngOnInit() {
@@ -22,7 +21,7 @@ export class HeaderComponent implements OnInit {
     }
   }
   openNave() {
-    this._Nave.showNave = true
+    this._tools._LinkComponent.next("open")
   }
   logOut() {
     localStorage.removeItem("logInfo")

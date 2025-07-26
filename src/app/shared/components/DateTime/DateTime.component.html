@@ -1,4 +1,4 @@
-<div class="app-date" >
+<div class="app-date" *ngIf="!ShowMode">
     <p-datePicker class="d-block w-100"
     [placeholder]="placeholder"
     [dateFormat]="dateFormat" 
@@ -13,3 +13,6 @@
     iconDisplay="input" [(ngModel)]="selectedDate"
     (ngModelChange)="change($event)"  (onClear)="clear()" (onClearClick)="clear()"  dateFormat="dd-mm-yy"  appendTo="body" [showIcon]="true"    ></p-datePicker> 
 </div>  
+<ng-container *ngIf="ShowMode">
+    <span>{{_tools.DateTime.EditFormateData(selectedDate,ShowModeFormat)}}</span>
+</ng-container>

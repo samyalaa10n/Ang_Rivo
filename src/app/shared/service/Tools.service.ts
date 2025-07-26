@@ -9,14 +9,20 @@ import { Excel } from "./Excel.service";
 import { Validation } from "./Validation.service";
 import { TDateTime } from "./DateTime.service";
 import { Location } from "./Location.service";
+import { ConfermationComponent } from "../components/Confermation/Confermation.component";
+import { PrintService } from "./Print.service";
+import { BehaviorSubject } from "rxjs";
 @Injectable({
   providedIn: 'root'
 })
 export class Tools {
+  _LinkComponent:BehaviorSubject<any>=new BehaviorSubject(null);
   Authentication: any = null
   tempData: any = null
   Loading!: LoadingComponent
   Toaster!: ToasterComponent
+  Confermation!: ConfermationComponent
+  printService: PrintService=new PrintService(this);
   _countries = [
     {
       "code": "AD",

@@ -25,6 +25,7 @@ export class ComboBoxComponent implements OnInit {
   @Input() SelectedValue: any = null
   @Input() NormalStyle: boolean = false
   @Input() showClear: boolean = true;
+  @Input() ShowMode: boolean = false;
   @Input() DefaultClearValue: any = 0;
   @Input() dataSource: Array<any> = []
   @Output() selectedChange: EventEmitter<any> = new EventEmitter();
@@ -35,7 +36,10 @@ export class ComboBoxComponent implements OnInit {
   }
   ngOnChanges() {
     if (this.optionValue != "") {
-      this.selected = this.dataSource.find(x => x[this.optionValue] == this.SelectedValue)
+      this.selected = this.dataSource?.find(x => x[this.optionValue] == this.SelectedValue)
+      if (this.selected == null) {
+        this.SelectedValueChange.emit(this.DefaultClearValue);
+      }
     }
   }
   async onShow() {

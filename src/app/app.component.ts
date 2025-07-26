@@ -8,10 +8,11 @@ import { DatePipe } from '@angular/common';
 import { LoadingComponent } from './shared/components/Loading/Loading.component';
 import { PrintComponent } from "./shared/components/print/print.component";
 import { PrintService } from './shared/service/Print.service';
+import { ConfermationComponent } from "./shared/components/Confermation/Confermation.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ToasterComponent, LoadingComponent, PrintComponent],
+  imports: [RouterOutlet, ToasterComponent, LoadingComponent, PrintComponent, ConfermationComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   providers: [DatePipe],

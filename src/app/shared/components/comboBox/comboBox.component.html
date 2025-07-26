@@ -1,4 +1,4 @@
-@if(NormalStyle==false)
+@if(NormalStyle==false && !ShowMode)
 {
   <div dir="rtl" class="combo">
     <p-iftalabel dir="rtl">
@@ -10,10 +10,14 @@
     </p-iftalabel>
   </div>
 }
-@if(NormalStyle)
+@if(NormalStyle && !ShowMode)
 {
   <p-dropdown [id]="placeholder" [placeholder]="'أختر القيمة ...'"  [loading]="IsLoading" appendTo="body" (onShow)="onShow()"  [(ngModel)]="selected" (ngModelChange)="selectedItem($event)"
   (onClear)="clear()" [showClear]="showClear" emptyMessage="لا يوجد بيانات" [filter]="optionLabel"
    [optionLabel]="optionLabel" [options]="dataSource" emptyFilterMessage="لا يوجد">
   </p-dropdown>
+}
+@if(ShowMode)
+{
+  <span>{{selected[optionLabel]}}</span>
 }

@@ -1,0 +1,84 @@
+<app-stepper [Configuration]="StepperConfig">
+  <ng-template stepConfig Header="كشوف الحسابات"  [isViewMode]="true" >
+    <div dir="rtl">
+      <div class="row" >
+        <div class="col-12 col-lg-3 my-2">
+           <app-comboBox  [dataSource]="Accounts" optionValue="ID" optionLabel="NAME" placeholder="الحسابات" apiPathDataSource="Accounts" [(SelectedValue)]="Account" class="form-control"></app-comboBox>
+        </div>
+      </div>
+      <div class="row d-flex justify-content-center  align-items-center">
+        <div class="col-12 col-lg-2 ">
+          <app-InputLabel placeholder="من">
+            <app-DateTime  [(selectedDate)]="START_DATE" placeholder="من"></app-DateTime>
+          </app-InputLabel>
+        </div>
+        <div class="col-12 col-lg-2">
+          <app-InputLabel placeholder="الي">
+            <app-DateTime [(selectedDate)]="END_DATE"  placeholder="الي"></app-DateTime>
+          </app-InputLabel>
+        </div>
+        <div class="col-12 col-lg-2">
+          <p-button [raised]="true" (onClick)="GetData()" label="عرض" class="font-bold mx-1 w-100" />
+        </div>
+      </div>
+      <div class="my-3">
+        <app-dataGrid [(dataSource)]="DATA_LIST" (onGridLoaded)="GridLoaded($event)"  [Columns]="Columns" >
+          <div header>
+            <label class="p-2 rounded-2 shadow-sm  form-label"> اجمالي المعاملات : {{GetTotal()}}</label>
+          </div>
+        </app-dataGrid>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template stepConfig Header="رصيد المخازن"  [isViewMode]="true" >
+    <div dir="rtl">
+      <div class="row" >
+        <div class="col-12 col-lg-3 my-2">
+           <app-comboBox  [dataSource]="WareHouses" optionValue="ID" optionLabel="NAME" placeholder="المخازن" apiPathDataSource="WareHouse" [(SelectedValue)]="WAREHOUSE" class="form-control"></app-comboBox>
+        </div>
+      </div>
+      <div class="row d-flex justify-content-center  align-items-center">
+        <div class="col-12 col-lg-2 ">
+          <app-InputLabel placeholder="من">
+            <app-DateTime  [(selectedDate)]="START_DATE" placeholder="من"></app-DateTime>
+          </app-InputLabel>
+        </div>
+        <div class="col-12 col-lg-2">
+          <app-InputLabel placeholder="الي">
+            <app-DateTime [(selectedDate)]="END_DATE"  placeholder="الي"></app-DateTime>
+          </app-InputLabel>
+        </div>
+        <div class="col-12 col-lg-2">
+          <p-button [raised]="true" (onClick)="GetDataIemstock()" label="عرض" class="font-bold mx-1 w-100" />
+        </div>
+      </div>
+      <div class="my-3">
+        <app-dataGrid [(dataSource)]="DATA_LIST" (onGridLoaded)="GridLoaded($event)"  [Columns]="Columns" >
+        </app-dataGrid>
+      </div>
+    </div>
+  </ng-template>
+    <ng-template stepConfig Header="التقرير الشامل للأصناف"  [isViewMode]="true" >
+    <div dir="rtl">
+      <div class="row d-flex justify-content-center  align-items-center">
+        <div class="col-12 col-lg-2 ">
+          <app-InputLabel placeholder="من">
+            <app-DateTime  [(selectedDate)]="START_DATE" placeholder="من"></app-DateTime>
+          </app-InputLabel>
+        </div>
+        <div class="col-12 col-lg-2">
+          <app-InputLabel placeholder="الي">
+            <app-DateTime [(selectedDate)]="END_DATE"  placeholder="الي"></app-DateTime>
+          </app-InputLabel>
+        </div>
+        <div class="col-12 col-lg-2">
+          <p-button [raised]="true" (onClick)="GetAllSalsItems()" label="عرض" class="font-bold mx-1 w-100" />
+        </div>  
+      </div>
+      <div class="my-3">
+        <app-dataGrid [(dataSource)]="DATA_LIST" (onGridLoaded)="GridLoaded($event)"  [Columns]="Columns" >
+        </app-dataGrid>
+      </div>
+    </div>
+  </ng-template>
+</app-stepper>

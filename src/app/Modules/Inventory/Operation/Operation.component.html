@@ -48,7 +48,7 @@
                             <div class="row mb-4  my-4">
                                 <div class="col-12">
                                     <div class="form-floating">
-                                        <app-comboBox [NormalStyle]="true"
+                                        <app-comboBox [ShowMode]="Operation.ID>0" [NormalStyle]="true"
                                             [dataSource]="[{ID:1,NAME:'اضافة'},{ID:2,NAME:'سحب'},{ID:3,NAME:'تحويل'}]"
                                             optionValue="ID" optionLabel="NAME"
                                             [(SelectedValue)]="Operation.TYPE" class="form-control"></app-comboBox>
@@ -63,9 +63,9 @@
                             <div class="row mb-4  my-4" *ngIf="Operation.TYPE>0">
                                 <div class="col-12">
                                     <div class="form-floating">
-                                        <app-comboBox [NormalStyle]="true" [dataSource]="WareHouses" optionValue="ID"
+                                        <app-comboBox [ShowMode]="Operation.ID>0" [NormalStyle]="true" [dataSource]="WareHouses" optionValue="ID" 
                                             optionLabel="NAME" apiPathDataSource="WareHouse"
-                                            [(SelectedValue)]="Operation.WAREHOUSE_ADDED_ID"
+                                            [(SelectedValue)]="Operation.WAREHOUSE_1" (SelectedValueChange)="GetDataRecordedStock()"
                                             class="form-control"></app-comboBox>
                                         <label class="text-muted">
                                             <i class="pi pi-database me-2"></i>
@@ -80,9 +80,9 @@
                             <div class="row mb-4  my-4" *ngIf="Operation.TYPE==3">
                                 <div class="col-12">
                                     <div class="form-floating">
-                                        <app-comboBox [NormalStyle]="true" [dataSource]="WareHouses" optionValue="ID"
+                                        <app-comboBox [ShowMode]="Operation.ID>0" [NormalStyle]="true" [dataSource]="WareHouses" optionValue="ID"
                                             optionLabel="NAME" apiPathDataSource="WareHouse"
-                                            [(SelectedValue)]="Operation.WAREHOUSE_GET_ID"
+                                            [(SelectedValue)]="Operation.WAREHOUSE_2"
                                             class="form-control"></app-comboBox>
                                         <label class="text-muted">
                                             <i class="pi pi-database me-2"></i>
@@ -96,7 +96,7 @@
                             <div class="row mb-4 ">
                                 <div class="col-12 col-md-6 ">
                                     <div class="form-floating">
-                                        <app-DateTime [(selectedDate)]="Operation.DATE_TIME"
+                                        <app-DateTime [ShowMode]="Operation.ID>0" [(selectedDate)]="Operation.DATE_TIME"
                                             class="form-control"></app-DateTime>
                                         <label class="text-muted">
                                             <i class="pi pi-calendar me-2"></i>تاريخ التسجيل
@@ -122,7 +122,7 @@
                                 </div>
                                 <div class="card-body p-3">
                                     <div class="form-floating">
-                                        <textarea [(ngModel)]="Operation.NOTS" class="form-control"
+                                        <textarea [(ngModel)]="Operation.NOTS" [disabled]="Operation.ID>0" class="form-control"
                                             style="height: 120px; resize: vertical;"
                                             placeholder="اكتب الملاحظات هنا..."></textarea>
                                         <label class="text-muted">اكتب الملاحظات هنا...</label>
@@ -144,7 +144,7 @@
                             </h5>
                         </div>
                         <div class="card-body">
-                            <app-InputFastItems #InputFastItems [ITEMS_INPUT]="Operation.ITEMS" Header="اصناف العملية المخزنية" [showPrice]="false"
+                            <app-InputFastItems [ShowMode]="Operation.ID>0" #InputFastItems  Header="اصناف العملية المخزنية" [showPrice]="false"
                                 (OnGridLoaded)="GridLoaded($event)"></app-InputFastItems>
                         </div>
                     </div>
@@ -158,8 +158,8 @@
                         <p-button *ngIf=" this.Operation.ID==0" [raised]="true" (onClick)="Save()" severity="success"
                             label="اضافة العملية وطباعة" icon="pi pi-save"
                             class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
-                        <p-button *ngIf=" this.Operation.ID>0" [raised]="true" (onClick)="Save()" severity="success"
-                            label="حفظ تعديل العملية وطباعة" icon="pi pi-save"
+                        <p-button *ngIf=" this.Operation.ID>0" [raised]="true" (onClick)="print()" severity="success"
+                            label="طباعة" icon="pi pi-print"
                             class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
                         <p-button *ngIf=" this.Operation.ID>0" [raised]="true" (onClick)="delete()" severity="danger"
                             label="حذف العملية" icon="pi pi-trash"

@@ -47,6 +47,7 @@ export class DataGridComponent implements OnInit {
   startDataSource: Array<any> = [];
   @Input() public set dataSource(v: any[]) {
     if (v != undefined) {
+
       this._dataSource = v;
       v.forEach((item, index) => {
         this.RenderItemSource.emit({ item, index });
@@ -56,6 +57,7 @@ export class DataGridComponent implements OnInit {
         this.startDataSource = this._tools.cloneObject(this.dataSource);
       }
       this.dataSourceChange.emit(v)
+      this.onSetItemSource(v)
     }
   }
   public get dataSource() {
@@ -98,7 +100,9 @@ export class DataGridComponent implements OnInit {
   @Input() AllowCurdOperation: boolean = true;
   @Input() paginator: boolean = true;
   @Input() AllowEdit: boolean = false;
+  @Input() AllowShow: boolean = false;
   @Input() AddInherit: boolean = false;
+  @Input() AllowPrintItem: boolean = false;
   @Input() AllowUpdate: boolean = true;
   @Input() AllowSearch: boolean = true;
   @Input() scrollHeight: string = "flex"
@@ -111,6 +115,8 @@ export class DataGridComponent implements OnInit {
   @Input() selectedColumns: Array<any> = [];
   @Input() AllowDeleteSelected: boolean = true;
   @Input() AllowExportExcel: boolean = true;
+  @Input() AllowImportExcel: boolean = false;
+  @Input() AllowPrint: boolean = false;
   @Input() singleSelectedMode: boolean = false;
   @Input() canSelectedSomeColumns: boolean = false;
   @Output() GridAction: EventEmitter<any> = new EventEmitter()
@@ -183,10 +189,40 @@ export class DataGridComponent implements OnInit {
   onRenderItemSource(item: any, index: number) {
 
   }
+  isPine: boolean = false;
+  pinColumn() {
+    if (this.isPine) {
+      let AllTd = Array.from(document.querySelectorAll('.fixed-column')) as Array<HTMLElement>
+      if (AllTd) {
+        AllTd.forEach((td: HTMLElement) => {
+          td.style.position = "static"
+        })
+      }
+      this.isPine = false;
+    }
+    else {
+      let AllTd = Array.from(document.querySelectorAll('.fixed-column')) as Array<HTMLElement>
+      if (AllTd) {
+        AllTd.forEach((td: HTMLElement) => {
+          td.style.position = "sticky"
+        })
+        this.isPine = true;
+      }
+    }
+  }
+  onSetItemSource(item: Array<any>) {
+
+  }
   async onSaveChanges(data: any = null) {
 
   }
   async onUpdate(table: Table) {
+
+  }
+  async onPrint(table: Table) {
+    print();
+  }
+  importExcel() {
 
   }
   exportExcel() {
@@ -256,12 +292,17 @@ export class DataGridComponent implements OnInit {
 
   // }
   DeleteSelectedData() {
-    this.dataSource = this.dataSource.filter(x => this.selectedItems.includes(x) == false);
-    this.dt.reset();
+    this._tools.Confermation.show("هل انت متأكد من الحذف").then(result => {
+      if (result) {
+        this.dataSource = this.dataSource.filter(x => this.selectedItems.includes(x) == false);
+        this.dt.reset();
+      }
+    })
+
   }
 
   onLoadedChildDataGrid(parent: DataGridComponent, ChildGrid: DataGridComponent, RowParentItem: any) {
-   
+
   }
   async AddNew(table: Table) {
     if (this.AllowAdd) {
@@ -292,10 +333,20 @@ export class DataGridComponent implements OnInit {
 
   }
   onDeleteItem(item: any) {
-    this.dataSource.splice(this.dataSource.indexOf(item), 1)
-    this.dt.reset();
+    this._tools.Confermation.show("هل انت متأكد من الحذف").then(result => {
+      if (result) {
+        this.dataSource.splice(this.dataSource.indexOf(item), 1)
+        this.dt.reset();
+      }
+    })
   }
   onEditItem(item: any) {
+
+  }
+  onShowItem(item: any) {
+
+  }
+  onPrintItem(item: any) {
 
   }
   onAddInert(item: any) {
@@ -307,7 +358,7 @@ export class DataGridComponent implements OnInit {
   onGridAction(Action: GridAction) {
     this.GridActionFunc(Action)
     this.GridAction.emit(Action);
-    this.onRenderItemSource(Action.itemEdit,this.dataSource.indexOf(Action.itemEdit))
+    this.onRenderItemSource(Action.itemEdit, this.dataSource.indexOf(Action.itemEdit))
   }
   GridActionFunc(Action: GridAction) {
 
@@ -340,7 +391,7 @@ export class DataGridComponent implements OnInit {
 
   async pInputTextKeyDown(e: KeyboardEvent, inputText: any, item: any) {
 
-    let MoveDown=()=>{
+    let MoveDown = () => {
       let cell = (e.target as HTMLElement)?.parentElement?.parentElement;
       window.getSelection()?.removeAllRanges();
       let Row = (e.target as HTMLElement)?.parentElement?.parentElement?.parentElement;
@@ -350,9 +401,9 @@ export class DataGridComponent implements OnInit {
         let Indexcell = Array.from(Row.children).indexOf(cell);
         if ((indexRow + 1) < Array.from(CollectRows.children).length) {
           let NewTarget = (CollectRows.children[indexRow + 1].children[Indexcell]?.children[0]?.children[0] as HTMLElement);
-          if (NewTarget) {     
+          if (NewTarget) {
             NewTarget.scroll({ behavior: 'smooth' });
-            this._tools.waitExecuteFunction(200,()=>{(NewTarget as any).select()})
+            this._tools.waitExecuteFunction(200, () => { (NewTarget as any).select() })
           }
         }
       }
