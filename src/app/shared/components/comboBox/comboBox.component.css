@@ -7,7 +7,7 @@
     padding-right: 10px !important;
 }
 
-::ng-deep p-dropdown {
+::ng-deep p-select {
     position : relative;
     min-width: 200px;
 }
@@ -20,7 +20,7 @@
     left: 8px !important;
 }
 
-::ng-deep p-dropdownitem li {
+::ng-deep p-selectitem li {
     direction: rtl !important;
 }
 

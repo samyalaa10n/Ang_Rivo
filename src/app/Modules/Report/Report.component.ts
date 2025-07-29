@@ -23,12 +23,15 @@ export class ReportComponent implements OnInit {
   StepperConfig = new StepperConfiguration(this)
   Accounts: Array<any> = [];
   WareHouses: Array<any> = [];
+  SEASONS: Array<any> = [];
   Customers: Array<any> = [];
   Columns: Array<Column> = [];
   START_DATE: Date = new Date();
   END_DATE: Date = new Date();
   Account: number = 0;
   WAREHOUSE: number = 0;
+  CUSTOMER: number = 0;
+  SEASON: number = 0;
   DATA_LIST: Array<any> = [];
   constructor(private _tools: Tools) {
     this.START_DATE.setDate(1);
@@ -41,6 +44,8 @@ export class ReportComponent implements OnInit {
   async ngOnInit() {
     this.Accounts = await this._tools.Network.getAsync<any>("Accounts");
     this.WareHouses = await this._tools.Network.getAsync<any>("WareHouse");
+    this.SEASONS = await this._tools.Network.getAsync<any>("Season");
+    this.Customers = await this._tools.Network.getAsync<any>("Customer");
   }
 
   async GetData() {
@@ -48,7 +53,7 @@ export class ReportComponent implements OnInit {
     this.Columns.push(new Column("REP_OPERATION_ID", "رقم العملية", "lapel"))
     this.Columns.push(new Column("REP_DATE", "تاريخ العملية", "lapel"))
     this.Columns[this.Columns.length - 1].Style_Show = (value) => {
-      return this._tools.DateTime.EditFormateData(value,"DD-MM-yyyy");
+      return this._tools.DateTime.EditFormateData(value, "DD-MM-yyyy");
     }
     this.Columns.push(new Column("REP_VALUE", "المبلغ", "lapel"))
     this.Columns.push(new Column("REP_TYPE_NAME", "طريقة المعاملة", "lapel"))
@@ -73,7 +78,7 @@ export class ReportComponent implements OnInit {
     var data = await this._tools.Network.getAsync<any>(`Report/GetItemsStock?Request=${JSON.stringify({ WAREHOUSE: this.WAREHOUSE, START: this.START_DATE, END: this.END_DATE })}`);
     if (data != undefined && Array.isArray(data)) {
       this.DATA_LIST = data;
-      
+
     }
     else {
       this.DATA_LIST = [];
@@ -92,16 +97,24 @@ export class ReportComponent implements OnInit {
     dataGrid.AllowShow = true;
     dataGrid.canSelectRow = false;
     dataGrid.AllowPrint = true;
+    dataGrid.prenTitle = () => {
+      return "كشف حساب " + this.Accounts.find(x => x.ID == this.Account)?.NAME;
+    }
     dataGrid.onShowItem = (item) => {
       this.GoPage(item)
     }
     if (this.StepperConfig._ActiveStepIndex == 1) {
       dataGrid.AllowShow = false;
-      dataGrid.IsHasChild = true;
+      dataGrid.prenTitle = () => {
+      return " رصيد المخازن -  " + (this.WareHouses.find(x => x.ID == this.WAREHOUSE)?.NAME ?? "");
+    }
       dataGrid.onLoadedChildDataGrid = (pernt, Child, row) => {
         let ChildCoumns: Array<Column> = []
         Child.AllowShow = true;
         Child.paginator = false;
+        Child.prenTitle = () => {
+          return "تفاصيل حركات صنف - " + row.ID + " - " + row.NAME;
+        };
         Child.AllowUpdate = false;
         Child.AllowDelete = false;
         Child.AllowDeleteSelected = false;
@@ -114,7 +127,7 @@ export class ReportComponent implements OnInit {
         ChildCoumns.push(new Column("OPERATION_ID", "رقم العملية", "lapel"))
         ChildCoumns.push(new Column("DATE_TIME", "تاريخ العملية", "lapel"))
         ChildCoumns[ChildCoumns.length - 1].Style_Show = (value) => {
-          return this._tools.DateTime.EditFormateData(value,"DD-MM-yyyy");
+          return this._tools.DateTime.EditFormateData(value, "DD-MM-yyyy");
         }
         ChildCoumns.push(new Column("TYPE", "نوع العملية", "lapel"))
         ChildCoumns.push(new Column("FROM_TYPE", "مصدر العملية", "lapel"))
@@ -128,7 +141,17 @@ export class ReportComponent implements OnInit {
     }
     else if (this.StepperConfig._ActiveStepIndex == 2) {
       dataGrid.AllowShow = false;
-      dataGrid.AllowPrint = false;
+      dataGrid.AllowPrint = true;
+      dataGrid.prenTitle = () => {
+        return "تفاصيل المبيعات للأصناف";
+      };
+    }
+    else if (this.StepperConfig._ActiveStepIndex == 3) {
+      dataGrid.AllowShow = false;
+      dataGrid.AllowPrint = true;
+      dataGrid.prenTitle = () => {
+        return "تقرير خطة انتاج - " + (this.SEASONS.find(x => x.ID == this.SEASON)?.NAME ?? "") + " - " + (this.Customers.find(x => x.ID == this.CUSTOMER)?.NAME ?? "") + " - " + (this.WareHouses.find(x => x.ID == this.WAREHOUSE)?.NAME ?? "");
+      };
     }
   }
   GoPage(Item: any) {
@@ -193,5 +216,29 @@ export class ReportComponent implements OnInit {
       }
     }
     this.DATA_LIST = Data
+  }
+  async GetProductionPlan() {
+    this.Columns = [];
+    this.Columns.push(new Column("ID", "رقم الصنف", "lapel"))
+    this.Columns.push(new Column("NAME", "اسم الصنف", "lapel"))
+    this.Columns.push(new Column("CATEGORY", "التصنيف", "lapel"))
+    this.Columns.push(new Column("UNIT", "الوحدة", "lapel"))
+    this.Columns.push(new Column("TYPE", "نوع الصنف", "lapel"))
+    this.Columns.push(new Column("COUNT_REQUEST", "المطلوب", "lapel"))
+    this.Columns.push(new Column("COUNT_INVOICE", "المباع", "lapel"))
+    this.Columns.push(new Column("COUNT_STOCK", "الرصيد المخزني", "lapel"))
+    this.Columns.push(new Column("REQUEST_PRODUCTION", "المطلوب لأنتاجة", "lapel"))
+    if (this.CUSTOMER != 0 || this.WAREHOUSE != 0) {
+      var data = await this._tools.Network.getAsync<any>(`Report/GetProductionPlanSpicalCustomer?Customer_Id=${this.CUSTOMER}&Sesson=${this.SEASON}&WareHouse=${this.WAREHOUSE}`);
+    }
+    else {
+      var data = await this._tools.Network.getAsync<any>(`Report/GetProductionPlan?Customer_Id=${this.CUSTOMER}&Sesson=${this.SEASON}&WareHouse=${this.WAREHOUSE}`);
+    }
+    if (data != undefined && Array.isArray(data)) {
+      this.DATA_LIST = data;
+    }
+    else {
+      this.DATA_LIST = [];
+    }
   }
 }

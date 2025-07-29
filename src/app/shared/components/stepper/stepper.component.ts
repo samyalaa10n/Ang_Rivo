@@ -7,14 +7,14 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { faSave } from '@fortawesome/free-regular-svg-icons';
 //import { faGithub } from '@fortawesome/free-brands-svg-icons';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ButtonModule } from 'primeng/button';
+import { Tools } from '../../service/Tools.service';
 @Component({
   selector: 'app-stepper',
   templateUrl: './stepper.component.html',
   styleUrls: ['./stepper.component.css'],
-  imports:[NgFor,NgClass,NgIf,NgTemplateOutlet,FontAwesomeModule,ProgressSpinnerModule,ButtonModule],
-  standalone:true,
+  imports: [NgFor, NgClass, NgIf, NgTemplateOutlet, FontAwesomeModule, ButtonModule],
+  standalone: true,
 })
 export class StepperComponent {
   faArrowLeft = faArrowLeft;   // أيقونة Solid
@@ -22,17 +22,32 @@ export class StepperComponent {
   faSave = faSave;   // أيقونة Solid
 
   SelectedTemplate!: TemplateRef<any>
-  loading: boolean = true;
+  private _loading: boolean = true;
+  set loading(v: boolean) {
+    this._loading = v
+    if (this._loading) {
+
+      this._tools.Loading.startLoading();
+    }
+    else {
+      this._tools.Loading.stopLoading();
+    }
+  }
+  get loading() {
+    return this._loading
+  }
   @ContentChildren(StepConfigurationDirective) steps!: QueryList<StepConfigurationDirective>;
   @ViewChildren("buttonHeader") buttonsHeader!: QueryList<ElementRef>
   @Input() Configuration: StepperConfiguration = new StepperConfiguration(this);
+  constructor(private _tools: Tools) { }
   selectStep(Step: StepConfiguration) {
     Step.select(true)
   }
   ngAfterViewInit() {
+    this._tools.Loading.startLoading();
     let clear = setTimeout(() => {
       let buttons: Array<HTMLElement> = [];
-      this.Configuration.Steps=[];
+      this.Configuration.Steps = [];
       this.buttonsHeader.forEach(btn => {
         buttons.push(btn.nativeElement)
       })
@@ -111,7 +126,7 @@ export class StepperComponent {
     //     this.Configuration.disableSave = false;
     //   }
     // }
-    let getLast = (lastDx: number = this.Configuration.Steps.length - 1): StepConfiguration |null=> {
+    let getLast = (lastDx: number = this.Configuration.Steps.length - 1): StepConfiguration | null => {
       let last = this.Configuration.Steps[lastDx];
       if (last == undefined) {
         return null;
@@ -128,7 +143,7 @@ export class StepperComponent {
     }
 
     let lastStep = getLast();
-    if (lastStep != null && this.Configuration.Steps[this.Configuration._ActiveStepIndex]!=undefined) {
+    if (lastStep != null && this.Configuration.Steps[this.Configuration._ActiveStepIndex] != undefined) {
       if (this.Configuration.Steps[this.Configuration._ActiveStepIndex].InfoStep.Header == lastStep.InfoStep.Header) {
         this.Configuration.ShowNextButton = false;
         this.Configuration.disableSave = false;

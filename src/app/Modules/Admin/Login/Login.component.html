@@ -1,13 +1,45 @@
+<div class="bg-animation">
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
 
-<div class="container-fluid d-flex justify-content-center align-items-center bg-black" style="height:100vh ;">
-  <div class="d-inline p-5 shadow rounded-3 bg-white">
-    <app-InputLabel placeholder="اسم المستخدم">
-      <input  pInputText type="text" placeholder="كتابة ..." [(ngModel)]="logInfo.NAME">
-    </app-InputLabel>
-    <app-InputLabel class="d-block my-4" placeholder="كلمة المرور">
-      <input pInputText  type="password" placeholder="كتابة ..."  [(ngModel)]="logInfo.PASSWORD">
-    </app-InputLabel>
-    <p-button label="دخول" class="d-flex  justify-content-center" (onClick)="login()"
-    icon="pi "></p-button>
-  </div> 
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+<div class="d-flex justify-content-center align-items-center">
+  <div class="container" dir="rtl">
+    <div class="login-container">
+      <div class="logo-container">
+        <div class="logo">Rivo</div>
+        <div class="company-name">للتطوير الأنظمة</div>
+      </div>
+      <div id="loginForm">
+        <div class="form-group">
+          <div class="input-container">
+            <input type="text" class="form-input" [(ngModel)]="logInfo.NAME" id="username"  >
+            <div class="input-icon">👤</div>
+            <label class="form-label">اسم المستخدم</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-container">
+            <input type="password" class="form-input" [(ngModel)]="logInfo.PASSWORD" id="password"  >
+            <div class="input-icon">🔒</div>
+            <label class="form-label">كلمة المرور</label>
+          </div>
+        </div>
+
+        <button  (click)="login()" class="login-btn" id="loginBtn">
+          تسجيل الدخول
+        </button>
+      </div>
+
+      <div class="success-checkmark" id="successCheck"></div>
+    </div>
+  </div>
 </div>

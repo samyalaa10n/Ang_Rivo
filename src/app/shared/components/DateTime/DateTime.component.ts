@@ -1,17 +1,16 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DatePickerModule } from 'primeng/datepicker';
 import { FloatLabel } from 'primeng/floatlabel';
 import { Tools } from '../../service/Tools.service';
 import { NgIf, NgStyle } from '@angular/common';
-import { CalendarModule, LocaleSettings } from 'primeng/calendar';
+import { DatePickerModule, LocaleSettings } from 'primeng/datepicker';
 
 @Component({
   selector: 'app-DateTime',
   templateUrl: './DateTime.component.html',
   styleUrls: ['./DateTime.component.css'],
   standalone: true,
-  imports: [DatePickerModule, FormsModule, CalendarModule,NgIf]
+  imports: [DatePickerModule, FormsModule,NgIf]
 })
 export class DateTimeComponent implements OnInit {
 

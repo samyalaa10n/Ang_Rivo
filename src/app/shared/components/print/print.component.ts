@@ -125,17 +125,18 @@ export class PrintComponent implements OnInit {
     this.removePrintStyles();
   }
 
-  printHTML(html: string, inMyWindow: boolean, options?: PrintOptions): void {
-    var printWindow: any = null;
-    if (inMyWindow) {
-      printWindow = window;
-    }
-    else {
-      printWindow = window.open('', '_blank');
-    }
-    if (printWindow) {
-      const printOptions = { ...this.defaultOptions, ...options };
-      printWindow.document.write(`
+  async printHTML(html: string, inMyWindow: boolean, options?: PrintOptions): Promise<void> {
+    return new Promise((resolve) => {
+      var printWindow: any = null;
+      if (inMyWindow) {
+        printWindow = window;
+      }
+      else {
+        printWindow = window.open('', '_blank');
+      }
+      if (printWindow) {
+        const printOptions = { ...this.defaultOptions, ...options };
+        printWindow.document.write(`
         <html dir="rtl">
           <head>
             <title>${printOptions.title || 'Print'}</title>
@@ -165,11 +166,13 @@ export class PrintComponent implements OnInit {
           </body>
         </html>
       `);
-      this._tools.waitExecuteFunction(100, () => {
-        printWindow.document.close();
-        printWindow.print();
-      })
+        this._tools.waitExecuteFunction(100, () => {
+          printWindow.document.close();
+          printWindow.print();
+          resolve();
+        })
+      }
+    })
 
-    }
   }
 }

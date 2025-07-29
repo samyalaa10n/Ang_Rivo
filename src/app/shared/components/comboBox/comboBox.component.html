@@ -2,20 +2,20 @@
 {
   <div dir="rtl" class="combo">
     <p-iftalabel dir="rtl">
-      <p-dropdown [id]="placeholder" [placeholder]="'أختر القيمة ...'"  [loading]="IsLoading" appendTo="body" (onShow)="onShow()"  [(ngModel)]="selected" (ngModelChange)="selectedItem($event)"
+      <p-select [id]="placeholder" [placeholder]="'أختر القيمة ...'"  [loading]="IsLoading" appendTo="body" (onShow)="onShow()"  [(ngModel)]="selected" (ngModelChange)="selectedItem($event)"
         (onClear)="clear()" [showClear]="showClear" emptyMessage="لا يوجد بيانات" [filter]="optionLabel"
          [optionLabel]="optionLabel" [options]="dataSource" emptyFilterMessage="لا يوجد">
-      </p-dropdown>
+      </p-select>
       <label [for]="placeholder" class="pb-2 comboLabel">{{placeholder}}</label>
     </p-iftalabel>
   </div>
 }
 @if(NormalStyle && !ShowMode)
 {
-  <p-dropdown [id]="placeholder" [placeholder]="'أختر القيمة ...'"  [loading]="IsLoading" appendTo="body" (onShow)="onShow()"  [(ngModel)]="selected" (ngModelChange)="selectedItem($event)"
-  (onClear)="clear()" [showClear]="showClear" emptyMessage="لا يوجد بيانات" [filter]="optionLabel"
+  <p-select [id]="placeholder" [placeholder]="'أختر القيمة ...'"  [loading]="IsLoading" appendTo="body" (onShow)="onShow()"  [(ngModel)]="selected" (ngModelChange)="selectedItem($event)"
+  (onClear)="clear()" [showClear]="showClear" emptyMessage="لا يوجد بيانات" fi [filter]="optionLabel"
    [optionLabel]="optionLabel" [options]="dataSource" emptyFilterMessage="لا يوجد">
-  </p-dropdown>
+  </p-select>
 }
 @if(ShowMode)
 {

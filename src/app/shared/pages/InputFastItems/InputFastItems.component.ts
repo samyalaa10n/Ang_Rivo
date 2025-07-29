@@ -47,6 +47,7 @@ export class InputFastItemsComponent implements OnInit {
   async GetOldData() {
     this.Category = await this._tools.Network.getAsync("Category") as Array<any>;
     this.ITEMS = await this._tools.Network.getAsync("Items") as Array<any>;
+    console.log(this.ITEMS)
     if (this.ITEMS_INPUT.length > 0) {
       let ItemsSelect = this.ITEMS.filter(item => this.ITEMS_INPUT.map(real_item => real_item.ITEM_ID).includes(item.ID))
       this.CategorySelected = this.Category.filter(cat => ItemsSelect.map(z => z.CATEGORY).includes(cat.ID));
@@ -119,21 +120,20 @@ export class InputFastItemsComponent implements OnInit {
     window.getSelection()?.removeAllRanges();
     var element: HTMLInputElement | HTMLButtonElement | null = null;
     if (number == 1) {
-      element = (this.StepInput1.el?.nativeElement as HTMLElement)?.children[0]?.children[0] as HTMLInputElement;
+      element = (this.StepInput1?.el?.nativeElement as HTMLElement)?.children[0]as HTMLInputElement;
     }
     else if (number == 2) {
       if (!this.showPrice) {
         this.next(3)
       }
-      element = (this.StepInput2.el?.nativeElement as HTMLElement)?.children[0] as HTMLInputElement;
+      element = (this.StepInput2?.el?.nativeElement as HTMLElement)?.children[0] as HTMLInputElement;
     }
     else if (number == 3) {
 
-      element = (this.StepInput3.el?.nativeElement as HTMLElement)?.children[0] as HTMLInputElement;
+      element = (this.StepInput3?.el?.nativeElement as HTMLElement)?.children[0] as HTMLInputElement;
     }
     else if (number == 4) {
-      element = (this.StepInput4.el.nativeElement as HTMLElement)?.children[0] as HTMLButtonElement;
-
+      element = (this.StepInput4?.el?.nativeElement as HTMLElement)?.children[0] as HTMLButtonElement;
     }
     if (element) {
       this._tools.waitExecuteFunction(100, () => { element?.focus(); if (number == 1 || number == 2 || number == 3) { (element as any)?.select(); } if (number == 4) { element?.click() } });

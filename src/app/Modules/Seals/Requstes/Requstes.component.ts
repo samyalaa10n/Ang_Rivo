@@ -38,20 +38,13 @@ export class RequstesComponent implements OnInit {
   SesonActive: number = 0;
   Request: RequestOrder = { ID: 0, ROW_NUMBER: -1, CUSTOMER_NAME: '', CUSTOMER: 0, DEPOST: 0, DESCOUND_PERCENT: 0, SEND_DATE: new Date(), RESAVE_DATE: new Date(), ITEMS: [], PRICE_AFTER_DESCOUND: 0, NOTS: '', PAYMENT_TYPE: 0 }
   constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _printService: PrintService, private _router: Router) { }
+
   async ngOnInit() {
-    this.Customers = await this._tools.Network.getAsync<any>("Customer")
-    this.AccountTypes = (await this._tools.Network.getAsync<any>("AccountType") as Array<AccountType>);
-    this.SpecialDescound = await this._tools.Network.getAsync<any>("SpecialDescound")
-    this.SpecialItemPrice = await this._tools.Network.getAsync<any>("SpecialItemPrice")
-    this.SesonActive = (await this._tools.Network.getAsync<any>("Season/GetActiveSeson") as any)?.SESON ?? 0
+    await this.UpdetLockep();
     this.AccountTypes = this.AccountTypes.filter(x => x.IS_ADDED == true && x.IS_AGAL == false);
-    this.ColumnsInput.push(new Column('ID', "رقم العملية"))
     this.ColumnsInput.push(new Column('ITEM_ID', "رقم الصنف"))
     this.ColumnsInput.push(new Column('NAME', "اسم الصنف"))
     this.ColumnsInput.push(new Column('UNIT', "وحدة الصنف"))
-    this.ColumnsInput.push(new Column('TYPE', "نوع الصنف"))
-    this.ColumnsInput.push(new Column('CATEGORY', "التصنيف"))
-    this.ColumnsInput.push(new Column('MAIN_PRICE', "سعر الصنف"))
     this.ColumnsInput.push(new Column('PRICE', "السعر في الطلبية", "numberWithFraction"))
     this.ColumnsInput.push(new Column('COUNT', "الكمية", "numberWithFraction"))
     this.ColumnsInput.push(new Column('TOTAL_COUNT', "اجمالي السعر"))
@@ -63,6 +56,7 @@ export class RequstesComponent implements OnInit {
           if (+ID > 0) {
             var response = await this._tools.Network.getAsync<RequestOrder>("Requstes/GetById?id=" + ID) as RequestOrder;
             if (response?.ID > 0) {
+              await this.UpdetLockep()
               this.Request = response;
               await this.InputFastItems.GetOldData();
             }
@@ -75,6 +69,13 @@ export class RequstesComponent implements OnInit {
       })
     })
   };
+  async UpdetLockep() {
+    this.Customers = await this._tools.Network.getAsync<any>("Customer")
+    this.AccountTypes = (await this._tools.Network.getAsync<any>("AccountType") as Array<AccountType>);
+    this.SpecialDescound = await this._tools.Network.getAsync<any>("SpecialDescound")
+    this.SpecialItemPrice = await this._tools.Network.getAsync<any>("SpecialItemPrice")
+    this.SesonActive = (await this._tools.Network.getAsync<any>("Season/GetActiveSeson") as any)?.SESON ?? 0
+  }
   GridLoaded(dataGrid: DataGridComponent) {
     dataGrid.Columns = this.ColumnsInput;
     dataGrid.onRenderItemSource = (item: RealItem) => {
@@ -83,7 +84,6 @@ export class RequstesComponent implements OnInit {
     dataGrid.GridActionFunc = (action) => {
       action.itemEdit.TOTAL_COUNT = action.itemEdit.COUNT * action.itemEdit.PRICE;
     }
-
   }
   calculate(item: RealItem) {
     item.TOTAL_COUNT = item.PRICE * item.COUNT;
@@ -91,9 +91,8 @@ export class RequstesComponent implements OnInit {
     if (NewPrice > 0) {
       item.PRICE = NewPrice;
     }
-    else
-    {
-      item.PRICE=item.MAIN_PRICE;
+    else {
+      item.PRICE = item.MAIN_PRICE;
     }
   }
   onSelectCustomer() {
@@ -124,22 +123,25 @@ export class RequstesComponent implements OnInit {
         this.Request = res;
         this.InputFastItems.oldData = [];
         await this.InputFastItems.UpdateOnSave();
-        this._tools.waitExecuteFunction(500, () => {
-          this.print();
+        this._tools.waitExecuteFunction(500, async () => {
+          await this.print();
           this._tools.waitExecuteFunction(500, () => {
             this._router.navigate(['Main', 'Requstes'], { queryParams: { ID: `${this.Request.ID}` } });
+            window.location.reload();
           })
         })
       }
     })
   }
-  print() {
+  async print() {
     let Req = this._tools.cloneObject(this.Request) as RequestOrder;
     Req.CUSTOMER_NAME = this.Customers.find(x => x.ID == Req.CUSTOMER)?.NAME;
     Req.PAYMENT_NAME = this.AccountTypes.find(x => x.ID == Req.PAYMENT_TYPE)?.NAME;
     Req.ITEMS = this.InputFastItems.ITEMS_INPUT;
     Req.ITEMS = Req.ITEMS.filter(x => x.TOTAL_COUNT > 0);
-    this._printService.printRequest(Req, { Total: this.Total(), TotalAfterDepost: this.TotalAfterDepost(), TotalAfterDescound: this.TotalAfterDescound() })
+
+    await this._printService.printRequest(Req, { Total: this.Total(), TotalAfterDepost: this.TotalAfterDepost(), TotalAfterDescound: this.TotalAfterDescound() }, true)
+
   }
   AddNew() {
     this._router.navigate(['Main', 'Requstes'], { queryParams: { ID: `0` } })

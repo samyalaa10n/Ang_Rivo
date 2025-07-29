@@ -2,6 +2,25 @@ import { Routes } from '@angular/router';
 import { authGuard } from './shared/Gurd/auth.guard';
 import { MainComponent } from './Modules/LayOut/Main/Main.component';
 import { LoginComponent } from './Modules/Admin/Login/Login.component';
+import { ReportComponent } from './Modules/Report/Report.component';
+import { AccountOperationComponent } from './Modules/Accounts/AccountOperation/AccountOperation.component';
+import { AccountOperationListComponent } from './Modules/Accounts/AccountOperationList/AccountOperationList.component';
+import { AccountTypeOperationsComponent } from './Modules/Accounts/AccountTypeOperations/AccountTypeOperations.component';
+import { AccountsComponent } from './Modules/Accounts/Accounts/Accounts.component';
+import { RequstesListComponent } from './Modules/Seals/RequstesList/RequstesList.component';
+import { RequstesComponent } from './Modules/Seals/Requstes/Requstes.component';
+import { WareHousesComponent } from './Modules/Inventory/WareHouses/WareHouses.component';
+import { CategoryComponent } from './Modules/Inventory/Category/Category.component';
+import { ItemsComponent } from './Modules/Inventory/Items/Items.component';
+import { OperationListComponent } from './Modules/Inventory/OperationList/OperationList.component';
+import { OperationComponent } from './Modules/Inventory/Operation/Operation.component';
+import { SeasonComponent } from './Modules/Seals/Season/Season.component';
+import { CustomerComponent } from './Modules/Seals/Customer/Customer.component';
+import { SpeciaPriceComponent } from './Modules/Seals/SpeciaPrice/SpeciaPrice.component';
+import { SpecialDescoundComponent } from './Modules/Seals/SpecialDescound/SpecialDescound.component';
+import { InvoiceListComponent } from './Modules/Seals/InvoiceList/InvoiceList.component';
+import { InvoiceComponent } from './Modules/Seals/Invoice/Invoice.component';
+import { HomeComponent } from './Modules/LayOut/Home/Home.component';
 
 
 
@@ -22,7 +41,7 @@ export const routes: Routes = [
       {
         path: 'Home',
         title: 'الترحيب',
-        loadComponent: () => import('./Modules/LayOut/Home/Home.component').then(m => m.HomeComponent)
+        component: HomeComponent
       },
       {
         path: 'EffectInSystem',
@@ -131,115 +150,115 @@ export const routes: Routes = [
       {
         path: 'WareHouses',
         title: 'المخازن',
-        loadComponent: () => import('./Modules/Inventory/WareHouses/WareHouses.component').then(m => m.WareHousesComponent)
+        component: WareHousesComponent
       }
       ,
       {
         path: 'Category',
         title: 'التصنيفات',
-        loadComponent: () => import('./Modules/Inventory/Category/Category.component').then(m => m.CategoryComponent)
+        component: CategoryComponent
       }
       ,
       {
         path: 'Items',
         title: 'الأصناف',
-        loadComponent: () => import('./Modules/Inventory/Items/Items.component').then(m => m.ItemsComponent)
+        component:ItemsComponent
       }
       ,
       {
         path: 'OperationList',
         title: 'العمليات المخزنية',
 
-        loadComponent: () => import('./Modules/Inventory/OperationList/OperationList.component').then(m => m.OperationListComponent)
+        component: OperationListComponent
       }
       ,
       {
         path: 'Operation',
         data: { ID: 0 },
         title: 'عملية مخزنية',
-        loadComponent: () => import('./Modules/Inventory/Operation/Operation.component').then(m => m.OperationComponent)
+        component: OperationComponent
       }
       ,
       {
         path: 'Season',
         title: 'المواسم',
-        loadComponent: () => import('./Modules/Seals/Season/Season.component').then(m => m.SeasonComponent)
+        component: SeasonComponent
       }
       ,
       {
         path: 'Customer',
         title: 'العملاء',
-        loadComponent: () => import('./Modules/Seals/Customer/Customer.component').then(m => m.CustomerComponent)
+        component: CustomerComponent
       }
       ,
       {
         path: 'SpecialPrice',
         title: 'اسعار خاصة',
-        loadComponent: () => import('./Modules/Seals/SpeciaPrice/SpeciaPrice.component').then(m => m.SpeciaPriceComponent)
+        component: SpeciaPriceComponent
       }
       ,
       {
         path: 'SpecialDescound',
         title: 'نسب خصم خاصة',
-        loadComponent: () => import('./Modules/Seals/SpecialDescound/SpecialDescound.component').then(m => m.SpecialDescoundComponent)
+        component: SpecialDescoundComponent
       }
       ,
       {
         path: 'InvoiceList',
         title: 'الفواتير',
-        loadComponent: () => import('./Modules/Seals/InvoiceList/InvoiceList.component').then(m => m.InvoiceListComponent)
+        component: InvoiceListComponent
       }
       ,
       {
         path: 'Invoice',
         data: { ID: 0 },
         title: 'فاتورة',
-        loadComponent: () => import('./Modules/Seals/Invoice/Invoice.component').then(m => m.InvoiceComponent)
+        component: InvoiceComponent
       }
       ,
       {
         path: 'Requstes',
         data: { ID: 0 },
         title: 'الطلبيات',
-        loadComponent: () => import('./Modules/Seals/Requstes/Requstes.component').then(m => m.RequstesComponent)
+        component: RequstesComponent
       }
       ,
       {
         path: 'RequstesList',
         title: 'الطلبيات',
-        loadComponent: () => import('./Modules/Seals/RequstesList/RequstesList.component').then(m => m.RequstesListComponent)
+        component: RequstesListComponent
       }
 
       ,
       {
         path: 'Accounts',
         title: 'الحسابات',
-        loadComponent: () => import('./Modules/Accounts/Accounts/Accounts.component').then(m => m.AccountsComponent)
+        component: AccountsComponent
       }
       ,
       {
         path: 'AccountTypeOperations',
         title: 'انواع العمليات المحاسبية',
-        loadComponent: () => import('./Modules/Accounts/AccountTypeOperations/AccountTypeOperations.component').then(m => m.AccountTypeOperationsComponent)
+        component: AccountTypeOperationsComponent
       }
       ,
       {
         path: 'AccountOperationList',
         title: 'القيود المحاسبية',
-        loadComponent: () => import('./Modules/Accounts/AccountOperationList/AccountOperationList.component').then(m => m.AccountOperationListComponent)
+        component: AccountOperationListComponent
       }
       ,
       {
         path: 'AccountOperation',
         data: { ID: 0 },
         title: 'قيد محاسبي',
-        loadComponent: () => import('./Modules/Accounts/AccountOperation/AccountOperation.component').then(m => m.AccountOperationComponent)
+        component:AccountOperationComponent
       }
       ,
       {
         path: 'Report',
         title: 'التقارير',
-        loadComponent: () => import('./Modules/Report/Report.component').then(m => m.ReportComponent)
+        component:ReportComponent
       }
 
     ]

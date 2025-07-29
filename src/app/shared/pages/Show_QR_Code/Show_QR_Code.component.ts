@@ -23,8 +23,7 @@ export class Show_QR_CodeComponent implements OnInit {
             let Http = window.location.href.split(":")[0]
             let Link = `${Http}://${window.location.host}/#/Show_QR?TEXT=${TEXT}&TYPE=1`
             var image = await QRCode.toDataURL(Link);
-            var CODE = await this._tools.Network.getAsync<string>("Invoices/DecryptText?token=" + encodeURIComponent(TEXT)) as string;
-            var response = await this._tools.Network.getAsync<InvoiceOrder>("Invoices/GetByIdFullData?id=" + CODE) as InvoiceOrder;
+            var response = await this._tools.Network.getAsync<InvoiceOrder>("Invoices/GetByIdFullData?token=" + encodeURIComponent(TEXT)) as InvoiceOrder;
             if (response?.ID > 0) {
               this._tools.waitExecuteFunction(100, () => {
                 response.QRImage=image;

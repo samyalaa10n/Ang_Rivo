@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   selector: 'app-Login',
   templateUrl: './Login.component.html',
   styleUrls: ['./Login.component.css'],
-  imports: [InputLabelComponent, FormsModule, InputTextModule, ButtonModule]
+  imports: [FormsModule, InputTextModule, ButtonModule]
 })
 export class LoginComponent implements OnInit {
   logInfo = { NAME: "", PASSWORD: "" }
@@ -19,17 +19,17 @@ export class LoginComponent implements OnInit {
   constructor(private _tools: Tools, private _router: Router) { }
 
   ngOnInit() {
-   
     if (localStorage.getItem("logInfo") != null) {
       this._router.navigate(['Main', 'Home'])
     }
-    else
-    {
-      this._tools.Network.hubConnection?.stop();
-    }
   }
   async login() {
-    this._tools.Network.startConnection(JSON.stringify(this.logInfo));
+    this._tools.Network.postAsync("Login", this.logInfo).then((response: any) => {
+      if (response) {
+        localStorage.setItem("logInfo", JSON.stringify(response));
+        this._router.navigate(['Main', 'Home']);
+      }
+    });
   }
 
 }

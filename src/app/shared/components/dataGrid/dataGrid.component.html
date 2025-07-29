@@ -7,7 +7,6 @@
         (onRowUnselect)="onUnSelectRow($event);onGridAction({EVENT:$event,itemEdit:$event,ActonType:'UN_SELECT',COLUMN:null});"
         (onRowSelect)="onSelectRow($event);onGridAction({EVENT:$event,itemEdit:$event,ActonType:'SELECT',COLUMN:null})"
         [columns]="selectedColumns" [reorderableColumns]="true" [selectionMode]="selectionMode"
-        
         [metaKeySelection]="singleSelectedMode" paginatorDropdownAppendTo="body">
         <ng-template #caption>
             <div *ngIf="AllowHeaderTemplate">
@@ -43,8 +42,11 @@
                         (click)="DeleteSelectedData()" />
                     <p-button *ngIf="AllowExportExcel" [variant]="'text'" [raised]="true" [size]="'small'" label="تصدير"
                         class="font-bold mx-1" icon="pi pi-file-excel" (click)="exportExcel()" />
-                    <p-button *ngIf="AllowImportExcel"  [variant]="'text'" [raised]="true" [size]="'small'" label="استيراد ملف"
-                        class="font-bold mx-1 " icon="pi pi-file-import" (click)="importExcel()" />
+                    <label *ngIf="AllowImportExcel" id="I_FILE" pButton  class="font-bold mx-1"  [raised]="true" [size]="'small'" >
+                        <i class="pi pi-file-import" pButtonIcon></i>
+                        <span pButtonLabel>استيراد الملف</span>
+                        <input hidden  for="I_FILE" type="file" (change)="importExcel($event)">
+                    </label>
                     <p-button class="mx-2" severity="primary" [variant]="'text'" [raised]="true" [size]="'small'"
                         *ngIf="AllowPrint" label="طباعة" icon="pi pi-print" (click)="onPrint(dt)"></p-button>
                     <ng-content select="[MORE_BUTTON]"></ng-content>
@@ -97,7 +99,7 @@
                 }
                 <th *ngIf="AllowCurdOperation" class="fixed-column px-2">
                     <div class="d-flex justify-content-center align-items-center">
-                        <p-button [text]="!isPine" icon="pi pi-thumbtack" (onClick)="pinColumn()" ></p-button>
+                        <p-button [text]="!isPine" icon="pi pi-thumbtack" (onClick)="pinColumn()"></p-button>
                     </div>
                 </th>
             </tr>
@@ -210,7 +212,7 @@
                     }
                 </td>
                 }
-                <td class="text-center fixed-column px-4"  *ngIf="AllowCurdOperation">
+                <td class="text-center fixed-column px-4" *ngIf="AllowCurdOperation">
                     <ng-container [ngTemplateOutlet]="templateBtn"
                         [ngTemplateOutletContext]="{ $implicit:item ,Grid:this}"></ng-container>
                     <p-button severity="danger" [variant]="'text'" [raised]="true" [size]="'small'" *ngIf="AllowDelete"

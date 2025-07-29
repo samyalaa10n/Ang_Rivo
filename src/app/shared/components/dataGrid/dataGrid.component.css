@@ -1,6 +1,13 @@
 [appResizableColumn] {
     position: relative;
 }
+ ::ng-deep body {
+     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+     background : unset;
+     min-height : unset;
+     overflow-x : unset;
+     position   : unset;
+ }
 
 .app-grid ::ng-deep .no-select {
     user-select        : none;

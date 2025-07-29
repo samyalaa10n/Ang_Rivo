@@ -92,7 +92,7 @@ export class SomeEmployRuleComponent implements OnInit {
       this.Columns[1].columnComboBoxChange = (select, item, comboBox) => {
         var userData = localStorage.getItem("logInfo")
         if (userData != null) {
-          item.USER_RECORD_NAME = JSON.parse(userData).useR_NAME
+          item.USER_RECORD_NAME = JSON.parse(userData).NAME
         }
         item.ID_EMPLOY = select.ID;
         item.DEPART = select.DEPART;

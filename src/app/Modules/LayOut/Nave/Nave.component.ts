@@ -1,7 +1,6 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { SidebarModule } from 'primeng/sidebar'
 import { MenuModule } from 'primeng/menu'
 import { MenuItem } from 'primeng/api';
 import { Tools } from '../../../shared/service/Tools.service';

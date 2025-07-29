@@ -17,7 +17,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     var userData = localStorage.getItem("logInfo")
     if (userData != null) {
-      this._tools.Network._LoginName=JSON.parse(userData).useR_NAME
+      this._tools.Network._LoginName=JSON.parse(userData).NAME
     }
   }
   openNave() {

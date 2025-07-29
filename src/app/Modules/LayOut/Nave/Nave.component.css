@@ -21,7 +21,7 @@
     background-color: transparent !important;
     border: 0.5 solid blue !important;
 }
-::ng-deep .p-panelmenu-panel .p-iconwrapper{
+::ng-deep .p-icon{
     transform: rotateY(180deg) !important;
 }
 ::ng-deep .p-panelmenu-header-link,::ng-deep  .p-panelmenu-item-link{
@@ -34,3 +34,4 @@
 ::ng-deep .p-panelmenu-header:not(.p-panelmenu-header-active) .p-panelmenu-header-content .p-panelmenu-submenu-icon:dir(rtl){
     transform:unset !important;
 }
+

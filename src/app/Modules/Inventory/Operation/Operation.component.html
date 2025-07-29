@@ -158,7 +158,7 @@
                         <p-button *ngIf=" this.Operation.ID==0" [raised]="true" (onClick)="Save()" severity="success"
                             label="اضافة العملية وطباعة" icon="pi pi-save"
                             class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
-                        <p-button *ngIf=" this.Operation.ID>0" [raised]="true" (onClick)="print()" severity="success"
+                        <p-button *ngIf=" this.Operation.ID>0" [raised]="true" (onClick)="print(true)" severity="success"
                             label="طباعة" icon="pi pi-print"
                             class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
                         <p-button *ngIf=" this.Operation.ID>0" [raised]="true" (onClick)="delete()" severity="danger"

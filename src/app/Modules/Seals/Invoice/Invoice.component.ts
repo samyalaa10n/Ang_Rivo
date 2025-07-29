@@ -25,7 +25,7 @@ import QRCode from 'qrcode';
 export class InvoiceComponent implements OnInit {
   @ViewChild('InputFastItems') InputFastItems!: InputFastItemsComponent
   AccountTypes: Array<AccountType> = [];
-  DataRecordedStock: Array<{ ID: number, ITEM_NAME: string, ITEM_UNIT: string, COUNT_STOCK: number, TOTAL_PRICE: number, COUNT_REQUEST: number, TOTAL_PRICE_STOCK: number }> = [];
+  DataRecordedStock: Array<{ ID: number, ITEM_NAME: string, ITEM_UNIT: string, COUNT_STOCK: number, TOTAL_PRICE: number,COUNT_INVOICE:number,  COUNT_REQUEST: number, TOTAL_PRICE_STOCK: number }> = [];
   ColumnsInput: Array<Column> = []
   Customers: Array<any> = []
   SpecialDescound: Array<any> = []
@@ -37,16 +37,22 @@ export class InvoiceComponent implements OnInit {
 
   async ngOnInit() {
     await this.UpdateLockUp();
-    this.ColumnsInput.push(new Column('ID', "رقم العملية"))
     this.ColumnsInput.push(new Column('ITEM_ID', "رقم الصنف"))
     this.ColumnsInput.push(new Column('NAME', "اسم الصنف"))
     this.ColumnsInput.push(new Column('UNIT', "وحدة الصنف"))
-    this.ColumnsInput.push(new Column('TYPE', "نوع الصنف"))
-    this.ColumnsInput.push(new Column('CATEGORY', "التصنيف"))
-    this.ColumnsInput.push(new Column('MAIN_PRICE', "سعر الصنف"))
     this.ColumnsInput.push(new Column('PRICE', "السعر في الفاتورة", "numberWithFraction"))
     this.ColumnsInput.push(new Column('COUNT', "الكمية في الفاتورة", "numberWithFraction"))
     this.ColumnsInput.push(new Column('COUNT_REQUEST', "الكمية المطلوبة"))
+    this.ColumnsInput.push(new Column('COUNT_INVOICE', "الكمية المنفذه"))
+     this.ColumnsInput.push(new Column('', "الكمية المتبقية للعميل"))
+    this.ColumnsInput[this.ColumnsInput.length - 1].DynamicShow = (item: RealItem) => {
+      if (this.Invoice.TYPE == 1) {
+        return ((item?.COUNT_REQUEST ?? 0) - (item?.COUNT_INVOICE ?? 0)).toString();
+      }
+      else {
+        return ((item?.COUNT_REQUEST ?? 0) + (item?.COUNT_INVOICE ?? 0)).toString();
+      }
+    }
     this.ColumnsInput.push(new Column('COUNT_STOCK', "الكمية المخزنة"))
     this.ColumnsInput.push(new Column('', "الكمية المتبقية في المخزن"))
     this.ColumnsInput[this.ColumnsInput.length - 1].DynamicShow = (item: RealItem) => {
@@ -124,14 +130,10 @@ export class InvoiceComponent implements OnInit {
     item.TOTAL_COUNT = item.PRICE * item.COUNT;
     item.COUNT_STOCK = this.DataRecordedStock.find(x => x.ID == item.ITEM_ID)?.COUNT_STOCK ?? 0;
     item.COUNT_REQUEST = this.DataRecordedStock.find(x => x.ID == item.ITEM_ID)?.COUNT_REQUEST ?? 0;
+    item.COUNT_INVOICE = this.DataRecordedStock.find(x => x.ID == item.ITEM_ID)?.COUNT_INVOICE ?? 0;
     var NewPrice = this.SpecialItemPrice.find(x => x.ID_ITEM == item.ITEM_ID && x.ID_CUSTOMER == this.Invoice.CUSTOMER && x.SESON == this.SesonActive)?.PRICE ?? 0;
-    var total = this.DataRecordedStock.find(x => x.ID == item.ITEM_ID)?.TOTAL_PRICE ?? 0;
     if (NewPrice > 0) {
       item.PRICE = NewPrice;
-    }
-    else if (total > 0) {
-      item.PRICE = total / item.COUNT_REQUEST;
-
     }
     else {
       item.PRICE = item.MAIN_PRICE;
@@ -182,8 +184,9 @@ export class InvoiceComponent implements OnInit {
         this.Invoice.QRImage = image;
         this.InputFastItems.oldData = [];
         await this.InputFastItems.UpdateOnSave();
-        this._tools.waitExecuteFunction(500, () => {
-          this.print();
+        this._tools.waitExecuteFunction(500, async () => {
+          let disc=await this._tools.Confermation.show("هل تريد عرض السعر في الفاتورة")
+          this.print(disc);
           this._tools.waitExecuteFunction(500, () => {
             this._router.navigate(['Main', 'Invoice'], { queryParams: { ID: `${this.Invoice.ID}` } });
           })
@@ -191,13 +194,13 @@ export class InvoiceComponent implements OnInit {
       }
     })
   }
-  print() {
+  print(showPrice: boolean = true) {
     let Inv = this._tools.cloneObject(this.Invoice) as InvoiceOrder;
     Inv.CUSTOMER_NAME = this.Customers.find(x => x.ID == Inv.CUSTOMER)?.NAME;
     Inv.PAYMENT_NAME = this.AccountTypes.find(x => x.ID == Inv.PAYMENT_TYPE)?.NAME;
     Inv.ITEMS = this.InputFastItems.ITEMS_INPUT;
     Inv.ITEMS = Inv.ITEMS.filter(x => x.TOTAL_COUNT > 0);
-    this._tools.printService.printInvoice(Inv)
+    this._tools.printService.printInvoice(Inv,true,showPrice)
   }
   AddNew() {
     this._router.navigate(['Main', 'Invoice'], { queryParams: { ID: `0` } })
@@ -230,7 +233,7 @@ export class InvoiceComponent implements OnInit {
     await this.GetDataRecordedStock();
     this.editStockInEditMode();
   }
-  async GetDataRecord(): Promise<Array<{ ID: number, ITEM_NAME: string, ITEM_UNIT: string, COUNT_STOCK: number, TOTAL_PRICE: number, COUNT_REQUEST: number, TOTAL_PRICE_STOCK: number }>> {
+  async GetDataRecord(): Promise<Array<{ ID: number, ITEM_NAME: string, ITEM_UNIT: string, COUNT_STOCK: number, TOTAL_PRICE: number, COUNT_INVOICE: number, COUNT_REQUEST: number, TOTAL_PRICE_STOCK: number }>> {
     let data = await this._tools.Network.getAsync<any>(`Invoices/GetPriceInRequest?Customer_Id=${this.Invoice.CUSTOMER}&WareHouse=${this.Invoice.WAREHOUSE}`);
     return data;
   }

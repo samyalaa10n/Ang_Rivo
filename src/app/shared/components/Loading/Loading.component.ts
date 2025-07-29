@@ -8,25 +8,28 @@ import { NgIf } from '@angular/common';
   templateUrl: './Loading.component.html',
   styleUrls: ['./Loading.component.css'],
   standalone: true,
-  imports: [ButtonModule,NgIf]
+  imports: [ButtonModule, NgIf]
 })
 export class LoadingComponent implements OnInit {
 
-  showLoading:boolean=false;
-  constructor(public _tools:Tools) {
-    _tools.Loading=this;
-    _tools.Network.Loading=this;
-   }
-
+  showLoading: boolean = false;
+  Req: number = 0;
+  constructor(public _tools: Tools) {
+    _tools.Loading = this;
+    _tools.Network.Loading = this;
+  }
   ngOnInit() {
 
   }
-  startLoading()
-  {
-    this.showLoading=true;
+  startLoading() {
+    this.Req++;
+    this.showLoading = true;
   }
-  stopLoading()
-  {
-    this.showLoading=false;
+  stopLoading() {
+    this.Req--
+    if (this.Req <= 0) {
+      this.showLoading = false;
+      this.Req = 0
+    }
   }
 }

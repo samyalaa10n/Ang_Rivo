@@ -19,6 +19,7 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DateTimeComponent } from "../DateTime/DateTime.component";
+import { BehaviorSubject } from 'rxjs';
 @Component({
   selector: 'app-dataGrid',
   templateUrl: './dataGrid.component.html',
@@ -81,6 +82,7 @@ export class DataGridComponent implements OnInit {
 
 
   @Input() searchValue: string = '';
+  prenTitle: Function= () => "";
   @Input() AllowAdd: boolean = true;
   childrenGrid: Array<ChildGrid> = []
   @Input() AllowSave: boolean = true;
@@ -220,9 +222,9 @@ export class DataGridComponent implements OnInit {
 
   }
   async onPrint(table: Table) {
-    print();
+    await this._tools.printService.printTable(this.dataSource, this.Columns.map(col => col.name) , this.Columns.map(col => col.header), this.prenTitle());
   }
-  importExcel() {
+  importExcel(e:any) {
 
   }
   exportExcel() {

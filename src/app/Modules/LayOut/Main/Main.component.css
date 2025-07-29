@@ -3,3 +3,10 @@
     padding-bottom: 15vh;
     padding-top: 10px;
 }
+ ::ng-deep body {
+     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+     background : unset;
+     min-height : unset;
+     overflow-x : unset;
+     position   : unset;
+ }

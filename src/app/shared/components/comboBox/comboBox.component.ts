@@ -1,7 +1,7 @@
 import { NgIf } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule   } from 'primeng/select';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { Tools } from '../../service/Tools.service';
@@ -11,7 +11,7 @@ import { Tools } from '../../service/Tools.service';
   templateUrl: './comboBox.component.html',
   styleUrls: ['./comboBox.component.css'],
   standalone: true,
-  imports: [DropdownModule, FormsModule, InputTextModule, IftaLabelModule]
+  imports: [SelectModule  , FormsModule, InputTextModule, IftaLabelModule]
 })
 export class ComboBoxComponent implements OnInit {
   @Input() selected: any = null

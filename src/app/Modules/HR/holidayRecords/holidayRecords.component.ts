@@ -71,7 +71,7 @@ export class HolidayRecodesComponent implements OnInit {
       this.Columns[1].columnComboBoxChange = (select, item, comboBox) => {
         var userData = localStorage.getItem("logInfo")
         if (userData != null) {
-          item.USER_RECORD_NAME = JSON.parse(userData).useR_NAME
+          item.USER_RECORD_NAME = JSON.parse(userData).NAME
         }
         item.ID_EMPLOY = select.ID;        
         this.Columns[6].columnComboBoxDataSource =suggestionsData.filter(x=>x.DEPART_ID==select.DEPART_ID && select.DEPART_ID!=null && item.ID_EMPLOY!=x.ID)
@@ -99,7 +99,7 @@ export class HolidayRecodesComponent implements OnInit {
       this.Columns[6].columnComboBoxChange = (select, item, comboBox) => {
         var userData = localStorage.getItem("logInfo")
         if (userData != null) {
-          item.USER_RECORD_NAME = JSON.parse(userData).useR_NAME
+          item.USER_RECORD_NAME = JSON.parse(userData).NAME
         }
         item.ID_EMPLOY_REPLACE = select.ID;
         item.DEPART_REP = select.DEPART;

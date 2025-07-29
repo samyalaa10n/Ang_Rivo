@@ -60,9 +60,9 @@ export class OperationComponent implements OnInit {
               this.InputFastItems.ITEMS_INPUT = this.Operation.ITEMS;
               this.editStockInEditMode();
               await this.InputFastItems.GetOldData();
-              this.ColumnsInput.forEach(col=>col.columnType="lapel")
-              this.ColumnsInput[this.ColumnsInput.length-2].InShow=false;
-              this.ColumnsInput[this.ColumnsInput.length-1].InShow=false;
+              this.ColumnsInput.forEach(col => col.columnType = "lapel")
+              this.ColumnsInput[this.ColumnsInput.length - 2].InShow = false;
+              this.ColumnsInput[this.ColumnsInput.length - 1].InShow = false;
             }
             else {
               this._tools.Toaster.showError("تم حذف العملية")
@@ -123,22 +123,26 @@ export class OperationComponent implements OnInit {
         this.Operation = res;
         this.InputFastItems.oldData = [];
         await this.InputFastItems.UpdateOnSave();
-        this._tools.waitExecuteFunction(500, () => {
-          this.print();
+        this._tools.waitExecuteFunction(500, async () => {
+          await this.print();
+          this._router.navigate(['Main', 'Operation'], { queryParams: { ID: `${this.Operation.ID}` } });
           this._tools.waitExecuteFunction(500, () => {
-            this._router.navigate(['Main', 'Operation'], { queryParams: { ID: `${this.Operation.ID}` } });
+            window.location.reload();
           })
         })
       }
     })
   }
-  print() {
+  async print(PrintBtnOnly: boolean = false) {
     let Oper = this._tools.cloneObject(this.Operation) as OperationOrder;
     Oper.WAREHOUSE_ADDED_NAME = this.WareHouses.find(x => x.ID == Oper.WAREHOUSE_1)?.NAME;
     Oper.WAREHOUSE_GET_NAME = this.WareHouses.find(x => x.ID == Oper.WAREHOUSE_2)?.NAME;
     Oper.ITEMS = this.InputFastItems.ITEMS_INPUT;
     Oper.ITEMS = Oper.ITEMS.filter(x => x.TOTAL_COUNT > 0);
-    this._printService.printOperation(Oper)
+    await this._printService.printOperation(Oper)
+    if (PrintBtnOnly) {
+      window.location.reload();
+    }
   }
   AddNew() {
     this._router.navigate(['Main', 'Operation'], { queryParams: { ID: `0` } })
@@ -169,8 +173,8 @@ export class OperationComponent implements OnInit {
     this.InputFastItems.reSelect();
     await this.GetDataRecordedStock();
     this.editStockInEditMode();
-    this.ColumnsInput[6].columnType="numberWithFraction"
-    this.ColumnsInput.forEach(col=>col.InShow=true);
+    this.ColumnsInput[6].columnType = "numberWithFraction"
+    this.ColumnsInput.forEach(col => col.InShow = true);
   }
   async GetDataRecord(): Promise<Array<{ ID: number, ITEM_NAME: string, ITEM_UNIT: string, COUNT_STOCK: number, TOTAL_PRICE: number, COUNT_REQUEST: number, TOTAL_PRICE_STOCK: number }>> {
     let data = await this._tools.Network.getAsync<any>(`Operations/GetItemsStock?WareHouse=${this.Operation.WAREHOUSE_1}`);
