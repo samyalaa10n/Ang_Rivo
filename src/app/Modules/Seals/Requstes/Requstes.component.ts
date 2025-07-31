@@ -138,7 +138,7 @@ export class RequstesComponent implements OnInit {
     Req.CUSTOMER_NAME = this.Customers.find(x => x.ID == Req.CUSTOMER)?.NAME;
     Req.PAYMENT_NAME = this.AccountTypes.find(x => x.ID == Req.PAYMENT_TYPE)?.NAME;
     Req.ITEMS = this.InputFastItems.ITEMS_INPUT;
-    Req.ITEMS = Req.ITEMS.filter(x => x.TOTAL_COUNT > 0);
+    Req.ITEMS = Req.ITEMS.filter(x => x.COUNT > 0);
 
     await this._printService.printRequest(Req, { Total: this.Total(), TotalAfterDepost: this.TotalAfterDepost(), TotalAfterDescound: this.TotalAfterDescound() }, true)
 

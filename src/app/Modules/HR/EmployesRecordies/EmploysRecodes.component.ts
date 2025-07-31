@@ -112,6 +112,10 @@ export class EmploysRecodesComponent implements OnInit {
     }
   }
   Config(dataGrid: DataGridComponent) {
+    dataGrid.importExcel = (e) => {
+      this.GetFile(e)
+    }
+    dataGrid.AllowImportExcel = true;
     dataGrid.onUpdate = async () => {
       let data = await this._tools.Network.getAsync("Employee") as Array<any>
       if (data != null) {
@@ -159,7 +163,7 @@ export class EmploysRecodesComponent implements OnInit {
     }
   }
   GetFile(e: any) {
-    this._tools.Excel.ExcelFileChange(e,(json: Array<any>) => {
+    this._tools.Excel.ExcelFileChange(e, (json: Array<any>) => {
       let source: Array<any> = [];
       json.forEach(item => {
         let employee: any = {
@@ -235,6 +239,7 @@ export class EmploysRecodesComponent implements OnInit {
     grid.onSaveChanges = async (editData: Array<any>) => {
       editData.forEach(item => {
         item.ROW_NUMBER = -1
+        item.SUITS = 0 || "";
       });
       let data = await this._tools.Network.putAsync("Employee/EditMore", editData) as Array<any>
       if (data) {

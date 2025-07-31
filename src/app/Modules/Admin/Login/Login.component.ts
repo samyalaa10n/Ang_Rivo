@@ -26,8 +26,10 @@ export class LoginComponent implements OnInit {
   async login() {
     this._tools.Network.postAsync("Login", this.logInfo).then((response: any) => {
       if (response) {
-        localStorage.setItem("logInfo", JSON.stringify(response));
-        this._router.navigate(['Main', 'Home']);
+        if (response.TOKEN != "" && response.TOKEN != null) {
+          localStorage.setItem("logInfo", JSON.stringify(response));
+          this._router.navigate(['Main', 'Home']);
+        }
       }
     });
   }

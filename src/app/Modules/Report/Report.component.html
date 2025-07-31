@@ -36,7 +36,7 @@
       <div class="row">
         <div class="col-12 col-lg-3 my-2">
           <app-comboBox [dataSource]="WareHouses" optionValue="ID" optionLabel="NAME" placeholder="المخازن"
-            apiPathDataSource="WareHouse" [(SelectedValue)]="WAREHOUSE" class="form-control"></app-comboBox>
+             [(SelectedValue)]="WAREHOUSE" class="form-control"></app-comboBox>
         </div>
       </div>
       <div class="row d-flex justify-content-center  align-items-center">
@@ -60,7 +60,7 @@
       </div>
     </div>
   </ng-template>
-  <ng-template stepConfig Header="مبياعات الأصناف " [isViewMode]="true">
+  <ng-template stepConfig Header="مبيعات الأصناف " [isViewMode]="true">
     <div dir="rtl">
       <div class="row d-flex justify-content-center  align-items-center">
         <div class="col-12 col-lg-2 ">
@@ -88,15 +88,15 @@
       <div class="row d-flex justify-content-center  align-items-center">
         <div class="col-12 col-lg-4 ">
           <app-comboBox [dataSource]="WareHouses" optionValue="ID" optionLabel="NAME" placeholder="المخازن"
-            apiPathDataSource="WareHouse" [(SelectedValue)]="WAREHOUSE" class="form-control"></app-comboBox>
+             [(SelectedValue)]="WAREHOUSE" class="form-control"></app-comboBox>
         </div>
         <div class="col-12 col-lg-4">
           <app-comboBox [dataSource]="Customers" optionValue="ID" optionLabel="NAME" placeholder="العملاء"
-            apiPathDataSource="Customer" [(SelectedValue)]="CUSTOMER" class="form-control"></app-comboBox>
+            [(SelectedValue)]="CUSTOMER" class="form-control"></app-comboBox>
         </div> 
         <div class="col-12 col-lg-4">
           <app-comboBox [dataSource]="SEASONS" optionValue="ID" optionLabel="NAME" placeholder="المواسم"
-            apiPathDataSource="Season" [(SelectedValue)]="SEASON" class="form-control"></app-comboBox>
+             [(SelectedValue)]="SEASON" class="form-control"></app-comboBox>
         </div>
         <div class="col-12 col-lg-2 my-2">
           <p-button [raised]="true" (onClick)="GetProductionPlan()" label="عرض" class="font-bold mx-1 w-100" />

@@ -11,10 +11,9 @@ import { HttpClient } from '@angular/common/http';
 })
 export class Network {
   public hubConnection: signalR.HubConnection | undefined;
-  //baseUrl: string = "https://192.168.191.160:261"
   // baseUrl: string = "https://aspnetclusters-200150-0.cloudclusters.net"
-  // baseUrl: string = "http://69.197.178.177:262"
-  baseUrl: string = "https://localhost:44327"
+  baseUrl: string = "http://69.197.178.177:262"
+  //baseUrl: string = "https://localhost:44327"
   baseUrlApi: string = `${this.baseUrl}/api/`
   constructor(public _httpClient: HttpClient,public _router: Router) { }
   Loading!: LoadingComponent

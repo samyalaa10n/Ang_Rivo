@@ -199,7 +199,7 @@ export class InvoiceComponent implements OnInit {
     Inv.CUSTOMER_NAME = this.Customers.find(x => x.ID == Inv.CUSTOMER)?.NAME;
     Inv.PAYMENT_NAME = this.AccountTypes.find(x => x.ID == Inv.PAYMENT_TYPE)?.NAME;
     Inv.ITEMS = this.InputFastItems.ITEMS_INPUT;
-    Inv.ITEMS = Inv.ITEMS.filter(x => x.TOTAL_COUNT > 0);
+    Inv.ITEMS = Inv.ITEMS.filter(x => x.COUNT > 0);
     this._tools.printService.printInvoice(Inv,true,showPrice)
   }
   AddNew() {

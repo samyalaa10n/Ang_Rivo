@@ -126,11 +126,11 @@
                     @switch (column.columnType) {
                     @case ("lapel") {
                     <ng-container *ngIf="item[column.name]!=null && item[column.name]!=undefined">
-                        {{column.Style_Show(item[column.name],item)}}
-                        {{column.DynamicShow(item)}}
+                        {{column.Style_Show(item[column.name],item ?? "")}}
+                        {{column.DynamicShow(item) ?? ""}}
                     </ng-container>
                     <ng-container *ngIf="column.DynamicShow(item)!=''">
-                        {{column.DynamicShow(item)}}
+                        {{column.DynamicShow(item) ?? ""}}
                     </ng-container>
                     }
                     @case ("text") {

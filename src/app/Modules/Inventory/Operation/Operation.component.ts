@@ -30,12 +30,9 @@ export class OperationComponent implements OnInit {
   constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _printService: PrintService, private _router: Router) { }
   async ngOnInit() {
     this.WareHouses = await this._tools.Network.getAsync<any>("WareHouse")
-    this.ColumnsInput.push(new Column('ID', "رقم العملية"))
     this.ColumnsInput.push(new Column('ITEM_ID', "رقم الصنف"))
     this.ColumnsInput.push(new Column('NAME', "اسم الصنف"))
     this.ColumnsInput.push(new Column('UNIT', "وحدة الصنف"))
-    this.ColumnsInput.push(new Column('TYPE', "نوع الصنف"))
-    this.ColumnsInput.push(new Column('CATEGORY', "التصنيف"))
     this.ColumnsInput.push(new Column('COUNT', "الكمية", "numberWithFraction"))
     this.ColumnsInput.push(new Column('COUNT_STOCK', "الرصيد"))
     this.ColumnsInput.push(new Column('', "الرصيد الجديد في المخزن"))
@@ -138,7 +135,7 @@ export class OperationComponent implements OnInit {
     Oper.WAREHOUSE_ADDED_NAME = this.WareHouses.find(x => x.ID == Oper.WAREHOUSE_1)?.NAME;
     Oper.WAREHOUSE_GET_NAME = this.WareHouses.find(x => x.ID == Oper.WAREHOUSE_2)?.NAME;
     Oper.ITEMS = this.InputFastItems.ITEMS_INPUT;
-    Oper.ITEMS = Oper.ITEMS.filter(x => x.TOTAL_COUNT > 0);
+    Oper.ITEMS = Oper.ITEMS.filter(x => x.COUNT > 0);
     await this._printService.printOperation(Oper)
     if (PrintBtnOnly) {
       window.location.reload();
@@ -173,7 +170,7 @@ export class OperationComponent implements OnInit {
     this.InputFastItems.reSelect();
     await this.GetDataRecordedStock();
     this.editStockInEditMode();
-    this.ColumnsInput[6].columnType = "numberWithFraction"
+    this.ColumnsInput[3].columnType = "numberWithFraction"
     this.ColumnsInput.forEach(col => col.InShow = true);
   }
   async GetDataRecord(): Promise<Array<{ ID: number, ITEM_NAME: string, ITEM_UNIT: string, COUNT_STOCK: number, TOTAL_PRICE: number, COUNT_REQUEST: number, TOTAL_PRICE_STOCK: number }>> {

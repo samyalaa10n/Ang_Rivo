@@ -8,30 +8,30 @@ import { Tools } from './Tools.service';
 import { InvoiceOrder } from '../Types/InvoiceOrder';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 
 export class PrintService {
-  constructor(private _Tools: Tools) { }
-  Open: boolean = false;
-  OpenPrint() {
-    this.Open = true;
-  }
-  ClosPrint() {
-    this.Open = false;
-  }
-  printComponent!: PrintComponent
-  printElement(element: HTMLElement, options?: PrintOptions): void {
-    this.printComponent.printElement(element, options);
-  }
+    constructor(private _Tools: Tools) { }
+    Open: boolean = false;
+    OpenPrint() {
+        this.Open = true;
+    }
+    ClosPrint() {
+        this.Open = false;
+    }
+    printComponent!: PrintComponent
+    printElement(element: HTMLElement, options?: PrintOptions): void {
+        this.printComponent.printElement(element, options);
+    }
 
-  async printHTML(html: string, inMyWindow: boolean, options?: PrintOptions): Promise<void> {
-    this.OpenPrint();
-    await this.printComponent.printHTML(html, inMyWindow, options);
-  }
+    async printHTML(html: string, inMyWindow: boolean, options?: PrintOptions): Promise<void> {
+        this.OpenPrint();
+        await this.printComponent.printHTML(html, inMyWindow, options);
+    }
 
-  async printTable(data: any[], Source: string[],  columns: string[], title?: string): Promise<void> {
-    let html = `
+    async printTable(data: any[], Source: string[], columns: string[], title?: string): Promise<void> {
+        let html = `
       <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
         <thead>
           <tr style="background-color: #f8f9fa;">
@@ -48,18 +48,18 @@ export class PrintService {
       </table>
     `;
 
-   await this.printHTML(html, window.screen.width < 800, { title: title || 'تقرير' });
-  }
+        await this.printHTML(html, window.screen.width < 800, { title: title || 'تقرير' });
+    }
 
-  printInvoice(_Invoice: InvoiceOrder, InMyWindow = false, showPrice = true): string {
-    var htmlRes = "";
-    if (showPrice) {
-      const html = `<!DOCTYPE html>
+    printInvoice(_Invoice: InvoiceOrder, InMyWindow = false, showPrice = true): string {
+        var htmlRes = "";
+        if (showPrice) {
+            const html = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فاتورة حديثة</title>
+    <title>فاتورة</title>
   <style>
         * {
             margin: 0;
@@ -474,8 +474,8 @@ export class PrintService {
         <!-- Header -->
         <header class="header">
             <div class="company-info">
-                <h1>سويت ماجيك</h1>
-                <p>📞 01140993467</p>
+               <h1> سويت ماجيك</h1>
+                <p>📞 01119036881</p>
             </div>
             <div class="logo-placeholder">
                  <img src="favicon.ico" alt="Logo" >
@@ -612,15 +612,15 @@ export class PrintService {
 </body>
 </html>
     `;
-      htmlRes = html;
-    }
-    else {
-      const html = `<!DOCTYPE html>
+            htmlRes = html;
+        }
+        else {
+            const html = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فاتورة حديثة</title>
+    <title>فاتورة</title>
   <style>
         * {
             margin: 0;
@@ -1035,8 +1035,8 @@ export class PrintService {
         <!-- Header -->
         <header class="header">
             <div class="company-info">
-                <h1>سويت ماجيك</h1>
-                <p>📞 01140993467</p>
+              <h1> سويت ماجيك</h1>
+              <p>📞 01119036881</p>
             </div>
             <div class="logo-placeholder">
                  <img src="favicon.ico" alt="Logo" >
@@ -1136,25 +1136,25 @@ export class PrintService {
 </body>
 </html>
     `;
-      htmlRes = html;
+            htmlRes = html;
+        }
+        this.printHTML(htmlRes, InMyWindow, {
+            title: `فاتورة رقم ${_Invoice.ID}`,
+            orientation: 'portrait',
+            paperSize: 'A4'
+        });
+        return htmlRes
     }
-    this.printHTML(htmlRes, InMyWindow, {
-      title: `فاتورة رقم ${_Invoice.ID}`,
-      orientation: 'portrait',
-      paperSize: 'A4'
-    });
-    return htmlRes
-  }
-  async printRequest(_Request: RequestOrder, Totals: { Total: number, TotalAfterDescound: number, TotalAfterDepost: number }, InSumPage: boolean = false): Promise<void> {
-    const html = `
+    async printRequest(_Request: RequestOrder, Totals: { Total: number, TotalAfterDescound: number, TotalAfterDepost: number }, InSumPage: boolean = false): Promise<void> {
+        const html = `
     <div style="max-width: 800px; margin: 0 auto; font-family: 'Arial', sans-serif; font-size: 14px; color: #000;">
   
   <!-- رأس الصفحة -->
   <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
     <div>
       <!-- اسم الشركة ورقم التليفون يكتب يدويًا أو يُملأ ديناميكيًا -->
-      <p style="margin: 4px 0;"><strong>اسم الشركة:</strong> سويت ماجيك</p>
-      <p style="margin: 4px 0;"><strong>رقم التليفون:</strong> 01140993467</p>
+      <p style="margin: 4px 0;"><strong>اسم الشركة:</strong>سويت ماجيك</p>
+      <p style="margin: 4px 0;"><strong>رقم التليفون:</strong> 01119036881</p>
     </div>
     <div>
       <img src="favicon.ico" alt="Logo" >
@@ -1226,14 +1226,14 @@ export class PrintService {
 
     `;
 
-    await this.printHTML(html, InSumPage, {
-      title: `طلبية رقم ${_Request.ID}`,
-      orientation: 'portrait',
-      paperSize: 'A4'
-    });
-  }
-  async printOperation(_Operation: OperationOrder): Promise<void> {
-    const html = `
+        await this.printHTML(html, InSumPage, {
+            title: `طلبية رقم ${_Request.ID}`,
+            orientation: 'portrait',
+            paperSize: 'A4'
+        });
+    }
+    async printOperation(_Operation: OperationOrder): Promise<void> {
+        const html = `
     <div style="max-width: 800px; margin: 0 auto; font-family: 'Arial', sans-serif; font-size: 14px; color: #000;">
   
   <!-- رأس الصفحة -->
@@ -1241,7 +1241,7 @@ export class PrintService {
     <div>
       <!-- اسم الشركة ورقم التليفون يكتب يدويًا أو يُملأ ديناميكيًا -->
       <p style="margin: 4px 0;"><strong>اسم الشركة:</strong> سويت ماجيك</p>
-      <p style="margin: 4px 0;"><strong>رقم التليفون:</strong> 01140993467</p>
+      <p style="margin: 4px 0;"><strong>رقم التليفون:</strong> 01119036881</p>
     </div>
     <div>
       <img src="favicon.ico" alt="Logo">
@@ -1300,11 +1300,11 @@ export class PrintService {
 
     `;
 
-    await this.printHTML(html, true, {
-      title: `عملية مخزنية رقم ${_Operation.ID}`,
-      orientation: 'portrait',
-      paperSize: 'A4'
-    });
+        await this.printHTML(html, true, {
+            title: `عملية مخزنية رقم ${_Operation.ID}`,
+            orientation: 'portrait',
+            paperSize: 'A4'
+        });
 
-  }
+    }
 }

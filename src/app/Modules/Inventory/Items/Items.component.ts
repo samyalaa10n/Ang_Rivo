@@ -40,6 +40,19 @@ export class ItemsComponent implements OnInit {
     this.Columns[2].columnComboBoxDataSource = this.Category
   }
   onConfigGrid(config: DataGridComponent) {
+    config.importExcel = (e) => {
+      this._tools.Excel.ExcelFileChange(e, (Data) => {
+        if (Array.isArray(Data)) {
+          let Nds = this._tools.cloneObject(config.dataSource);
+          Data.forEach((item) => {
+            item.ID = -1;
+            item.ROW_NUMBER = -1;
+            Nds.push(item);
+          })
+          config.dataSource = Nds;
+        }
+      })
+    }
     config.AllowImportExcel = true;
     config.IsHasChild = true;
     config.onLoadedChildDataGrid = (pernt, child, row) => {
@@ -61,7 +74,7 @@ export class ItemsComponent implements OnInit {
       child.Columns.push(new Column("PRICE_GET", "سعر الشراء", "lapel"))
       child.Columns.push(new Column("PRICE_SEAL", "سعر البيع", "lapel"))
       child.Columns.push(new Column("NOTS", "الملاحظات", "lapel"))
-      child.Columns=child.Columns;
+      child.Columns = child.Columns;
       child.dataSource = row?.ITEM_HESTORY ?? [];
       child.dataSource = child.dataSource.sort((Item2, Item1) => {
         return Item1.ID > Item2.ID ? 1 : -1;

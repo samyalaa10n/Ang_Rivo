@@ -27,7 +27,7 @@ export class Show_QR_CodeComponent implements OnInit {
             if (response?.ID > 0) {
               this._tools.waitExecuteFunction(100, () => {
                 response.QRImage=image;
-                this._tools.printService.printInvoice(response, true)
+                this._tools.printService.printInvoice(response, true,false)
               })
             }
           }

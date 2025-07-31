@@ -98,29 +98,30 @@ export class ReportComponent implements OnInit {
     dataGrid.canSelectRow = false;
     dataGrid.AllowPrint = true;
     dataGrid.prenTitle = () => {
-      return "كشف حساب " + this.Accounts.find(x => x.ID == this.Account)?.NAME;
+      return "كشف حساب " + this.Accounts.find(x => x.ID == this.Account)?.NAME + " من " + this.START_DATE.toLocaleDateString() + " الي " + this.END_DATE.toLocaleDateString();;
     }
     dataGrid.onShowItem = (item) => {
       this.GoPage(item)
     }
     if (this.StepperConfig._ActiveStepIndex == 1) {
       dataGrid.AllowShow = false;
+      dataGrid.IsHasChild = true;
       dataGrid.prenTitle = () => {
-      return " رصيد المخازن -  " + (this.WareHouses.find(x => x.ID == this.WAREHOUSE)?.NAME ?? "");
-    }
+        return " رصيد المخازن -  " + (this.WareHouses.find(x => x.ID == this.WAREHOUSE)?.NAME ?? "") + " من " + this.START_DATE.toLocaleDateString() + " الي " + this.END_DATE.toLocaleDateString();
+      }
       dataGrid.onLoadedChildDataGrid = (pernt, Child, row) => {
         let ChildCoumns: Array<Column> = []
         Child.AllowShow = true;
         Child.paginator = false;
         Child.prenTitle = () => {
-          return "تفاصيل حركات صنف - " + row.ID + " - " + row.NAME;
+          return "تفاصيل حركات صنف - (" + row.ID + " - " + row.NAME + ") من " + this.START_DATE.toLocaleDateString() + " الي " + this.END_DATE.toLocaleDateString() + " - " + (this.WareHouses.find(x => x.ID == this.WAREHOUSE)?.NAME ?? "")
         };
         Child.AllowUpdate = false;
         Child.AllowDelete = false;
         Child.AllowDeleteSelected = false;
         Child.AllowSave = false;
         Child.AllowAdd = false;
-        Child.AllowShow = false;
+        Child.AllowPrint = true;
         Child.AllowShow = true;
         Child.canSelectRow = false;
         ChildCoumns.push(new Column("WARE_HOUSE_NAME", "اسم المخزن", "lapel"))
@@ -143,7 +144,7 @@ export class ReportComponent implements OnInit {
       dataGrid.AllowShow = false;
       dataGrid.AllowPrint = true;
       dataGrid.prenTitle = () => {
-        return "تفاصيل المبيعات للأصناف";
+        return "تفاصيل المبيعات للأصناف" + " من " + this.START_DATE.toLocaleDateString() + " الي " + this.END_DATE.toLocaleDateString();;
       };
     }
     else if (this.StepperConfig._ActiveStepIndex == 3) {
@@ -227,7 +228,7 @@ export class ReportComponent implements OnInit {
     this.Columns.push(new Column("COUNT_REQUEST", "المطلوب", "lapel"))
     this.Columns.push(new Column("COUNT_INVOICE", "المباع", "lapel"))
     this.Columns.push(new Column("COUNT_STOCK", "الرصيد المخزني", "lapel"))
-    this.Columns.push(new Column("REQUEST_PRODUCTION", "المطلوب لأنتاجة", "lapel"))
+    this.Columns.push(new Column("REQUEST_PRODUCTION", "المطلوب للأنتاج", "lapel"))
     if (this.CUSTOMER != 0 || this.WAREHOUSE != 0) {
       var data = await this._tools.Network.getAsync<any>(`Report/GetProductionPlanSpicalCustomer?Customer_Id=${this.CUSTOMER}&Sesson=${this.SEASON}&WareHouse=${this.WAREHOUSE}`);
     }
@@ -235,7 +236,7 @@ export class ReportComponent implements OnInit {
       var data = await this._tools.Network.getAsync<any>(`Report/GetProductionPlan?Customer_Id=${this.CUSTOMER}&Sesson=${this.SEASON}&WareHouse=${this.WAREHOUSE}`);
     }
     if (data != undefined && Array.isArray(data)) {
-      this.DATA_LIST = data;
+      this.DATA_LIST = data.filter(x => !(x.COUNT_REQUEST == 0 && x.COUNT_INVOICE == 0 && x.COUNT_STOCK == 0 && x.REQUEST_PRODUCTION == 0));
     }
     else {
       this.DATA_LIST = [];
