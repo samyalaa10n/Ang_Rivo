@@ -20,6 +20,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DateTimeComponent } from "../DateTime/DateTime.component";
 import { BehaviorSubject } from 'rxjs';
+import { TooltipModule } from 'primeng/tooltip';
 @Component({
   selector: 'app-dataGrid',
   templateUrl: './dataGrid.component.html',
@@ -27,6 +28,7 @@ import { BehaviorSubject } from 'rxjs';
   standalone: true,
   imports: [
     FormsModule,
+    TooltipModule,
     TableModule,
     ButtonModule,
     DatePickerModule,
@@ -82,7 +84,7 @@ export class DataGridComponent implements OnInit {
 
 
   @Input() searchValue: string = '';
-  prenTitle: Function= () => "";
+  prenTitle: Function = () => "";
   @Input() AllowAdd: boolean = true;
   childrenGrid: Array<ChildGrid> = []
   @Input() AllowSave: boolean = true;
@@ -119,6 +121,8 @@ export class DataGridComponent implements OnInit {
   @Input() AllowExportExcel: boolean = true;
   @Input() AllowImportExcel: boolean = false;
   @Input() AllowPrint: boolean = false;
+  @Input() AllowCopyPest: boolean = false;
+  @Input() AllowCopyPestItems: boolean = false;
   @Input() singleSelectedMode: boolean = false;
   @Input() canSelectedSomeColumns: boolean = false;
   @Output() GridAction: EventEmitter<any> = new EventEmitter()
@@ -221,10 +225,40 @@ export class DataGridComponent implements OnInit {
   async onUpdate(table: Table) {
 
   }
-  async onPrint(table: Table) {
-    await this._tools.printService.printTable(this.dataSource, this.Columns.map(col => col.name) , this.Columns.map(col => col.header), this.prenTitle());
+  Copy() {
+    navigator.clipboard.writeText(JSON.stringify(this.dataSource));
+    this._tools.Toaster.showInfo("تم النسخ")
   }
-  importExcel(e:any) {
+  CopyItem(e: any) {
+    navigator.clipboard.writeText(JSON.stringify(e));
+    this._tools.Toaster.showInfo("تم النسخ")
+  }
+  async Pest() {
+    var data = JSON.parse(await navigator.clipboard.readText());
+    if (Array.isArray(data) && data.length > 0) {
+      data.forEach(item => {
+        item.ID = -1;
+        item.ROW_NUMBER=0;
+        this.dataSource.push(item)
+      })
+      this.dataSource = this.dataSource
+      this._tools.Toaster.showInfo("تم اللصق")
+    }
+  }
+  async PestItem(e: any) {
+    let OldItem = this._tools.cloneObject(e)
+    var txt = await navigator.clipboard.readText();
+    var item = JSON.parse(txt);
+    if (!Array.isArray(item)) {
+      item.ID = OldItem.ID
+      this.dataSource[this.dataSource.indexOf(e)] = { ...item };
+      this._tools.Toaster.showInfo("تم اللصق")
+    }
+  }
+  async onPrint(table: Table) {
+    await this._tools.printService.printTable(this.dataSource, this.Columns.map(col => col.name), this.Columns.map(col => col.header), this.prenTitle());
+  }
+  importExcel(e: any) {
 
   }
   exportExcel() {

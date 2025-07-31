@@ -38,7 +38,7 @@ export class InputFastItemsComponent implements OnInit {
   @Input() ITEMS_INPUT: Array<RealItem> = [];
   @Input() showPrice: boolean = true;
   @Input() Header: string = 'أصناف الطلبية';
-  @Input() ShowMode: boolean=false;
+  @Input() ShowMode: boolean = false;
   constructor(private _tools: Tools) { }
   async ngOnInit() {
     await this.GetOldData();
@@ -68,8 +68,26 @@ export class InputFastItemsComponent implements OnInit {
   }
   onGridLoaded(grid: DataGridComponent) {
     grid.AllowUpdate = true;
+    grid.AllowCopyPest = true
     grid.onUpdate = async () => {
       grid.dataSource = this.ITEMS_INPUT;
+    }
+    grid.Pest = async () => {
+      var data = JSON.parse(await navigator.clipboard.readText()) as Array<RealItem>;
+      if (Array.isArray(data) && data.length > 0) {
+        let cats =data.map(z=>this.ITEMS.find(x=>x.ID==z.ITEM_ID)?.CATEGORY);
+        this.CategorySelected = this.Category.filter(x => cats.includes(x.ID))
+        this.SelectCategory()
+        this._tools.waitExecuteFunction(100, () => {
+          this.ITEMS_INPUT.forEach(item => {
+            let SELECTED = data.find(x => x.ITEM_ID == item.ITEM_ID);
+            if (SELECTED) {
+              item.COUNT = SELECTED.COUNT
+            }
+          })
+        });
+        this._tools.Toaster.showInfo("تم اللصق")
+      }
     }
     this.OnGridLoaded.emit(grid);
   }
@@ -120,7 +138,7 @@ export class InputFastItemsComponent implements OnInit {
     window.getSelection()?.removeAllRanges();
     var element: HTMLInputElement | HTMLButtonElement | null = null;
     if (number == 1) {
-      element = (this.StepInput1?.el?.nativeElement as HTMLElement)?.children[0]as HTMLInputElement;
+      element = (this.StepInput1?.el?.nativeElement as HTMLElement)?.children[0] as HTMLInputElement;
     }
     else if (number == 2) {
       if (!this.showPrice) {

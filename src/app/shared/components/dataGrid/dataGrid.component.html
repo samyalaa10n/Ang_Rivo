@@ -42,14 +42,20 @@
                         (click)="DeleteSelectedData()" />
                     <p-button *ngIf="AllowExportExcel" [variant]="'text'" [raised]="true" [size]="'small'" label="تصدير"
                         class="font-bold mx-1" icon="pi pi-file-excel" (click)="exportExcel()" />
-                    <label *ngIf="AllowImportExcel" id="I_FILE" pButton  class="font-bold mx-1"  [raised]="true" [size]="'small'" >
+                    <label *ngIf="AllowImportExcel" id="I_FILE" pButton class="font-bold mx-1" [raised]="true"
+                        [size]="'small'">
                         <i class="pi pi-file-import" pButtonIcon></i>
                         <span pButtonLabel>استيراد الملف</span>
-                        <input hidden  for="I_FILE" type="file" (change)="importExcel($event)">
+                        <input hidden for="I_FILE" type="file" (change)="importExcel($event)">
                     </label>
                     <p-button class="mx-2" severity="primary" [variant]="'text'" [raised]="true" [size]="'small'"
                         *ngIf="AllowPrint" label="طباعة" icon="pi pi-print" (click)="onPrint(dt)"></p-button>
                     <ng-content select="[MORE_BUTTON]"></ng-content>
+                    <span *ngIf="AllowCopyPest" class="btn btn-sm p-2" pTooltip="نسخ" (click)="Copy()"> <i
+                            class="pi pi-copy position-relative top-50"></i></span>
+                    <span *ngIf="AllowCopyPest" class="btn  btn-sm p-2"  pTooltip="لصق" (click)="Pest()"> <i
+                            class="pi pi-clipboard position-relative top-50"></i></span>
+
                 </div>
             </div>
         </ng-template>
@@ -123,6 +129,7 @@
                 @for (column of columns; track $index)
                 {
                 <td class="text-center" *ngIf="column.InShow">
+
                     @switch (column.columnType) {
                     @case ("lapel") {
                     <ng-container *ngIf="item[column.name]!=null && item[column.name]!=undefined">
@@ -213,6 +220,10 @@
                 </td>
                 }
                 <td class="text-center fixed-column px-4" *ngIf="AllowCurdOperation">
+                    <span *ngIf="AllowCopyPestItems" pTooltip="نسخ" class="btn  btn-sm p-2" (click)="CopyItem(item)"> <i
+                            class="pi pi-copy position-relative top-50"></i></span>
+                    <span *ngIf="AllowCopyPestItems" pTooltip="لصق" class="btn  btn-sm p-2" (click)="PestItem(item)"> <i
+                            class="pi pi-clipboard position-relative top-50"></i></span>
                     <ng-container [ngTemplateOutlet]="templateBtn"
                         [ngTemplateOutletContext]="{ $implicit:item ,Grid:this}"></ng-container>
                     <p-button severity="danger" [variant]="'text'" [raised]="true" [size]="'small'" *ngIf="AllowDelete"

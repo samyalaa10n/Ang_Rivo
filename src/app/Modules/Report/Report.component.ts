@@ -150,6 +150,10 @@ export class ReportComponent implements OnInit {
     else if (this.StepperConfig._ActiveStepIndex == 3) {
       dataGrid.AllowShow = false;
       dataGrid.AllowPrint = true;
+      dataGrid.onRenderItemSource = (Item) => {
+        Item.ShowResult = Item.REQUEST_PRODUCTION > 0 ? ` ناقص { ${Item.REQUEST_PRODUCTION}  ${Item.UNIT} } في الأنتاج` : Item.REQUEST_PRODUCTION < 0 ? ` زايد { ${Item.REQUEST_PRODUCTION * -1} ${Item.UNIT} }  في الأنتاج` : ''
+
+      }
       dataGrid.prenTitle = () => {
         return "تقرير خطة انتاج - " + (this.SEASONS.find(x => x.ID == this.SEASON)?.NAME ?? "") + " - " + (this.Customers.find(x => x.ID == this.CUSTOMER)?.NAME ?? "") + " - " + (this.WareHouses.find(x => x.ID == this.WAREHOUSE)?.NAME ?? "");
       };
@@ -228,7 +232,7 @@ export class ReportComponent implements OnInit {
     this.Columns.push(new Column("COUNT_REQUEST", "المطلوب", "lapel"))
     this.Columns.push(new Column("COUNT_INVOICE", "المباع", "lapel"))
     this.Columns.push(new Column("COUNT_STOCK", "الرصيد المخزني", "lapel"))
-    this.Columns.push(new Column("REQUEST_PRODUCTION", "المطلوب للأنتاج", "lapel"))
+    this.Columns.push(new Column("ShowResult", "المطلوب للأنتاج", "lapel"))
     if (this.CUSTOMER != 0 || this.WAREHOUSE != 0) {
       var data = await this._tools.Network.getAsync<any>(`Report/GetProductionPlanSpicalCustomer?Customer_Id=${this.CUSTOMER}&Sesson=${this.SEASON}&WareHouse=${this.WAREHOUSE}`);
     }
