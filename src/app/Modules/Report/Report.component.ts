@@ -87,6 +87,7 @@ export class ReportComponent implements OnInit {
   GetTotal(): number {
     return this.DATA_LIST.map(z => z.REP_VALUE).reduce((a, b) => a + b, 0);
   }
+
   GridLoaded(dataGrid: DataGridComponent) {
     dataGrid.paginator = false;
     dataGrid.AllowUpdate = false;
@@ -109,6 +110,9 @@ export class ReportComponent implements OnInit {
       dataGrid.prenTitle = () => {
         return " رصيد المخازن -  " + (this.WareHouses.find(x => x.ID == this.WAREHOUSE)?.NAME ?? "") + " من " + this.START_DATE.toLocaleDateString() + " الي " + this.END_DATE.toLocaleDateString();
       }
+
+
+
       dataGrid.onLoadedChildDataGrid = (pernt, Child, row) => {
         let ChildCoumns: Array<Column> = []
         Child.AllowShow = true;
@@ -143,16 +147,8 @@ export class ReportComponent implements OnInit {
     else if (this.StepperConfig._ActiveStepIndex == 2) {
       dataGrid.AllowShow = false;
       dataGrid.AllowPrint = true;
-      dataGrid.prenTitle = () => {
-        return "تفاصيل المبيعات للأصناف" + " من " + this.START_DATE.toLocaleDateString() + " الي " + this.END_DATE.toLocaleDateString();;
-      };
-    }
-    else if (this.StepperConfig._ActiveStepIndex == 3) {
-      dataGrid.AllowShow = false;
-      dataGrid.AllowPrint = true;
       dataGrid.onRenderItemSource = (Item) => {
-        Item.ShowResult = Item.REQUEST_PRODUCTION > 0 ? ` ناقص { ${Item.REQUEST_PRODUCTION}  ${Item.UNIT} } في الأنتاج` : Item.REQUEST_PRODUCTION < 0 ? ` زايد { ${Item.REQUEST_PRODUCTION * -1} ${Item.UNIT} }  في الأنتاج` : ''
-
+        Item.ShowResult = Item.REQUEST_PRODUCTION > 0 ? ` ناقص { ${Item.REQUEST_PRODUCTION}  ${Item.UNIT} }` : Item.REQUEST_PRODUCTION < 0 ? ` زايد { ${Item.REQUEST_PRODUCTION * -1} ${Item.UNIT} } ` : ''
       }
       dataGrid.prenTitle = () => {
         return "تقرير خطة انتاج - " + (this.SEASONS.find(x => x.ID == this.SEASON)?.NAME ?? "") + " - " + (this.Customers.find(x => x.ID == this.CUSTOMER)?.NAME ?? "") + " - " + (this.WareHouses.find(x => x.ID == this.WAREHOUSE)?.NAME ?? "");
@@ -185,50 +181,11 @@ export class ReportComponent implements OnInit {
     }
     window.open(link, "_balnck")
   }
-  async GetAllSalsItems() {
-    var res = await this._tools.Network.getAsync<any>(`Report/GetItemsSeals?Request=${JSON.stringify({ START: this.START_DATE, END: this.END_DATE })}`)
-    let Data = JSON.parse(res?.JSON ?? "{}")
-    let ReadAr = (en: string): string => {
-      switch (en) {
-        case "ITEM_ID":
-          return "كود الصنف"
-        case "ITEM_NAME":
-          return "اسم الصنف"
-        case "UNIT":
-          return "وحدة الصنف"
-        case "ADDED":
-          return "كمية الصنف المصنعة"
-      }
-      return en;
-    }
-    if (Array.isArray(Data) && Data.length > 0) {
-      this.Columns = [];
-      let colums = Object.entries(Data[0]).map(x => x[0]);
-      let OnlyCostomer = colums.slice(3, colums.length)
-      OnlyCostomer = OnlyCostomer.sort().reverse();
-      colums = colums.slice(0, 3);
-      colums.push("ADDED")
-      OnlyCostomer.forEach(el => colums.push(el))
-      colums.forEach(col => {
-        this.Columns.push(new Column(col, ReadAr(col), "lapel"))
-      })
-      let ITEMS_ADDED = res.ITEMS_ADDED;
-      if (Array.isArray(ITEMS_ADDED)) {
-        console.log(ITEMS_ADDED)
-        Data.forEach(item => {
-          item["ADDED"] = ITEMS_ADDED.filter(x => x.ID == item.ITEM_ID).map(Z => Z.COUNT).reduce((A, B) => A + B, 0)
-        })
-      }
-    }
-    this.DATA_LIST = Data
-  }
   async GetProductionPlan() {
     this.Columns = [];
     this.Columns.push(new Column("ID", "رقم الصنف", "lapel"))
     this.Columns.push(new Column("NAME", "اسم الصنف", "lapel"))
-    this.Columns.push(new Column("CATEGORY", "التصنيف", "lapel"))
     this.Columns.push(new Column("UNIT", "الوحدة", "lapel"))
-    this.Columns.push(new Column("TYPE", "نوع الصنف", "lapel"))
     this.Columns.push(new Column("COUNT_REQUEST", "المطلوب", "lapel"))
     this.Columns.push(new Column("COUNT_INVOICE", "المباع", "lapel"))
     this.Columns.push(new Column("COUNT_STOCK", "الرصيد المخزني", "lapel"))

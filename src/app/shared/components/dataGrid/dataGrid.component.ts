@@ -97,6 +97,7 @@ export class DataGridComponent implements OnInit {
     }
   }
 
+  expandedRows = {};
   @Input() templateBtn!: TemplateRef<any>
   @Input() AllowHeaderTemplate: boolean = true;
   @Input() AllowDelete: boolean = true;
@@ -225,6 +226,13 @@ export class DataGridComponent implements OnInit {
   async onUpdate(table: Table) {
 
   }
+  expandAll() {
+    this.expandedRows = this.dataSource.reduce((acc, p) => (acc[p.ID] = true) && acc, {});
+  }
+
+  collapseAll() {
+    this.expandedRows = {};
+  }
   Copy() {
     navigator.clipboard.writeText(JSON.stringify(this.dataSource));
     this._tools.Toaster.showInfo("تم النسخ")
@@ -238,7 +246,7 @@ export class DataGridComponent implements OnInit {
     if (Array.isArray(data) && data.length > 0) {
       data.forEach(item => {
         item.ID = -1;
-        item.ROW_NUMBER=0;
+        item.ROW_NUMBER = 0;
         this.dataSource.push(item)
       })
       this.dataSource = this.dataSource

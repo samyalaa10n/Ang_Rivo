@@ -60,29 +60,6 @@
       </div>
     </div>
   </ng-template>
-  <ng-template stepConfig Header="مبيعات الأصناف " [isViewMode]="true">
-    <div dir="rtl">
-      <div class="row d-flex justify-content-center  align-items-center">
-        <div class="col-12 col-lg-2 ">
-          <app-InputLabel placeholder="من">
-            <app-DateTime [(selectedDate)]="START_DATE" placeholder="من"></app-DateTime>
-          </app-InputLabel>
-        </div>
-        <div class="col-12 col-lg-2">
-          <app-InputLabel placeholder="الي">
-            <app-DateTime [(selectedDate)]="END_DATE" placeholder="الي"></app-DateTime>
-          </app-InputLabel>
-        </div>
-        <div class="col-12 col-lg-2">
-          <p-button [raised]="true" (onClick)="GetAllSalsItems()" label="عرض" class="font-bold mx-1 w-100" />
-        </div>
-      </div>
-      <div class="my-3">
-        <app-dataGrid [(dataSource)]="DATA_LIST" (onGridLoaded)="GridLoaded($event)" [Columns]="Columns">
-        </app-dataGrid>
-      </div>
-    </div>
-  </ng-template>
   <ng-template stepConfig Header=" خطة الأنتاج " [isViewMode]="true">
     <div dir="rtl">
       <div class="row d-flex justify-content-center  align-items-center">
