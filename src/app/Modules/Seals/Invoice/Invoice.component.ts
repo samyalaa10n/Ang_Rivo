@@ -25,13 +25,14 @@ import QRCode from 'qrcode';
 export class InvoiceComponent implements OnInit {
   @ViewChild('InputFastItems') InputFastItems!: InputFastItemsComponent
   AccountTypes: Array<AccountType> = [];
-  DataRecordedStock: Array<{ ID: number, ITEM_NAME: string, ITEM_UNIT: string, COUNT_STOCK: number, TOTAL_PRICE: number,COUNT_INVOICE:number,  COUNT_REQUEST: number, TOTAL_PRICE_STOCK: number }> = [];
+  DataRecordedStock: Array<{ ID: number, ITEM_NAME: string, ITEM_UNIT: string, COUNT_STOCK: number, TOTAL_PRICE: number, COUNT_INVOICE: number, COUNT_REQUEST: number, TOTAL_PRICE_STOCK: number }> = [];
   ColumnsInput: Array<Column> = []
   Customers: Array<any> = []
   SpecialDescound: Array<any> = []
   SpecialItemPrice: Array<any> = []
   SesonActive: number = 0;
   WareHouses: Array<any> = []
+  somePricies: boolean = false;
   Invoice: InvoiceOrder = { ID: 0, ROW_NUMBER: -1, CUSTOMER_NAME: '', CUSTOMER: 0, DESCOUND_PERCENT: 0, DATE_TIME: new Date(), ITEMS: [], PRICE_AFTER_DESCOUND: 0, NOTS: '', PAYMENT_TYPE: 0, WAREHOUSE: 0, WAREHOUSE_NAME: '', PAYMENT: 0, TYPE: 0 }
   constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _router: Router) { }
 
@@ -44,7 +45,7 @@ export class InvoiceComponent implements OnInit {
     this.ColumnsInput.push(new Column('COUNT', "الكمية في الفاتورة", "numberWithFraction"))
     this.ColumnsInput.push(new Column('COUNT_REQUEST', "الكمية المطلوبة"))
     this.ColumnsInput.push(new Column('COUNT_INVOICE', "الكمية المنفذه"))
-     this.ColumnsInput.push(new Column('', "الكمية المتبقية للعميل"))
+    this.ColumnsInput.push(new Column('', "الكمية المتبقية للعميل"))
     this.ColumnsInput[this.ColumnsInput.length - 1].DynamicShow = (item: RealItem) => {
       if (this.Invoice.TYPE == 1) {
         return ((item?.COUNT_REQUEST ?? 0) - (item?.COUNT_INVOICE ?? 0)).toString();
@@ -84,6 +85,11 @@ export class InvoiceComponent implements OnInit {
               this._router.navigate(['Main', 'InvoiceList']);
             }
           }
+          else {
+            this.InputFastItems.OnSelectedItems = () => {
+              this.InputFastItems.ITEMS_INPUT.forEach(x => this.calculate(x, true))
+            }
+          }
         }
       })
     })
@@ -106,7 +112,7 @@ export class InvoiceComponent implements OnInit {
       }
       this.DataRecordedStock = data;
       this.InputFastItems.ITEMS_INPUT.forEach(item => {
-        this.calculate(item)
+        this.calculate(item, true)
       })
     }
   }
@@ -126,16 +132,16 @@ export class InvoiceComponent implements OnInit {
       })
     }
   }
-  calculate(item: RealItem) {
+  calculate(item: RealItem, onStart: boolean = false) {
     item.TOTAL_COUNT = item.PRICE * item.COUNT;
     item.COUNT_STOCK = this.DataRecordedStock.find(x => x.ID == item.ITEM_ID)?.COUNT_STOCK ?? 0;
     item.COUNT_REQUEST = this.DataRecordedStock.find(x => x.ID == item.ITEM_ID)?.COUNT_REQUEST ?? 0;
     item.COUNT_INVOICE = this.DataRecordedStock.find(x => x.ID == item.ITEM_ID)?.COUNT_INVOICE ?? 0;
     var NewPrice = this.SpecialItemPrice.find(x => x.ID_ITEM == item.ITEM_ID && x.ID_CUSTOMER == this.Invoice.CUSTOMER && x.SESON == this.SesonActive)?.PRICE ?? 0;
-    if (NewPrice > 0) {
+    if (NewPrice > 0 && item.ID < 0 && this.somePricies == false && onStart) {
       item.PRICE = NewPrice;
     }
-    else {
+    else if (item.ID < 0 && this.somePricies == false && onStart) {
       item.PRICE = item.MAIN_PRICE;
     }
   }
@@ -185,7 +191,7 @@ export class InvoiceComponent implements OnInit {
         this.InputFastItems.oldData = [];
         await this.InputFastItems.UpdateOnSave();
         this._tools.waitExecuteFunction(500, async () => {
-          let disc=await this._tools.Confermation.show("هل تريد عرض السعر في الفاتورة")
+          let disc = await this._tools.Confermation.show("هل تريد عرض السعر في الفاتورة")
           this.print(disc);
           this._tools.waitExecuteFunction(500, () => {
             this._router.navigate(['Main', 'Invoice'], { queryParams: { ID: `${this.Invoice.ID}` } });
@@ -200,7 +206,7 @@ export class InvoiceComponent implements OnInit {
     Inv.PAYMENT_NAME = this.AccountTypes.find(x => x.ID == Inv.PAYMENT_TYPE)?.NAME;
     Inv.ITEMS = this.InputFastItems.ITEMS_INPUT;
     Inv.ITEMS = Inv.ITEMS.filter(x => x.COUNT > 0);
-    this._tools.printService.printInvoice(Inv,true,showPrice)
+    this._tools.printService.printInvoice(Inv, true, showPrice)
   }
   AddNew() {
     this._router.navigate(['Main', 'Invoice'], { queryParams: { ID: `0` } })
@@ -221,6 +227,7 @@ export class InvoiceComponent implements OnInit {
 
   }
   async AddInhert() {
+    this.somePricies = await this._tools.Confermation.show("هل تريد نسخ الأسعار ايضا مع الكميات", "استفسار")
     this.Invoice.ID = 0;
     this.Invoice.ROW_NUMBER = -1;
     this.Invoice.ITEMS.forEach(item => {

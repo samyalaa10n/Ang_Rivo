@@ -17,11 +17,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
     return next(cloned).pipe(
       tap({
-        next: () => {},
+        next: (res) => { 
+             console.log(res)
+        },
         error: (error: any) => {
           const title = error?.error?.title || 'Unknown Error';
           const detail = error?.error?.detail;
           _tools.Toaster.showError(title);
+          console.log(error)
           if (detail) _tools.Toaster.showError(detail);
         },
       })

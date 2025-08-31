@@ -40,6 +40,7 @@ export class ItemsComponent implements OnInit {
     this.Columns[2].columnComboBoxDataSource = this.Category
   }
   onConfigGrid(config: DataGridComponent) {
+    config.AllowCopyPest=true
     config.importExcel = (e) => {
       this._tools.Excel.ExcelFileChange(e, (Data) => {
         if (Array.isArray(Data)) {
@@ -52,6 +53,9 @@ export class ItemsComponent implements OnInit {
           config.dataSource = Nds;
         }
       })
+    }
+    config.Pest = async () => {
+    this._tools.Toaster.showInfo("لا يمكن الصق في هذه القائمة")
     }
     config.AllowImportExcel = true;
     config.IsHasChild = true;

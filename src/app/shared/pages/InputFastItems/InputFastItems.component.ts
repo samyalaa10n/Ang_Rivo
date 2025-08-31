@@ -47,11 +47,9 @@ export class InputFastItemsComponent implements OnInit {
   async GetOldData() {
     this.Category = await this._tools.Network.getAsync("Category") as Array<any>;
     this.ITEMS = await this._tools.Network.getAsync("Items") as Array<any>;
-    console.log(this.ITEMS)
     if (this.ITEMS_INPUT.length > 0) {
       let ItemsSelect = this.ITEMS.filter(item => this.ITEMS_INPUT.map(real_item => real_item.ITEM_ID).includes(item.ID))
       this.CategorySelected = this.Category.filter(cat => ItemsSelect.map(z => z.CATEGORY).includes(cat.ID));
-      console.log(this.CategorySelected)
       this.SelectCategory();
     }
   }
@@ -74,15 +72,31 @@ export class InputFastItemsComponent implements OnInit {
     }
     grid.Pest = async () => {
       var data = JSON.parse(await navigator.clipboard.readText()) as Array<RealItem>;
+
+      let D_Price = false;
+      let rs = await this._tools.DecisionMaker.Show("هل تريد لصق السعر مع الكمية", ["نعم", 'لا'])
+      if(rs==null)
+      {
+        return;
+      }
+      if(this.showPrice && rs=="نعم")
+      {
+        D_Price=true;
+      }
       if (Array.isArray(data) && data.length > 0) {
-        let cats =data.map(z=>this.ITEMS.find(x=>x.ID==z.ITEM_ID)?.CATEGORY);
+        let cats = data.map(z => this.ITEMS.find(x => x.ID == z.ITEM_ID)?.CATEGORY);
         this.CategorySelected = this.Category.filter(x => cats.includes(x.ID))
         this.SelectCategory()
         this._tools.waitExecuteFunction(100, () => {
           this.ITEMS_INPUT.forEach(item => {
             let SELECTED = data.find(x => x.ITEM_ID == item.ITEM_ID);
             if (SELECTED) {
+              if(D_Price)
+              {
+                item.PRICE = SELECTED.PRICE
+              }
               item.COUNT = SELECTED.COUNT
+              this.GridAction({ itemEdit: item });
             }
           })
         });
@@ -99,8 +113,15 @@ export class InputFastItemsComponent implements OnInit {
   getLastElemnt(ITEM_ID: number): RealItem | null {
     return this.oldData.filter(x => x.ITEM_ID == ITEM_ID)[this.oldData.filter(x => x.ITEM_ID == ITEM_ID).length - 1]
   }
+  OnSelectedItems()
+  {
+    
+  }
   SelectCategory() {
     this.reSelect()
+    this._tools.waitExecuteFunction(100,()=>{
+      this.OnSelectedItems();
+    })
   }
   RenderItemSource(e: { item: RealItem }) {
     e.item.TOTAL_COUNT = e.item.COUNT * e.item.PRICE;

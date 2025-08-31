@@ -1,0 +1,26 @@
+.message-box {
+  position: relative;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin: 15px;
+  font-size: 16px;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+
+/* أنواع الرسائل */
+.message-box.success { background-color: #28a745; }   /* نجاح */
+.message-box.error { background-color: #dc3545; }     /* خطأ */
+.message-box.warning { background-color: #ffc107; color: #333; } /* تحذير */
+.message-box.info { background-color: #17a2b8; }       /* معلومات */
+
+.close-btn {
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 20px;
+  margin-left: 15px;
+}

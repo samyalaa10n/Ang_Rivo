@@ -12,6 +12,7 @@ import { Location } from "./Location.service";
 import { ConfermationComponent } from "../components/Confermation/Confermation.component";
 import { PrintService } from "./Print.service";
 import { BehaviorSubject } from "rxjs";
+import { DecisionMakerComponent } from "../pages/DecisionMaker/DecisionMaker.component";
 @Injectable({
   providedIn: 'root'
 })
@@ -22,6 +23,7 @@ export class Tools {
   Loading!: LoadingComponent
   Toaster!: ToasterComponent
   Confermation!: ConfermationComponent
+  DecisionMaker!: DecisionMakerComponent
   printService: PrintService=new PrintService(this);
   _countries = [
     {

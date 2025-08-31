@@ -20,7 +20,6 @@
             "outputPath": "dist/Rivo",
             "index": "src/index.html",
             "browser": "src/main.ts",
-          
             "polyfills": [
               "zone.js"
             ],
@@ -30,6 +29,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "input": "src",
+                "output": "/",
+                "glob": "sitemap.xml"
               }
             ],
             "styles": [
@@ -91,6 +95,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "input": "src",
+                "output": "/",
+                "glob": "sitemap.xml"
               }
             ],
             "styles": [

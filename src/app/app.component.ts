@@ -9,10 +9,11 @@ import { LoadingComponent } from './shared/components/Loading/Loading.component'
 import { PrintComponent } from "./shared/components/print/print.component";
 import { PrintService } from './shared/service/Print.service';
 import { ConfermationComponent } from "./shared/components/Confermation/Confermation.component";
+import { DecisionMakerComponent } from "./shared/pages/DecisionMaker/DecisionMaker.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ToasterComponent, LoadingComponent, PrintComponent, ConfermationComponent],
+  imports: [RouterOutlet, ToasterComponent, LoadingComponent, PrintComponent, ConfermationComponent, DecisionMakerComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   providers: [DatePipe],

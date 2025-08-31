@@ -20,6 +20,7 @@ import { NgIf } from '@angular/common';
 import { RequestOrder } from '../../../shared/Types/Request';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PrintService } from '../../../shared/service/Print.service';
+import e from 'express';
 
 
 @Component({
@@ -36,6 +37,7 @@ export class RequstesComponent implements OnInit {
   SpecialDescound: Array<any> = []
   SpecialItemPrice: Array<any> = []
   SesonActive: number = 0;
+  somePricies: boolean = false;
   Request: RequestOrder = { ID: 0, ROW_NUMBER: -1, CUSTOMER_NAME: '', CUSTOMER: 0, DEPOST: 0, DESCOUND_PERCENT: 0, SEND_DATE: new Date(), RESAVE_DATE: new Date(), ITEMS: [], PRICE_AFTER_DESCOUND: 0, NOTS: '', PAYMENT_TYPE: 0 }
   constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _printService: PrintService, private _router: Router) { }
 
@@ -54,15 +56,22 @@ export class RequstesComponent implements OnInit {
       this._ActiveRouter.queryParams.subscribe({
         next: async ({ ID }) => {
           if (+ID > 0) {
+
             var response = await this._tools.Network.getAsync<RequestOrder>("Requstes/GetById?id=" + ID) as RequestOrder;
             if (response?.ID > 0) {
               await this.UpdetLockep()
               this.Request = response;
               await this.InputFastItems.GetOldData();
+
             }
             else {
               this._tools.Toaster.showError("تم حذف الطلبية")
               this._router.navigate(['Main', 'RequstesList']);
+            }
+          }
+          else {
+            this.InputFastItems.OnSelectedItems = () => {
+              this.InputFastItems.ITEMS_INPUT.forEach(x => this.calculate(x, true))
             }
           }
         }
@@ -85,13 +94,13 @@ export class RequstesComponent implements OnInit {
       action.itemEdit.TOTAL_COUNT = action.itemEdit.COUNT * action.itemEdit.PRICE;
     }
   }
-  calculate(item: RealItem) {
+  calculate(item: RealItem, onStart: boolean = false) {
     item.TOTAL_COUNT = item.PRICE * item.COUNT;
     var NewPrice = this.SpecialItemPrice.find(x => x.ID_ITEM == item.ITEM_ID && x.ID_CUSTOMER == this.Request.CUSTOMER && x.SESON == this.SesonActive)?.PRICE ?? 0;
-    if (NewPrice > 0) {
+    if (NewPrice > 0 && item.ID < 0 && this.somePricies == false && onStart) {
       item.PRICE = NewPrice;
     }
-    else {
+    else if (item.ID < 0 && this.somePricies == false && onStart) {
       item.PRICE = item.MAIN_PRICE;
     }
   }
@@ -100,8 +109,9 @@ export class RequstesComponent implements OnInit {
     if (this.Request.ROW_NUMBER < 0) {
       this.Request.DESCOUND_PERCENT = desc?.DESCOUND ?? 0;
     }
+    if(this.InputFastItems && this.InputFastItems.ITEMS_INPUT)
     this.InputFastItems.ITEMS_INPUT.forEach(item => {
-      this.calculate(item)
+      this.calculate(item, true)
     })
   }
   Total(): number {
@@ -139,7 +149,6 @@ export class RequstesComponent implements OnInit {
     Req.PAYMENT_NAME = this.AccountTypes.find(x => x.ID == Req.PAYMENT_TYPE)?.NAME;
     Req.ITEMS = this.InputFastItems.ITEMS_INPUT;
     Req.ITEMS = Req.ITEMS.filter(x => x.COUNT > 0);
-
     await this._printService.printRequest(Req, { Total: this.Total(), TotalAfterDepost: this.TotalAfterDepost(), TotalAfterDescound: this.TotalAfterDescound() }, true)
 
   }
@@ -160,7 +169,8 @@ export class RequstesComponent implements OnInit {
       }
     })
   }
-  AddInhert() {
+  async AddInhert() {
+    this.somePricies = await this._tools.Confermation.show("هل تريد نسخ الأسعار ايضا مع الكميات", "استفسار")
     this.Request.ID = 0;
     this.Request.ROW_NUMBER = -1;
     this.Request.ITEMS.forEach(item => {
