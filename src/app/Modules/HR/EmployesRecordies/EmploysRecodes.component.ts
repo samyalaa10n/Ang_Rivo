@@ -44,7 +44,7 @@ export class EmploysRecodesComponent implements OnInit {
     this.Columns[this.Columns.length - 1].Style_Show = (VALUE) => {
       return this._tools.DateTime.EditFormateData(VALUE, "YYYY-MM-DD")
     };
-    this.Columns.push(new Column('MARITAL_STATUS', "الحالة الأجتماعية", "comboBox"))
+    this.Columns.push(new Column('MARITAL_STATUS', "الحالة الأجتماعية", "comboBox","text",100,false,""))
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = [{ name: 'أعزب', id: 1 }, { name: 'متزوج', id: 2 }, { name: 'مطلق', id: 3 }, { name: 'أرمل', id: 4 }];
     this.Columns[this.Columns.length - 1].columnComboBoxOptionLabel = "name";
     this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "اختر الحالة";
@@ -54,12 +54,12 @@ export class EmploysRecodesComponent implements OnInit {
     this.Columns.push(new Column('NATIONAL_ID', "الرقم القومي"))
     this.Columns.push(new Column('RELIGION', "الديانة"))
 
-    this.Columns.push(new Column('CONSCRIPTION_POSITION', "موقف التجنيد", "comboBox"))
+    this.Columns.push(new Column('CONSCRIPTION_POSITION', "موقف التجنيد", "comboBox","text",100,false,""))
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = [{ name: 'اعفاء نهائي', id: 1 }, { name: 'اعفاء مؤقت', id: 2 }, { name: 'قضي الخدمة', id: 3 }, { name: 'بالخدمة', id: 4 }, { name: 'لم يصبة الدور', id: 5 }];
     this.Columns[this.Columns.length - 1].columnComboBoxOptionLabel = "name";
     this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "اختر موقف التجنيد";
     this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "name";
-    this.Columns.push(new Column('QUALIFICATION_DEGREE', "درجة المؤهل", "comboBox"))
+    this.Columns.push(new Column('QUALIFICATION_DEGREE', "درجة المؤهل", "comboBox","text",100,false,""))
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = [{ name: 'دون مؤهل', id: 1 }, { name: 'محو امية', id: 2 }, { name: 'اعدادية', id: 3 }, { name: 'متوسط', id: 4 }, { name: 'عالي', id: 5 }, { name: 'ماجيستير', id: 6 }, { name: 'دكتوراة', id: 7 }];
     this.Columns[this.Columns.length - 1].columnComboBoxOptionLabel = "name";
     this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "اختر المؤهل";
@@ -172,7 +172,7 @@ export class EmploysRecodesComponent implements OnInit {
           "CODE": null,
           "NAME": "",
           "NATIONAL_ID": null,
-          "MARITAL_STATUS": null,
+          "MARITAL_STATUS": "",
           "RELIGION": null,
           "NATIONALITY": "مصر",
           "CONSCRIPTION_POSITION": null,
@@ -212,12 +212,6 @@ export class EmploysRecodesComponent implements OnInit {
           "ARMY_CERTIFICATE_PHOTO": null,
           "CRIMINAL_RECORD_PHOTO": null,
           "PLACES": [
-            {
-              "ID": 0,
-              "ROW_NUMBER": 0,
-              "EMPLOYEE_ID": 0,
-              "PLACE_ID": 0
-            }
           ]
         }
         Object.entries(item).forEach(p => {
@@ -239,7 +233,7 @@ export class EmploysRecodesComponent implements OnInit {
     grid.onSaveChanges = async (editData: Array<any>) => {
       editData.forEach(item => {
         item.ROW_NUMBER = -1
-        item.SUITS = 0 || "";
+        item.SUITS = 0;
       });
       let data = await this._tools.Network.putAsync("Employee/EditMore", editData) as Array<any>
       if (data) {

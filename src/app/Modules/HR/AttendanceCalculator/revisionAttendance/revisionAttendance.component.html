@@ -6,17 +6,24 @@
         <app-InputLabel *ngIf="employSelected" class="d-inline-block mx-4" placeholder="الأسم">
             <div class="py-3" pInputText>{{employSelected.NAME}}</div>
         </app-InputLabel>
-        <span class="p-2 mx-2 border border-1">عدد الأمضائات : {{Attendance.length}}</span>
-        <span class="p-2 mx-2 border border-1"> اجمالي ساعات العمل: {{getTotalHours()}}</span>
-
+        <div class="my-4">
+            <span class="p-2 mx-2 border border-1">عدد الأمضائات : {{Attendance.length}}</span>
+            <span class="p-2 mx-2 border border-1"> اجمالي ساعات العمل: {{getTotalHours()}}</span>
+            <span class="p-2 mx-2 border border-1"> اجمالي ساعات الأضافي: {{getTotalAddtionHours()}}</span>
+            <span class="p-2 mx-2 border border-1"> اجمالي ساعات الأذن: {{getTotalOutErly()}}</span>
+        </div>
+        <div class="my-4">
+            <span class="p-2 mx-2 border border-1"> اجمالي ساعات التأخير: {{getTotalInLate()}}</span>
+            <span class="p-2 mx-2 border border-1"> اجمالي ساعات المبكر: {{getTotalInErly()}}</span>
+        </div>
     </div>
     <div class="p-2">
         <p-button class="mx-1 w-100" size="small" (onClick)="ShowDeleted()" variant="text" [raised]="true"
             severity="danger" label="عرض الأمضائات الملغية"></p-button>
+        <p-button class="mx-1 w-100" size="small" icon="pi pi-plus" (onClick)="saveData()" variant="text" [raised]="true"
+            label="اضافة حضور وانصراف"></p-button>
         <p-button class="mx-1 w-100" size="small" (onClick)="saveData()" variant="text" [raised]="true"
             label="حفظ"></p-button>
-        <p-button class="mx-1 w-100" size="small" (onClick)="GetItem()" variant="text" [raised]="true"
-            label="عرض"></p-button>
     </div>
 </div>
 <div dir="rtl" *ngIf="DataLoaded" class="position-relative overflow-scroll MyTable-Height">

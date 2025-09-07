@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Type } from '@angular/core';
 import { DataGridComponent } from "../../../../shared/components/dataGrid/dataGrid.component";
 import { Column } from '../../../../shared/components/dataGrid/Column';
 import { Tools } from '../../../../shared/service/Tools.service';
@@ -35,6 +35,22 @@ export class RevisionAttendanceComponent implements OnInit {
     let TOTAL_NUMBER = this.Attendance.filter(x => x.TotalHoursWithNumber != undefined).map(x => x.TotalHoursWithNumber).reduce((a, b) => a + b, 0);
     return this._tools.DateTime.convertNumberToTimeString(TOTAL_NUMBER);
   }
+  getTotalAddtionHours(): string {
+    let TOTAL_NUMBER = this.Attendance.filter(x => x.overTime != undefined).map(x => x.overTime).reduce((a, b) => a + b, 0);
+    return this._tools.DateTime.convertNumberToTimeString(TOTAL_NUMBER);
+  }
+  getTotalOutErly(): string {
+    let TOTAL_NUMBER = this.Attendance.filter(x => x.earlyLeave != undefined).map(x => x.earlyLeave).reduce((a, b) => a + b, 0);
+    return this._tools.DateTime.convertNumberToTimeString(TOTAL_NUMBER);
+  }
+  getTotalInErly(): string {
+    let TOTAL_NUMBER = this.Attendance.filter(x => x.early != undefined).map(x => x.early).reduce((a, b) => a + b, 0);
+    return this._tools.DateTime.convertNumberToTimeString(TOTAL_NUMBER);
+  }
+  getTotalInLate(): string {
+    let TOTAL_NUMBER = this.Attendance.filter(x => x.late != undefined).map(x => x.late).reduce((a, b) => a + b, 0);
+    return this._tools.DateTime.convertNumberToTimeString(TOTAL_NUMBER);
+  }
   ngOnInit() {
     this.InitialAttendance()
   }
@@ -60,12 +76,34 @@ export class RevisionAttendanceComponent implements OnInit {
     this.AttSelected = Att;
     this.ShowDialogEdit = true;
   }
+  validations():boolean {
+    if (this.Attendance.filter(x => x.TotalHoursWithNumber < 0).length > 0) {
+      this._tools.Toaster.showError("يوجد يوم محسوب بالسالب")
+      return false
+    }
+    if (this.Attendance.filter(x => x.ERROR == true).length) {
+      this._tools.Toaster.showError("يوجد خطاء في الحضور والأنصراف")
+       return false
+    }
+     return true
+  }
   saveData() {
-    localStorage.setItem("testSave", JSON.stringify(this.Attendance))
+    console.log(this.Attendance)
+    if(!this.validations())
+    {
+      return
+    }
+    let RecordRevesionEmploye = {
+      TOTAL_HOURE: this.getTotalHours(),
+      EMPLOYE_ID: this.employSelected.ID,
+      REVISON_TEXT: JSON.stringify(this.Attendance),
+      Att: this.Attendance.map(x => { return { ID_EMPLOYE: x.ID_EMPLOYE, DATE_TIME: x.TIME, TYPE: x.TYPE, SHIFT: x.Shift || 0, TOTAL_HOUER_DAY: x.TotalHoursWithNumber || 0, OVER_TIME: x.overTime || 0, LATE: x.early || 0, EARLY: x.early || 0, LEAVE_ERLY: x.earlyLeave || 0, SEG_FROM: x.IsAdded ? "بصمة يدوية" : "بصمة أصلية", FORGET_ID: x.FORGET_ID || 0, ID_DIVICE_IN_SYSTEM: x.ID_DIVICE_IN_SYSTEM, ID_PLACE: x.ID_PLACE || this.getDevicePlace(x.ID_DIVICE_IN_SYSTEM).ID } })
+    }
+    console.log(RecordRevesionEmploye);
   }
   GetItem() {
     let data = localStorage.getItem("testSave");
-    if (data) this.Attendance =  JSON.parse(data)
+    if (data) this.Attendance = JSON.parse(data)
   }
   // التحقق من التكرار في أنواع البصمات
   validateDuplicateTypes() {
@@ -110,6 +148,7 @@ export class RevisionAttendanceComponent implements OnInit {
         this.addChangeRecord(AttIn)
       } else {
         AttIn.LATE = this._tools.DateTime.TimeToString(late);
+        AttIn.late = this._tools.DateTime.convertTimeToNumber(late);
       }
     }
     if (actualInNum < shiftInNum) {
@@ -120,6 +159,7 @@ export class RevisionAttendanceComponent implements OnInit {
         this.addChangeRecord(AttIn)
       } else {
         AttIn.EARLY = this._tools.DateTime.TimeToString(early);
+        AttIn.early = this._tools.DateTime.convertTimeToNumber(early);
       }
     }
 
@@ -137,6 +177,7 @@ export class RevisionAttendanceComponent implements OnInit {
         // AttOut.TIME = shiftOut.toISOString();
       } else {
         AttOut.EARLY_LEAVE = this._tools.DateTime.TimeToString(earlyLeave);
+        AttOut.earlyLeave = this._tools.DateTime.convertTimeToNumber(earlyLeave);
       }
     }
 
@@ -148,6 +189,7 @@ export class RevisionAttendanceComponent implements OnInit {
         this.addChangeRecord(AttOut)
       } else {
         AttOut.OVERTIME = this._tools.DateTime.TimeToString(overTime);
+        AttOut.overTime = this._tools.DateTime.convertTimeToNumber(overTime);
       }
     }
 

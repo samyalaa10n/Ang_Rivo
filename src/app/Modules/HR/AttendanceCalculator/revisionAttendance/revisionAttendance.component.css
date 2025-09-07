@@ -1,6 +1,10 @@
 .MyTable ::ng-deep .combo .p-select-label {
     padding: 2px !important;
 }
+.MyTable ::ng-deep .p-select {
+    display: inline-flex;
+    min-width: unset !important;
+}
 
 .MyTable ::ng-deep .p-datepicker:has(.p-datepicker-input-icon-container) .p-datepicker-input {
     padding: 2px !important;
@@ -8,6 +12,12 @@
 
 .MyTable ::ng-deep p-iftalabel {
     padding: 0px !important;
+}
+.MyTable ::ng-deep .p-datepicker-input-icon-container {
+    display: none;
+}
+.MyTable ::ng-deep .p-select-label {
+    display:  inline !important;
 }
 
 .MyTable ::ng-deep .combo .comboLabel {
@@ -53,6 +63,7 @@
     border          : none !important;
     box-shadow      : unset !important;
     background-color: transparent !important;
+    min-width: 100px !important;
 }
 
 .MyTable ::ng-deep .p-select-dropdown {

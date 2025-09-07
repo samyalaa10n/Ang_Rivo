@@ -9,9 +9,11 @@ export class Column {
         public columnType: "text" | "number" | "numberWithFraction" | "lapel" | "date-Time" | "Time" | "date" | "custom" | "comboBox" | "multiSelect" | "multiSelectObjectMode" | "yes-no" | "textarea" = "lapel",
         public filterType: "text" | "numeric" | "boolean" | "date" | "comboBox" | "yes-no" | "none" = "text",
         public width: number = 100,
-        public frozen: boolean = false
+        public frozen: boolean = false,
+        public columnComboBoxDefaultClearValue: any = 0
     ) {
     }
+
     apiPathDataSource: string = ''
     columnComboBoxOptionLabel: string = ''
     columnComboBoxOptionValue: string = ''
@@ -40,5 +42,5 @@ export class Column {
         return "";
     }
     templateColumn!: TemplateRef<any>
-    InShow:boolean=true;
+    InShow: boolean = true;
 }

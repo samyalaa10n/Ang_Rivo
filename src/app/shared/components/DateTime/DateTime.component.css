@@ -1,6 +1,7 @@
 .app-date ::ng-deep .app-date [pinputtext]{
     width: 100% !important;
     padding: 15PX;
+    min-width: 50px !important;
 }
 .app-date ::ng-deep .app-date .p-datepicker{
     width: 100% !important;
