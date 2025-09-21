@@ -5,6 +5,7 @@
     margin: 0px;
     padding: 0px;
 }
-.p-dialog-header{
+::ng-deep .p-dialog-header{
+    direction: ltr !important;
     justify-content: end !important;
 }

@@ -29,6 +29,8 @@ export class RevisionAttendanceComponent implements OnInit {
   ShowDialogDeleted: boolean = false
   ShowDialogEdit: boolean = false
   ShowDialogForget: boolean = false
+  ShowDialogAddInOut: boolean = false
+  NewAtt: any = {};
   constructor(public _tools: Tools) {
   }
   getTotalHours(): string {
@@ -76,21 +78,22 @@ export class RevisionAttendanceComponent implements OnInit {
     this.AttSelected = Att;
     this.ShowDialogEdit = true;
   }
-  validations():boolean {
+  validations(): boolean {
     if (this.Attendance.filter(x => x.TotalHoursWithNumber < 0).length > 0) {
       this._tools.Toaster.showError("يوجد يوم محسوب بالسالب")
       return false
     }
     if (this.Attendance.filter(x => x.ERROR == true).length) {
       this._tools.Toaster.showError("يوجد خطاء في الحضور والأنصراف")
-       return false
+      return false
     }
-     return true
+    return true
+  }
+  AddInOut() {
+    this.ShowDialogAddInOut=true;
   }
   saveData() {
-    console.log(this.Attendance)
-    if(!this.validations())
-    {
+    if (!this.validations()) {
       return
     }
     let RecordRevesionEmploye = {
@@ -273,7 +276,6 @@ export class RevisionAttendanceComponent implements OnInit {
       else {
         Att.TIME = this._tools.DateTime.convertDataToMoment(Att.DATETIME).set("hours", (Att.TIME as Date).getHours()).set("minutes", (Att.TIME as Date).getMinutes()).set("seconds", (Att.TIME as Date).getSeconds()).clone().toDate();
       }
-
       this.addChangeRecord(Att)
     }
     if (this.AttSelected?.FORGET_ID != null) this.AttSelected.FORGET_ID = undefined;

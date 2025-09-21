@@ -20,8 +20,8 @@
     <div class="p-2">
         <p-button class="mx-1 w-100" size="small" (onClick)="ShowDeleted()" variant="text" [raised]="true"
             severity="danger" label="عرض الأمضائات الملغية"></p-button>
-        <p-button class="mx-1 w-100" size="small" icon="pi pi-plus" (onClick)="saveData()" variant="text" [raised]="true"
-            label="اضافة حضور وانصراف"></p-button>
+        <p-button class="mx-1 w-100" size="small" icon="pi pi-plus" (onClick)="AddInOut()" variant="text"
+            [raised]="true" label="اضافة حضور وانصراف"></p-button>
         <p-button class="mx-1 w-100" size="small" (onClick)="saveData()" variant="text" [raised]="true"
             label="حفظ"></p-button>
     </div>
@@ -114,7 +114,7 @@
         <table class="table table-sm">
             <thead>
                 <tr>
-                    <th>تاريخ التوقيع</th>>
+                    <th>تاريخ التوقيع</th>
                     <th>يوم التوقيع</th>
                     <th>نوع التوقيع</th>
                     <th>اسم المكينة</th>
@@ -206,5 +206,32 @@
             </tbody>
 
         </table>
+    </p-dialog>
+
+    <p-dialog [(visible)]="ShowDialogAddInOut" [maximizable]="true" [modal]="true"
+        [style]="{'width':'50%','height':'50%'}" header="اضافة حضور و انصراف">
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12 col-lg-6 d-flex justify-content-center my-2">
+                <app-InputLabel class="d-inline-block mx-2 " placeholder="اختر وقت و تاريخ الحضور">
+                    <app-DateTime  [showTime]="true" [(selectedDate)]="NewAtt.DATETIME_IN"></app-DateTime>
+                </app-InputLabel>
+            </div>
+            <div class="col-12 col-lg-6 d-flex justify-content-center my-2">
+                <app-comboBox [showClear]="false" placeholder="اختر مكان الحضور" class="d-inline-block mx-2"
+                    optionLabel="NAME" [(SelectedValue)]="NewAtt.ID_PLACE_In" optionValue="ID"
+                    [dataSource]="Data.PLACES"></app-comboBox>
+            </div>
+            <div class="col-12 col-lg-6 d-flex justify-content-center my-2">
+                <app-InputLabel class="d-inline-block mx-2 " placeholder="اختر وقت و تاريخ الحضور">
+                    <app-DateTime [showTime]="true" [(selectedDate)]="NewAtt.DATETIME_Out"></app-DateTime>
+                </app-InputLabel>
+            </div>
+            <div class="col-12 col-lg-6 d-flex justify-content-center my-2">
+                <app-comboBox [showClear]="false" placeholder="اختر مكان الانصراف" class="d-inline-block mx-2"
+                    optionLabel="NAME" [(SelectedValue)]="NewAtt.ID_PLACE_Out" optionValue="ID"
+                    [dataSource]="Data.PLACES"></app-comboBox>
+            </div>
+        </div>
+
     </p-dialog>
 </div>
