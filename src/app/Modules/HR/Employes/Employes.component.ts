@@ -74,7 +74,7 @@ export class EmployesComponent implements OnInit {
     "BUS_NAME": null,
     "EMPLOYEE_MEAL": null,
     "OPENING_BALANCE_FOR_REGULAR": null,
-    "SUITS": null,
+    "ALLOWANCES": null,
     "SALARY": null,
     "IMAGE_PRINT": null,
     "FINGER_PRINT": null,
@@ -172,7 +172,7 @@ export class EmployesComponent implements OnInit {
           item.DEPART_ID = this.employee.DEPART_ID != null ? this.employee.DEPART_ID : item.DEPART_ID;
           item.TYPE_OF_CONTRACT = this.employee.TYPE_OF_CONTRACT != null ? this.employee.TYPE_OF_CONTRACT : item.TYPE_OF_CONTRACT;
           item.SALARY = this.employee.SALARY != null ? this.employee.SALARY : item.SALARY;
-          item.SUITS = this.employee.SUITS != null ? this.employee.SUITS : item.SUITS;
+          item.ALLOWANCES = this.employee.ALLOWANCES != null ? this.employee.ALLOWANCES : item.ALLOWANCES;
           item.POSATION_ID = this.employee.POSATION_ID != null ? this.employee.POSATION_ID : item.POSATION_ID;
           item.DATE_OF_APPOINTMENT = this.employee.DATE_OF_APPOINTMENT != null ? this.employee.DATE_OF_APPOINTMENT : item.DATE_OF_APPOINTMENT;
           item.ASSIGNMENT_MODE = this.employee.ASSIGNMENT_MODE != null ? this.employee.ASSIGNMENT_MODE : item.ASSIGNMENT_MODE;
@@ -249,7 +249,7 @@ export class EmployesComponent implements OnInit {
       "BUS_NAME": null,
       "EMPLOYEE_MEAL": null,
       "OPENING_BALANCE_FOR_REGULAR": null,
-      "SUITS": null,
+      "ALLOWANCES": null,
       "SALARY": null,
       "IMAGE_PRINT": null,
       "FINGER_PRINT": null,
@@ -389,7 +389,7 @@ export class EmployesComponent implements OnInit {
       this._tools.Toaster.showError("يجب ادخال نوع التوظيف للموظف")
       return false
     }
-    if (this._tools.Validation.isEmpty(this.employee.SUITS)) {
+    if (this._tools.Validation.isEmpty(this.employee.ALLOWANCES)) {
       this._tools.Toaster.showError("يجب ادخال البدلات للموظف")
       return false
     }

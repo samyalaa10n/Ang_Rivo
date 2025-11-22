@@ -9,12 +9,12 @@ import { GetAddEditDeleteComponent } from "../../../shared/pages/get-add-edit-de
 import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-Suits',
-  templateUrl: './Suits.component.html',
-  styleUrls: ['./Suits.component.css'],
+  selector: 'app-Allowance',
+  templateUrl: './Allowance.component.html',
+  styleUrls: ['./Allowance.component.css'],
   imports: [ButtonModule, DialogModule, GetAddEditDeleteComponent,NgIf]
 })
-export class SuitsComponent implements OnInit {
+export class AllowanceComponent implements OnInit {
 
   Columns: Column[] = [];
   constructor(private _tools: Tools) { }

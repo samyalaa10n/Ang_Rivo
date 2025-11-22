@@ -125,9 +125,9 @@ export const routes: Routes = [
         loadComponent: () => import('./Modules/HR/AttendanceRecord/AttendanceRecord.component').then(m => m.AttendanceRecordComponent)
       },
       {
-        path: 'Suits',
+        path: 'ALLOWANCES',
         title: 'البدلات',
-        loadComponent: () => import('./Modules/HR/Suits/Suits.component').then(m => m.SuitsComponent)
+        loadComponent: () => import('./Modules/HR/Allowance/Allowance.component').then(m => m.AllowanceComponent)
       }
       ,
       {

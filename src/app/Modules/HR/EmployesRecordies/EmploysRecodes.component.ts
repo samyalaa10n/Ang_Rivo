@@ -72,7 +72,7 @@ export class EmploysRecodesComponent implements OnInit {
     this.Columns.push(new Column('POSATION', "الوظيفة"))
     this.Columns.push(new Column('TYPE_OF_CONTRACT', "نوع التعاقد"))
     this.Columns.push(new Column('SALARY', "قيمة الراتب", "numberWithFraction"))
-    this.Columns.push(new Column('SUITS', "قيمة البدلات", "numberWithFraction"))
+    this.Columns.push(new Column('ALLOWANCES', "قيمة البدلات", "numberWithFraction"))
     this.Columns.push(new Column('DATE_OF_APPOINTMENT', "تاريخ التعين"))
     this.Columns[this.Columns.length - 1].Style_Show = (VALUE) => {
       return this._tools.DateTime.EditFormateData(VALUE, "YYYY-MM-DD ")
@@ -201,7 +201,7 @@ export class EmploysRecodesComponent implements OnInit {
           "BUS_NAME": "",
           "EMPLOYEE_MEAL": null,
           "OPENING_BALANCE_FOR_REGULAR": 0,
-          "SUITS": 0,
+          "ALLOWANCES": 0,
           "SALARY": null,
           "IMAGE_PRINT": null,
           "FINGER_PRINT": null,
@@ -233,7 +233,7 @@ export class EmploysRecodesComponent implements OnInit {
     grid.onSaveChanges = async (editData: Array<any>) => {
       editData.forEach(item => {
         item.ROW_NUMBER = -1
-        item.SUITS = 0;
+        item.ALLOWANCES = 0;
       });
       let data = await this._tools.Network.putAsync("Employee/EditMore", editData) as Array<any>
       if (data) {

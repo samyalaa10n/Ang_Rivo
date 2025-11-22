@@ -185,7 +185,7 @@ export class NaveComponent implements OnInit {
             label: 'البدلات',
             icon: 'pi pi-database',
             command: (event) => {
-              this._router.navigate(['Main', 'Suits']);
+              this._router.navigate(['Main', 'ALLOWANCES']);
             },
           },
           {
