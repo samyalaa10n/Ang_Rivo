@@ -1,0 +1,186 @@
+<div class="row my-2">
+  <div class="col-12 col-lg-4 p-1">
+    <app-comboBox placeholder="اختر حساب المطعم" [dataSource]="Customers" optionValue="ID" optionLabel="NAME"
+      [(SelectedValue)]="Invoice.CUSTOMER" class="form-control"></app-comboBox>
+  </div>
+  <div class="col-12 col-lg-4 p-1">
+    <app-comboBox placeholder="اختر المكان" optionValue="ID" optionLabel="NAME" apiPathDataSource="Place"
+      (selectedChange)="getTabels($event)"></app-comboBox>
+  </div>
+  <div class="col-12 col-lg-4 p-1">
+    <app-comboBox placeholder="اختر المخزن" [dataSource]="WareHouses" optionValue="ID" optionLabel="NAME"
+      apiPathDataSource="WareHouse" [(SelectedValue)]="Invoice.WAREHOUSE" class="form-control"></app-comboBox>
+  </div>
+</div>
+
+<div class="container">
+  <!-- قائمة التربيزات -->
+  <div class="tables-section" *ngIf="Invoice.WAREHOUSE!=0 && Invoice.CUSTOMER!=0">
+    <h2>اختار التربيزة</h2>
+    <div class="tables-grid">
+      <button (click)="selectTable(PayDirect)" [class.Work]="PayDirect.itemsCared.length>0"
+        [class.active]="selectedTable === PayDirect.id" class="table-btn" style="font-size: 14px; padding:0px;">
+        بيع مباشر
+      </button>
+      <button *ngFor="let table of tables" (click)="selectTable(table)" [class.Work]="table.itemsCared.length>0"
+        [class.active]="selectedTable === table.id" class="table-btn">
+        {{ table.id }}
+      </button>
+
+    </div>
+    <div *ngIf="selectedTable" class="selected-table">
+      ✓ التربيزة: <strong>{{ selectedTable }}</strong>
+    </div>
+  </div>
+
+  <!-- القائمة -->
+  <div class="menu-section" *ngIf="selectedTable>0 || selectedTable==-2">
+    <h1>القائمة</h1>
+
+    <!-- الأقسام -->
+    <div class="categories">
+      <button *ngFor="let category of categories" (click)="selectCategory(category.id)"
+        [class.active]="selectedCategory === category.id" class="category-btn">
+        {{ category.name }}
+      </button>
+    </div>
+
+    <!-- الأصناف -->
+    <div class="menu-grid">
+      <button *ngFor="let item of getItemsByCategory()" (click)="addToCart(item)" class="menu-item">
+        <div class="item-name">{{ item.name }} [ {{ item.UNIT }} ]</div>
+        <div class="item-price">{{ item.price }} ج.م</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- الكاشير -->
+  <div class="cashier-section" *ngIf="selectedTable>0 || selectedTable==-2">
+    <div class="cashier-header">
+      <h2>الفاتورة</h2>
+      <div class="order-number">'طولة رقم' #{{ selectedTable }}</div>
+    </div>
+
+    <!-- العناصر المختارة -->
+    <div class="cart-items">
+      <div *ngIf="cart.length === 0" class="empty-cart">
+        <p>ماحد اتاختار حاجة</p>
+      </div>
+      <div *ngFor="let item of cart" class="cart-item">
+        <div class="item-header">
+          <div class="item-name">{{ item.name }}</div>
+          <button (click)="removeFromCart(item.id)" class="delete-btn">
+            ✕
+          </button>
+        </div>
+        <div class="item-controls">
+          <div class="price mx-2">السعر</div>
+          <input type="number" class="form-control form-input mx-1 d-inline " [(ngModel)]="item.price">
+          <div class="price mx-2">ج.م</div>
+          <div class="quantity-control">
+            <button (click)="updateQuantity(item.id, item.quantity - 1)" class="qty-btn">
+              −
+            </button>
+            <span class="quantity">{{ item.quantity }}</span>
+            <button (click)="updateQuantity(item.id, item.quantity + 1)" class="qty-btn">
+              +
+            </button>
+          </div>
+        </div>
+        <div class="item-total">
+          {{ item.price * item.quantity }} ج.م
+        </div>
+      </div>
+    </div>
+
+    <!-- الملخص -->
+    <div class="summary">
+      <div class="summary-row">
+        <span>عدد الأصناف:</span>
+        <span class="value">{{ totalItems }}</span>
+      </div>
+      <div class="summary-row">
+        <span>السعر:</span>
+        <span class="value">{{ totalPrice }} ج.م</span>
+      </div>
+      <div class="summary-row total">
+        <span>الإجمالي:</span>
+        <span class="value">{{ finalTotal }} ج.م</span>
+      </div>
+    </div>
+
+    <!-- الأزرار -->
+    <div class="action-buttons">
+      <button (click)="clearCart()" class="btn btn-clear">
+        مسح
+      </button>
+      <button (click)="openPaymentModal()" [disabled]="cart.length === 0 || !selectedTable" class="btn btn-payment">
+        ادفع
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة الدفع -->
+<p-dialog [(visible)]="showPaymentModal" [maximizable]="true" [modal]="true" header="الدفع"
+  [style]="{'width':'70%','height':'90%'}">
+  <div dir="rtl">
+    <div class="modal-total">
+      <div>الإجمالي المستحق:</div>
+      <div class="total-amount">{{ TotalAfterDescound() }} ج.م</div>
+    </div>
+    <div class="row my-1">
+
+
+      <div class="col-12 col-lg-6">
+
+        <!-- خيارات الدفع -->
+        <div class="payment-options" *ngFor="let type of AccountTypes">
+          <label class="payment-option">
+            <input type="radio" name="payment" [value]="type" [(ngModel)]="paymentMethod" class="radio-input" />
+            <span>{{type.name}}</span>
+          </label>
+        </div>
+
+        <!-- حقل المبلغ المدفوع -->
+        <div *ngIf="paymentMethod!=null" class="cash-input-section">
+          <label>المبلغ:</label>
+          <input type="number" [(ngModel)]="paidAmount" placeholder="ادخل المبلغ" class="cash-input" />
+          <div *ngIf="paidAmount && paidAmount > 0" class="change-info">
+            <div>المستحق: {{ finalTotal }} ج.م</div>
+            <div> قيمة الخصم: {{ DescoundValue() }} ج.م</div>
+            <div> المستحق بعد الخصم: {{ TotalAfterDescound() }} ج.م</div>
+            <div>المدفوع: {{ paidAmount }} ج.م</div>
+            <div [class]="changeAmount >= 0 ? 'change-positive' : 'change-negative'"> الباقي: {{ changeAmount }} ج.م
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="row mb-4">
+          <div class="col-12 col-md-6">
+            <div class="form-floating p-2" dir="rtl">
+              <p-inputNumber [(ngModel)]="Invoice.DESCOUND_PERCENT" (ngModelChange)="EditPaidAmount()" [max]="100"
+                [min]="0" class="form-control" styleClass="w-100"></p-inputNumber>
+              <label class="text-muted">
+                <i class="pi pi-percentage me-2"></i>نسبة خصم
+              </label>
+            </div>
+          </div>
+        </div>
+        <!-- الأزرار -->
+        <div class="modal-buttons">
+          <button *ngIf="paymentMethod!=null" (click)="completePayment()" class="btn btn-confirm">
+            ✓ تمام
+          </button>
+          <button (click)="closePaymentModal()" class="btn btn-cancel">
+            إلغاء
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+</p-dialog>

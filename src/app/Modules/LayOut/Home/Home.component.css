@@ -8,8 +8,6 @@
       font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background : linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #333333 100%);
       color      : #ffffff;
-      min-height : 100vh;
-      overflow-x : hidden;
   }
 
   .container {

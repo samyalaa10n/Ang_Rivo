@@ -23,12 +23,23 @@ export class LoadingComponent implements OnInit {
   }
   startLoading() {
     this.Req++;
-    this.showLoading = true;
+    if ((window as any)?.chrome?.webview == undefined) {
+      this.showLoading = true;
+    }
+    else {
+      (window as any)?.chrome?.webview?.postMessage('startLoading');
+    }
+
   }
   stopLoading() {
     this.Req--
     if (this.Req <= 0) {
-      this.showLoading = false;
+      if ((window as any)?.chrome?.webview == undefined) {
+        this.showLoading = false;
+      }
+      else {
+        (window as any)?.chrome?.webview?.postMessage('stopLoading');
+      }
       this.Req = 0
     }
   }

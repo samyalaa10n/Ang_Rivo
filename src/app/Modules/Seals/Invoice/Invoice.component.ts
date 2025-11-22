@@ -105,11 +105,12 @@ export class InvoiceComponent implements OnInit {
   async GetDataRecordedStock() {
     if (this.Invoice.CUSTOMER != 0 && this.Invoice.WAREHOUSE != 0) {
       this.SesonActive = (await this._tools.Network.getAsync<any>("Season/GetActiveSeson") as any)?.SESON ?? 0
-      var data = await this.GetDataRecord();
       var desc = this.SpecialDescound.find(x => x.ID_CUSTOMER == this.Invoice.CUSTOMER && x.SESON == this.SesonActive)
       if (this.Invoice.ROW_NUMBER < 0) {
         this.Invoice.DESCOUND_PERCENT = desc?.DESCOUND ?? 0;
       }
+      
+      var data = await this.GetDataRecord();
       this.DataRecordedStock = data;
       this.InputFastItems.ITEMS_INPUT.forEach(item => {
         this.calculate(item, true)
@@ -157,10 +158,10 @@ export class InvoiceComponent implements OnInit {
   }
   GetAccountTypesActive() {
     if (this.Invoice.TYPE == 1) {
-      return this.AccountTypes.filter(x => x.IS_ADDED == true);
+      return this.AccountTypes.filter(x => x.IS_ADDED == true || x.IS_ADDED_IN_BANK == true || x.IS_AGAL_ADD == true);
     }
     else {
-      return this.AccountTypes.filter(x => x.IS_ADDED == false);
+      return this.AccountTypes.filter(x => x.IS_MINIS == true || x.IS_MINIS_IN_BANK == true || x.IS_AGAL == true);
     }
   }
   Total(): number {

@@ -4,14 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { Tools } from '../../../shared/service/Tools.service';
-import { Router } from '@angular/router';
-
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-Login',
   templateUrl: './Login.component.html',
   styleUrls: ['./Login.component.css'],
-  imports: [FormsModule, InputTextModule, ButtonModule]
+  imports: [FormsModule, InputTextModule, ButtonModule,RouterLink]
 })
 export class LoginComponent implements OnInit {
   logInfo = { NAME: "", PASSWORD: "" }
@@ -20,15 +19,16 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     if (localStorage.getItem("logInfo") != null) {
-      this._router.navigate(['Main', 'Home'])
+      this._router.navigate(['Main'])
     }
+  
   }
   async login() {
     this._tools.Network.postAsync("Login", this.logInfo).then((response: any) => {
       if (response) {
         if (response.TOKEN != "" && response.TOKEN != null) {
           localStorage.setItem("logInfo", JSON.stringify(response));
-          this._router.navigate(['Main', 'Home']);
+          this._router.navigate(['Main']);
         }
       }
     });

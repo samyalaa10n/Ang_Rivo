@@ -474,7 +474,8 @@ export class PrintService {
         <!-- Header -->
         <header class="header">
             <div class="company-info">
-               <h1> سويت ماجيك</h1>
+               <h1>FOCUS CAFA</h1>
+               <div>01018325475</div>
             </div>
             <div class="logo-placeholder">
                  <img src="favicon.ico" alt="Logo" >
@@ -563,14 +564,7 @@ export class PrintService {
         </div>
 
         <!-- Footer -->
-        <footer class="footer">
-            <div class="signature-section">
-                <div>
-                    <p style="margin-bottom: 10px; font-weight: 600; color: #2d3748;">الختم والتوقيع:</p>
-                    <div class="signature-box">التوقيع هنا</div>
-                </div>
-            </div>
-            
+        <footer class="footer">  
             <div class="qr-code-section">
              <img style="width:100%;" src="${_Invoice.QRImage ?? ''}" alt="qr-code" >
                 <p class="qr-label">رمز الاستجابة السريعة</p>
@@ -934,7 +928,8 @@ export class PrintService {
             <div class="header-left">
                 <img src="favicon.ico" alt="Logo" class="company-logo">
                 <div class="company-details">
-                    <h1>سويت ماجيك</h1>
+                    <h1>FOCUS CAFA</h1>
+                    <div>01018325475</div>
                     <p class="invoice-info">فاتورة رقم: #${_Invoice.ID} | التاريخ: ${this._Tools.DateTime.EditFormateData(_Invoice.DATE_TIME,'DD-MM-YYYY')}</p>
                 </div>
             </div>
@@ -1011,7 +1006,7 @@ export class PrintService {
   <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
     <div>
       <!-- اسم الشركة ورقم التليفون يكتب يدويًا أو يُملأ ديناميكيًا -->
-      <p style="margin: 4px 0;"><strong>اسم الشركة:</strong>سويت ماجيك</p>
+      <p style="margin: 4px 0;"><strong>اسم الشركة:</strong>FOCUS CAFA</p>
     </div>
     <div>
       <img src="favicon.ico" alt="Logo" >
@@ -1097,7 +1092,7 @@ export class PrintService {
   <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
     <div>
       <!-- اسم الشركة ورقم التليفون يكتب يدويًا أو يُملأ ديناميكيًا -->
-      <p style="margin: 4px 0;"><strong>اسم الشركة:</strong> سويت ماجيك</p>
+      <p style="margin: 4px 0;"><strong>اسم الشركة:</strong> FOCUS CAFA</p>
     </div>
     <div>
       <img src="favicon.ico" alt="Logo">

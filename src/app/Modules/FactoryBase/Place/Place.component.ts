@@ -20,6 +20,7 @@ export class PlaceComponent implements OnInit {
     this.Columns.push(new Column('NAME', "الأسم", "text", "text", 400))
     this.Columns.push(new Column('IS_FACTORY', "هل مصنع ؟", "yes-no", "none", 50))
     this.Columns.push(new Column('IS_BRANCH', "هل فرع ؟", "yes-no", "none", 50))
+    this.Columns.push(new Column('TABLE_COUNT', "عدد الطاولات", "number", "none", 50))
   }
 
 }

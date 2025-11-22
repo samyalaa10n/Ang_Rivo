@@ -240,6 +240,13 @@ export class NaveComponent implements OnInit {
         label: 'المبيعات',
         icon: 'pi pi-database',
         items: [
+           {
+            label: 'الكاشير',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'Cashier']);
+            },
+          },
           {
             label: 'بيانات المواسم',
             icon: 'pi pi-database',

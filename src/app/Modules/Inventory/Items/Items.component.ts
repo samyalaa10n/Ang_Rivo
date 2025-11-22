@@ -32,6 +32,7 @@ export class ItemsComponent implements OnInit {
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = [{ NAME: "خامة" }, { NAME: "منتج تام" }, { NAME: "نصف مصنع" }];
     this.Columns.push(new Column("PRICE_GET", "سعر الشراء", "numberWithFraction"))
     this.Columns.push(new Column("PRICE_SEAL", "سعر البيع", "numberWithFraction"))
+    this.Columns.push(new Column("TEX", "الضريبة %", "numberWithFraction"))
     this.Columns.push(new Column("NOTS", "الملاحظات", "textarea"))
   }
 
@@ -77,6 +78,7 @@ export class ItemsComponent implements OnInit {
       child.Columns.push(new Column("TYPE", "نوع الصنف", "lapel"))
       child.Columns.push(new Column("PRICE_GET", "سعر الشراء", "lapel"))
       child.Columns.push(new Column("PRICE_SEAL", "سعر البيع", "lapel"))
+      child.Columns.push(new Column("TEX", "الضريبة %", "lapel"))
       child.Columns.push(new Column("NOTS", "الملاحظات", "lapel"))
       child.Columns = child.Columns;
       child.dataSource = row?.ITEM_HESTORY ?? [];

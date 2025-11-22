@@ -21,28 +21,29 @@ import { SpecialDescoundComponent } from './Modules/Seals/SpecialDescound/Specia
 import { InvoiceListComponent } from './Modules/Seals/InvoiceList/InvoiceList.component';
 import { InvoiceComponent } from './Modules/Seals/Invoice/Invoice.component';
 import { HomeComponent } from './Modules/LayOut/Home/Home.component';
+import { RestaurantCashierComponent } from './Modules/Seals/Cashier/Cashier.component';
 
 
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'Login', pathMatch: 'full' },
+  { path: '', redirectTo: 'Home', pathMatch: 'full' },
   {
     path: 'Login',
     title: 'تسجيل الدخول',
     component: LoginComponent
   },
   {
+    path: 'Home',
+    title: 'الترحيب',
+    component: HomeComponent
+  },
+  {
     path: 'Main',
     title: 'الرئيسية',
-    canActivate: [authGuard],
     canActivateChild: [authGuard],
     component: MainComponent,
     children: [
-      {
-        path: 'Home',
-        title: 'الترحيب',
-        component: HomeComponent
-      },
+
       {
         path: 'EffectInSystem',
         title: 'مؤثرات النظام',
@@ -162,7 +163,7 @@ export const routes: Routes = [
       {
         path: 'Items',
         title: 'الأصناف',
-        component:ItemsComponent
+        component: ItemsComponent
       }
       ,
       {
@@ -252,13 +253,19 @@ export const routes: Routes = [
         path: 'AccountOperation',
         data: { ID: 0 },
         title: 'قيد محاسبي',
-        component:AccountOperationComponent
+        component: AccountOperationComponent
       }
       ,
       {
         path: 'Report',
         title: 'التقارير',
-        component:ReportComponent
+        component: ReportComponent
+      }
+      ,
+      {
+        path: 'Cashier',
+        title: 'الكاشير',
+        component: RestaurantCashierComponent
       }
 
     ]
