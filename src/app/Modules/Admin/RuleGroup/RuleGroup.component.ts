@@ -27,20 +27,18 @@ export class RuleGroupComponent implements OnInit {
   constructor(private _tools: Tools) { }
 
   async ngOnInit() {
-    debugger
     this.Promotions = await this._tools.Network.getAsync("RuleGroup/GetPromotions") as Array<any>;
-    this.Columns.push(new Column('ID', "الكود", "lapel", "text"))
-    this.Columns.push(new Column('NAME', "اسم المجموعة", "text", "text"))
-    this.Columns.push(new Column('IS_ACTIVE', "مفعل ام لا","yes-no", "yes-no"))
-    this.columnsChildGrid.push(new Column("NAME_PERMITION", "اسم الصلاحية"))
-    this.columnsChildGrid.push(new Column("VALUES", "الخصائص", "custom"))
-    this.columnsChildGrid[this.columnsChildGrid.length - 1].columnMultiPlaceholder = "اختر الخصائص";
+    this.Columns.push(new Column('ID', "Code", "lapel", "text"))
+    this.Columns.push(new Column('NAME', "Group Name", "text", "text"))
+    this.Columns.push(new Column('IS_ACTIVE', "Active","yes-no", "yes-no"))
+    this.columnsChildGrid.push(new Column("NAME_PERMITION", "Permission Name"))
+    this.columnsChildGrid.push(new Column("VALUES", "Properties", "custom"))
+    this.columnsChildGrid[this.columnsChildGrid.length - 1].columnMultiPlaceholder = "Select Properties";
     this.columnsChildGrid[this.columnsChildGrid.length - 1].columnMultiOptionLabel = "NAME";
     this.columnsChildGrid[this.columnsChildGrid.length - 1].columnMultiSelectOptionValue = "ID";
-    this.columnsChildGrid[this.columnsChildGrid.length - 1].columnMultiSelectDataSource = [{ ID: 1, NAME: "عرض" }, { ID: 2, NAME: "اضافة" }, { ID: 3, NAME: "تعديل" }, { ID: 4, NAME: "حذف" }]
+    this.columnsChildGrid[this.columnsChildGrid.length - 1].columnMultiSelectDataSource = [{ ID: 1, NAME: "View" }, { ID: 2, NAME: "Add" }, { ID: 3, NAME: "Edit" }, { ID: 4, NAME: "Delete" }]
   }
   async ngAfterViewInit() {
-
     this._tools.waitExecuteFunction(100, () => {
       this.CardOperation.grid.Columns = this.Columns
       this.CardOperation.grid.AllowCurdOperation=false;
@@ -53,33 +51,6 @@ export class RuleGroupComponent implements OnInit {
       this.CardOperation.grid.AllowSearch=false;
       this.CardOperation.grid.AllowSave=false;
       this.CardOperation.grid.AllowExportExcel=false;
-      //this.CardOperation.grid.IsHasChild = true;
-      // this.CardOperation.grid.onSaveChanges = (e: any) => this.SaveData(e, this.CardOperation.grid)
-      // this.CardOperation.grid.onLoadedChildDataGrid = async (parent, child, row) => {
-      //   child.AddNew=async ()=>{
-      //     this.showDialogAddSitting=true;
-      //   }
-      //   child.Columns = this.columnsChildGrid;
-      //   child.AllowDelete = false;
-      //   child.AllowEdit = false;
-      //   child.AllowSave = false;
-      //   child.AllowAdd = true;
-      //   child.AllowUpdate = false;
-      //   child.AllowDeleteSelected = false;
-      //   child.canSelectRow = false;
-      //   child.canSelectedSomeColumns = false;
-      //   child.dataSource=row.PREMOTION_RULEGROUPDTO
-      // }
     })
-  }
-  select(item:any)
-  {
-    console.log(item)
-    this.PromotionSelected=item;
-    console.log(this.Promotions)
-  }
-  delete(item:any)
-  {
-
   }
 }

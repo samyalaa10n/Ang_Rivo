@@ -21,23 +21,23 @@ export class ItemsComponent implements OnInit {
   constructor(private _tools: Tools, private _router: Router) { }
   async ngOnInit() {
     this.Category = await this._tools.Network.getAsync("Category") as Array<any>;
-    this.Columns.push(new Column("ID", "رقم الصنف"))
-    this.Columns.push(new Column("NAME", "الأسم", "text"))
-    this.Columns.push(new Column("CATEGORY", "التصنيف", "comboBox"))
+    this.Columns.push(new Column("ID", "Item Number"))
+    this.Columns.push(new Column("NAME", "Name", "text"))
+    this.Columns.push(new Column("CATEGORY", "Category", "comboBox"))
     this.Columns[this.Columns.length - 1].columnComboBoxOptionLabel = "NAME";
     this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "ID";
-    this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "اختر التصنيف"
+    this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "Select Category"
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = this.Category;
-    this.Columns.push(new Column("UNIT", "وحدة البيع", "text"))
-    this.Columns.push(new Column("TYPE", "نوع الصنف", "comboBox"))
+    this.Columns.push(new Column("UNIT", "Sales Unit", "text"))
+    this.Columns.push(new Column("TYPE", "Item Type", "comboBox"))
     this.Columns[this.Columns.length - 1].columnComboBoxOptionLabel = "NAME";
     this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "NAME";
-    this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "اختر نوع الصنف"
-    this.Columns[this.Columns.length - 1].columnComboBoxDataSource = [{ NAME: "خامة" }, { NAME: "منتج تام" }, { NAME: "نصف مصنع" }];
-    this.Columns.push(new Column("PRICE_GET", "سعر الشراء", "numberWithFraction"))
-    this.Columns.push(new Column("PRICE_SEAL", "سعر البيع", "numberWithFraction"))
-    this.Columns.push(new Column("TEX", "الضريبة %", "numberWithFraction"))
-    this.Columns.push(new Column("NOTS", "الملاحظات", "textarea"))
+    this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "Select Item Type"
+    this.Columns[this.Columns.length - 1].columnComboBoxDataSource = [{ NAME: "Raw Material" }, { NAME: "Finished Product" }, { NAME: "Semi-Finished" }];
+    this.Columns.push(new Column("PRICE_GET", "Purchase Price", "numberWithFraction"))
+    this.Columns.push(new Column("PRICE_SEAL", "Selling Price", "numberWithFraction"))
+    this.Columns.push(new Column("TEX", "Tax %", "numberWithFraction"))
+    this.Columns.push(new Column("NOTS", "Notes", "textarea"))
   }
 
   async update() {
@@ -73,7 +73,7 @@ export class ItemsComponent implements OnInit {
               NAME: cells[1].trim() ?? '',
               CATEGORY: this.Category.find(x => x.NAME == cells[0]?.trim())?.ID ?? 0,
               UNIT: cells[2].trim() ?? '',
-              TYPE: "منتج تام",
+              TYPE: "Finished Product",
               PRICE_GET: 0,
               PRICE_SEAL: Number.parseFloat(cells[3] != '' && cells[3] != null ? cells[3].trim() : '0') ? parseFloat(cells[3]) : 0,
               TEX: 0,
@@ -89,7 +89,7 @@ export class ItemsComponent implements OnInit {
     config.AllowImportExcel = true;
     config.IsHasChild = true;
     config.onRenderItemSource = (item) => {
-      if (item.PRICE_SEAL == 0 && item.TYPE != "منتج تام") {
+      if (item.PRICE_SEAL == 0 && item.TYPE != "Finished Product") {
         item.PRICE_SEAL = item.PRICE_GET
       }
     }
@@ -97,22 +97,22 @@ export class ItemsComponent implements OnInit {
       child.StopAllButtons = true;
       child.paginator = false;
       this._tools.waitExecuteFunction(100, () => { child.AllowExportExcel = true; })
-      child.Columns.push(new Column("IN_DATE", "تاريخ التغير", "lapel"))
+      child.Columns.push(new Column("IN_DATE", "Change Date", "lapel"))
       child.Columns[child.Columns.length - 1].Style_Show = (VALUE) => {
         return this._tools.DateTime.EditFormateData(VALUE, "DD-MM-yyyy")
       }
-      child.Columns.push(new Column("ID", "كود السجل"))
-      child.Columns.push(new Column("NAME", "الأسم", "lapel"))
-      child.Columns.push(new Column("CATEGORY", "التصنيف", "lapel"))
+      child.Columns.push(new Column("ID", "Record Code"))
+      child.Columns.push(new Column("NAME", "Name", "lapel"))
+      child.Columns.push(new Column("CATEGORY", "Category", "lapel"))
       child.Columns[child.Columns.length - 1].Style_Show = (VALUE) => {
         return this.Category.find(x => x.ID == VALUE)?.NAME ?? ''
       }
-      child.Columns.push(new Column("UNIT", "الوحدة", "lapel"))
-      child.Columns.push(new Column("TYPE", "نوع الصنف", "lapel"))
-      child.Columns.push(new Column("PRICE_GET", "سعر الشراء", "lapel"))
-      child.Columns.push(new Column("PRICE_SEAL", "سعر البيع", "lapel"))
-      child.Columns.push(new Column("TEX", "الضريبة %", "lapel"))
-      child.Columns.push(new Column("NOTS", "الملاحظات", "lapel"))
+      child.Columns.push(new Column("UNIT", "Unit", "lapel"))
+      child.Columns.push(new Column("TYPE", "Item Type", "lapel"))
+      child.Columns.push(new Column("PRICE_GET", "Purchase Price", "lapel"))
+      child.Columns.push(new Column("PRICE_SEAL", "Selling Price", "lapel"))
+      child.Columns.push(new Column("TEX", "Tax %", "lapel"))
+      child.Columns.push(new Column("NOTS", "Notes", "lapel"))
       child.Columns = child.Columns;
       child.dataSource = row?.ITEM_HESTORY ?? [];
       child.dataSource = child.dataSource.sort((Item2, Item1) => {

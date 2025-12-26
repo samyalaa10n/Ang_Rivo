@@ -16,11 +16,11 @@ export class PlaceComponent implements OnInit {
   constructor(private _tools: Tools) { }
 
   async ngOnInit() {
-    this.Columns.push(new Column('ID', "الكود", "lapel", "text"))
-    this.Columns.push(new Column('NAME', "الأسم", "text", "text", 400))
-    this.Columns.push(new Column('IS_FACTORY', "هل مصنع ؟", "yes-no", "none", 50))
-    this.Columns.push(new Column('IS_BRANCH', "هل فرع ؟", "yes-no", "none", 50))
-    this.Columns.push(new Column('TABLE_COUNT', "عدد الطاولات", "number", "none", 50))
+    this.Columns.push(new Column('ID', "Code", "lapel", "text"))
+    this.Columns.push(new Column('NAME', "Name", "text", "text", 400))
+    this.Columns.push(new Column('IS_FACTORY', "Is Factory?", "yes-no", "none", 50))
+    this.Columns.push(new Column('IS_BRANCH', "Is Branch?", "yes-no", "none", 50))
+    this.Columns.push(new Column('TABLE_COUNT', "Number of Tables", "number", "none", 50))
   }
 
 }

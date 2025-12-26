@@ -1,85 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
 
-<main>
-    <section class="hero" id="home">
-        <div class="container">
-            <div class="hero-content">
-                <h1>نظام إدارة شامل للمخازن والمحاسبة</h1>
-                <p>إدارة متكاملة للمخزون والأصناف والفواتير والطلبيات والعملاء والحسابات</p>
-                <a  (click)="LogIn()" class="cta-button">ابدأ الآن</a>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coppermelt - Booking & POS System</title>
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🍰</div>
+                <div class="logo-text">COPPERMELT</div>
             </div>
+            <div class="header-time" id="currentTime"></div>
         </div>
-    </section>
+    </header>
 
-    <section class="features" id="features">
-        <div class="container">
-            <h2>مميزات النظام</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">📦</div>
-                    <h3>إدارة المخزون</h3>
-                    <p>تتبع شامل لجميع العمليات المخزنية مع تحديثات فورية للكميات والحركات</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📋</div>
-                    <h3>إدارة الأصناف</h3>
-                    <p>تصنيف وتنظيم الأصناف مع إمكانية تتبع تفصيلي لكل صنف ومواصفاته</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🧾</div>
-                    <h3>نظام الفواتير</h3>
-                    <p>إصدار وإدارة الفواتير بشكل احترافي مع خيارات للطباعة والتصدير</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📄</div>
-                    <h3>إدارة الطلبيات</h3>
-                    <p>نسجيل الطلبيات مع إشعارات تلقائية</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">👥</div>
-                    <h3>إدارة العملاء</h3>
-                    <p>قاعدة بيانات شاملة للعملاء مع تاريخ المعاملات والتفاعلات</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">💰</div>
-                    <h3>النظام المحاسبي</h3>
-                    <p>نظام محاسبي بصيت لأدارة المعاملات المالية</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="stats">
-        <div class="container">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <span class="stat-number">10000+</span>
-                    <span class="stat-label">صنف مُدار</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">5000+</span>
-                    <span class="stat-label">عميل راضٍ</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">24/7</span>
-                    <span class="stat-label">دعم تقني</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">99.9%</span>
-                    <span class="stat-label">وقت التشغيل</span>
-                </div>
-            </div>
-        </div>
-    </section>
-</main>
-
-<footer class="footer">
     <div class="container">
-        <p>&copy; 2025 نظام إدارة المخازن والمحاسبة. جميع الحقوق محفوظة.</p>
-        <div class="footer-links">
-            <a >سياسة الخصوصية</a>
-            <a >شروط الاستخدام</a>
-            <a >الدعم التقني</a>
-            <a >اتصل بنا : 01140993467</a>
-        </div>
+        <section class="hero">
+            <h1>Welcome to Coppermelt System</h1>
+            <p>Choose your access point to manage orders, bookings, and sales efficiently</p>
+            <button (click)="LogIn()" class="header-login-btn">
+                🔑 Login
+            </button>
+        </section>
+
+        <section class="main-cards">
+            <div class="card" onclick="navigateToBookings()">
+                <div class="card-icon">📋</div>
+                <h2>Bookings</h2>
+                <p>Manage customer reservations, pre-orders, and special cake requests with our intuitive booking system
+                </p>
+                <button class="card-btn">Open Bookings</button>
+            </div>
+
+            <div class="card" onclick="navigateToPOS()">
+                <div class="card-icon">💳</div>
+                <h2>POS / Cashier</h2>
+                <p>Process sales transactions, manage inventory, and handle customer payments seamlessly</p>
+                <button class="card-btn">Open Cashier</button>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h3>Real-time Sync</h3>
+                <p>All bookings and sales are synchronized instantly across all branches</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">📊</div>
+                <h3>Analytics</h3>
+                <p>Track sales performance and booking trends with detailed reports</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">🔒</div>
+                <h3>Secure</h3>
+                <p>Enterprise-level security to protect your business data</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">📱</div>
+                <h3>Responsive</h3>
+                <p>Works perfectly on desktop, tablet, and mobile devices</p>
+            </div>
+        </section>
     </div>
-</footer>
+
+    <footer>
+        <div class="footer-logo">COPPERMELT</div>
+        <p>Melting hearts with every bite | Hotline: 15938</p>
+        <p style="margin-top: 10px; font-size: 12px;">© 2025 Coppermelt. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Update time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+            const dateString = now.toLocaleDateString('en-US', {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+            document.getElementById('currentTime').textContent = `${dateString} | ${timeString}`;
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // Navigation functions
+        function navigateToBookings() {
+            // Replace with your actual bookings route
+            window.location.href = '/Main/RequstesList';
+        }
+
+        function navigateToPOS() {
+            // Replace with your actual POS route
+            window.location.href = '/Main/Cashier';
+        }
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '1') navigateToBookings();
+            if (e.key === '2') navigateToPOS();
+        });
+    </script>
+</body>
+
+</html>

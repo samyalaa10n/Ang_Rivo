@@ -32,7 +32,7 @@ import { TooltipModule } from 'primeng/tooltip';
     TableModule,
     ButtonModule,
     DatePickerModule,
-    PResizableColumnDirective,
+    //PResizableColumnDirective,
     DataGridComponent,
     MultiSelectModule,
     ToggleButtonModule,

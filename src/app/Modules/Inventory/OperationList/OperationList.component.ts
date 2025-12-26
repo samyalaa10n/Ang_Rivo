@@ -30,16 +30,16 @@ export class OperationListComponent implements OnInit {
 
   async ngOnInit() {
     this.WareHouses = await this._tools.Network.getAsync<any>('WareHouse');
-    this.Columns.push(new Column('ID', 'رقم الطلبية', "lapel"))
-    this.Columns.push(new Column('DATE_TIME', ' تاريخ الأرسال', "lapel", "date"))
+    this.Columns.push(new Column('ID', 'Order Number', "lapel"))
+    this.Columns.push(new Column('DATE_TIME', 'Sending Date', "lapel", "date"))
     this.Columns[this.Columns.length - 1].Style_Show = (value) => {
       return this._tools.DateTime.EditFormateData(value);
     }
-    this.Columns.push(new Column('WAREHOUSE_ADDED_NAME', 'المخزن', "lapel"))
-    this.Columns.push(new Column('WAREHOUSE_GET_NAME', 'المخزن المحول منة', "lapel"))
-    this.Columns.push(new Column('TYPE', 'نوع العملية', "lapel"))
+    this.Columns.push(new Column('WAREHOUSE_ADDED_NAME', 'Warehouse', "lapel"))
+    this.Columns.push(new Column('WAREHOUSE_GET_NAME', 'Transferred From Warehouse', "lapel"))
+    this.Columns.push(new Column('TYPE', 'Operation Type', "lapel"))
     this.Columns[this.Columns.length - 1].Style_Show = (value) => {
-      return value == 1 ? 'اضافة' : value == 2 ? 'سحب' : value == 3 ? 'تحويل' : "";
+      return value == 1 ? 'Add' : value == 2 ? 'Withdraw' : value == 3 ? 'Transfer' : "";
     }
   }
   AddNew() {

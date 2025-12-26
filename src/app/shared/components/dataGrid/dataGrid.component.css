@@ -72,7 +72,7 @@
 
 .fixed-column {
     position        : sticky;
-    left            : 0px;
+    right            : 0px;
     background-color: #f1f5f9 !important;
     z-index         : 20;
 

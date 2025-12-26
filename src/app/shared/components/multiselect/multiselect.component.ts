@@ -26,15 +26,15 @@ export class MultiselectComponent implements OnInit {
   @Input() appendTo: string = 'body'
   @Input() display: string = 'comma'
   @Input() dataSource: Array<any> = []
-  @Input() placeholder: string = 'اختر'
+  @Input() placeholder: string = 'Select'
   @Input() Label: string = ''
   @Input() optionLabel: string = 'name'
   @Input() dataSelected: Array<any> = []
   @Input() dataSelectedValues: Array<any> = []
   @Input() maxSelectedLabels: number = 3;
   @Input() style: any = { 'width': '100%' }
-  @Input() textHeader: string = "العناصر المتاحة"
-  @Input() selectedItemsLabel: string = "تم تحديد {0} عناصر"
+  @Input() textHeader: string = "Available Items"
+  @Input() selectedItemsLabel: string = "{0} items selected"
   @Output() dataSelectedChange: EventEmitter<any> = new EventEmitter();
   @Output() dataSelectedValuesChange: EventEmitter<any> = new EventEmitter();
 

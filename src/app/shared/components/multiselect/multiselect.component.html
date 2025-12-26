@@ -1,6 +1,6 @@
-<div dir="rtl" class="multi">
-  <p-iftalabel dir="rtl">
-    <p-multiselect [placeholder]="'أختر القيمة ...'"  emptyMessage="لا يوجد بيانات" emptyFilterMessage="لا يوجد"  (ngModelChange)="change($event)" [display]="display"
+<div dir="ltr" class="multi">
+  <p-iftalabel dir="ltr">
+    <p-multiselect [placeholder]="'Select value...'"  emptyMessage="No data available" emptyFilterMessage="No results found"  (ngModelChange)="change($event)" [display]="display"
       [appendTo]="appendTo" [maxSelectedLabels]="maxSelectedLabels" [optionLabel]="optionLabel"
       [selectedItemsLabel]="selectedItemsLabel" [options]="dataSource" [(ngModel)]="dataSelected" [style]="style">
       <ng-template #header>

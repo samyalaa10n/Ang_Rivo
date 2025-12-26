@@ -1,6 +1,6 @@
 <div dir="rtl">
   <p-button [raised]="true" [routerLink]="['/Main/RequstesList']" routerLinkActive="router-link-active" severity="info"
-    label="رجوع الي قائمة الحجوزات" icon="pi pi-arrow-right" class=" btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
+    label="Back to Reservations List" icon="pi pi-arrow-right" class=" btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
   <div class="row justify-content-center my-3">
     <div class="col-12 col-xl-10">
 
@@ -13,18 +13,18 @@
                 <div class="col-12 col-md-6">
                   <h2 class="mb-0 fw-bold text-primary" *ngIf="Request.ID==0">
                     <i class="pi pi-shopping-cart me-2"></i>
-                    إنشاء حجز جديدة
+                    Create New Reservation
                   </h2>
                   <h2 class="mb-0 fw-bold text-primary" *ngIf="Request.ID>0">
                     <i class="pi pi-shopping-cart me-2"></i>
-                    بيانات الحجوزات
+                    Reservation Details
                   </h2>
                 </div>
                 <div class="col-12 col-md-6 mt-3 mt-md-0">
                   <div class="form-floating">
-                    <input type="text" [(ngModel)]="Request.ID" class="form-control" placeholder="رقم الحجز" readonly>
+                    <input type="text" [(ngModel)]="Request.ID" class="form-control" placeholder="Reservation Number" readonly>
                     <label class="text-muted">
-                      <i class="pi pi-hashtag me-2"></i>رقم الحجز
+                      <i class="pi pi-hashtag me-2"></i>Reservation Number
                     </label>
                   </div>
                 </div>
@@ -45,14 +45,13 @@
               <!-- Customer Selection -->
               <div class="row mb-4  my-4">
                 <div class="col-12">
-                  <div class="form-floating">
-                    <p-button [raised]="true" [size]="'small'" (onClick)="AddCompany=true"  severity="info" label="اضافة شركة" icon="pi pi-plus"
-                      class=" btn-sm fw-bold "></p-button>
+                  <div class="form-floating text-end">
+                    <p-button [raised]="true" [size]="'small'" (onClick)="AddCompany=true"  severity="info" label="Add Company" icon="pi pi-plus" class="btn-sm fw-bold"></p-button>
                     <app-comboBox [NormalStyle]="true" [dataSource]="Customers" optionValue="ID" optionLabel="NAME"
                       apiPathDataSource="Customer" [(SelectedValue)]="Request.CUSTOMER"
                       (SelectedValueChange)="onSelectCustomer()" class="form-control mt-2"></app-comboBox>
                     <label class="text-muted">
-                      <i class="pi pi-user me-2"></i>الشركة
+                      <i class="pi pi-user me-2"></i>Company
                     </label>
                   </div>
                 </div>
@@ -65,7 +64,7 @@
                       optionLabel="NAME" apiPathDataSource="Place" [(SelectedValue)]="Request.PLACE"
                       class="form-control "></app-comboBox>
                     <label class="text-muted">
-                      المكان
+                      Place
                     </label>
 
                   </div>
@@ -80,7 +79,7 @@
                         <app-DateTime [showTime]="true" [(selectedDate)]="Request.RESAVE_DATE"
                           class="form-control"></app-DateTime>
                         <label class="text-muted">
-                          <i class="pi pi-calendar me-2"></i>تاريخ الأستلام
+                          <i class="pi pi-calendar me-2"></i>Receipt Date
                         </label>
                       </div>
                     </div>
@@ -93,7 +92,7 @@
                       <div class="form-floating">
                         <input type="text" [(ngModel)]="Request.CUSTOMER_BUY_NAME" class="form-control" />
                         <label class="text-muted">
-                          اسم العميل
+                          Customer Name
 
                         </label>
                       </div>
@@ -107,7 +106,7 @@
                       <div class="form-floating">
                         <input type="text" [(ngModel)]="Request.PHONE" class="form-control" />
                         <label class="text-muted">
-                          رقم التيلفون
+                          Phone Number
                         </label>
                       </div>
                     </div>
@@ -120,7 +119,7 @@
                       <div class="form-floating">
                         <input type="text" [(ngModel)]="Request.SELLER" class="form-control" />
                         <label class="text-muted">
-                          مسئول المبيعات
+                          Sales Representative
                         </label>
                       </div>
                     </div>
@@ -134,7 +133,7 @@
                         <p-inputNumber [(ngModel)]="Request.DEPOST" [minFractionDigits]="0" [maxFractionDigits]="3"
                           class="form-control" styleClass="w-100"></p-inputNumber>
                         <label class="text-muted">
-                          <i class="pi pi-money-bill me-2"></i>العربون
+                          <i class="pi pi-money-bill me-2"></i>Deposit
                         </label>
                       </div>
                     </div>
@@ -142,9 +141,9 @@
                       <div class="form-floating">
                         <app-comboBox [NormalStyle]="true" [dataSource]="AccountTypes"
                           [(SelectedValue)]="Request.PAYMENT_TYPE" optionLabel="NAME" optionValue="ID"
-                          placeholder="طريقة الدفع" class="form-control"></app-comboBox>
+                          placeholder="Payment Method" class="form-control"></app-comboBox>
                         <label class="text-muted">
-                          <i class="pi pi-credit-card me-2"></i>طريقة الدفع
+                          <i class="pi pi-credit-card me-2"></i>Payment Method
                         </label>
                       </div>
                     </div>
@@ -157,7 +156,7 @@
                         <p-inputNumber [(ngModel)]="Request.DESCOUND_PERCENT" [max]="100" [min]="0" class="form-control"
                           styleClass="w-100"></p-inputNumber>
                         <label class="text-muted">
-                          <i class="pi pi-percentage me-2"></i>نسبة خصم
+                          <i class="pi pi-percentage me-2"></i>Discount Percentage
                         </label>
                       </div>
                     </div>
@@ -169,14 +168,14 @@
                     <div class="card shadow-sm border-0">
                       <div class="card-header bg-light border-0">
                         <h5 class="mb-0 fw-bold text-secondary">
-                          <i class="pi pi-comment me-2"></i>عنوان التسليم
+                          <i class="pi pi-comment me-2"></i>Delivery Address
                         </h5>
                       </div>
                       <div class="card-body p-3">
                         <div class="form-floating">
                           <textarea [(ngModel)]="Request.ADDRESS" class="form-control"
-                            style="height: 120px; resize: vertical;" placeholder="اكتب العنوان هنا..."></textarea>
-                          <label class="text-muted">اكتب العنوان هنا...</label>
+                            style="height: 120px; resize: vertical;" placeholder="Write the address here..."></textarea>
+                          <label class="text-muted">Write the address here...</label>
                         </div>
                       </div>
                     </div>
@@ -205,34 +204,34 @@
               <div class="card shadow-sm border-0">
                 <div class="card-header bg-light border-0">
                   <h5 class="mb-0 fw-bold text-secondary">
-                    <i class="pi pi-calculator me-2"></i>الحسابات
+                    <i class="pi pi-calculator me-2"></i>Calculations
                   </h5>
                 </div>
                 <div class="card-body p-3">
                   <div class="row g-3">
                     <div class="col-12">
                       <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded">
-                        <span class="text-muted">سعر الحجز:</span>
+                        <span class="text-muted">Reservation Price:</span>
                         <span class="fw-bold text-primary">{{Total()}}</span>
                       </div>
                     </div>
                     <div class="col-12">
                       <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded">
-                        <span class="text-muted">قيمة الخصم:</span>
+                        <span class="text-muted">Discount Value:</span>
                         <span class="fw-bold text-warning">{{DescoundValue()}}</span>
                       </div>
                     </div>
                     <div class="col-12">
                       <div
                         class="d-flex justify-content-between align-items-center p-3 bg-success bg-opacity-10 rounded border border-success border-opacity-25">
-                        <span class="text-success">السعر بعد الخصم:</span>
+                        <span class="text-success">Price After Discount:</span>
                         <span class="fw-bold text-success">{{TotalAfterDescound()}}</span>
                       </div>
                     </div>
                     <div class="col-12">
                       <div
                         class="d-flex justify-content-between align-items-center p-3 bg-info bg-opacity-10 rounded border border-info border-opacity-25">
-                        <span class="text-info">المتبقي بعد العربون:</span>
+                        <span class="text-info">Remaining After Deposit:</span>
                         <span class="fw-bold text-info">{{TotalAfterDepost()}}</span>
                       </div>
                     </div>
@@ -247,14 +246,14 @@
               <div class="card shadow-sm border-0">
                 <div class="card-header bg-light border-0">
                   <h5 class="mb-0 fw-bold text-secondary">
-                    <i class="pi pi-comment me-2"></i>الملاحظات
+                    <i class="pi pi-comment me-2"></i>Notes
                   </h5>
                 </div>
                 <div class="card-body p-3">
                   <div class="form-floating">
                     <textarea [(ngModel)]="Request.NOTS" class="form-control" style="height: 120px; resize: vertical;"
-                      placeholder="اكتب الملاحظات هنا..."></textarea>
-                    <label class="text-muted">اكتب الملاحظات هنا...</label>
+                      placeholder="Write notes here..."></textarea>
+                    <label class="text-muted">Write notes here...</label>
                   </div>
                 </div>
               </div>
@@ -269,7 +268,7 @@
           <div class="card shadow-sm border-0">
             <div class="card-header bg-light border-0">
               <h5 class="mb-0 fw-bold text-secondary">
-                <i class="pi pi-list me-2"></i> الأصناف المطلوبة
+                <i class="pi pi-list me-2"></i> Requested Items
               </h5>
             </div>
             <div class="card-body">
@@ -285,17 +284,17 @@
         <div class="col-12 ">
           <div class="d-grid gap-2 d-md-flex justify-content-md-center">
             <p-button *ngIf=" this.Request.ID==0" [raised]="true" (onClick)="Save()" severity="success"
-              label="اضافة الحجز وطباعة" icon="pi pi-save" class="btn-lg p-1 fw-bold shadow-sm"></p-button>
+              label="Add Reservation & Print" icon="pi pi-save" class="btn-lg p-1 fw-bold shadow-sm"></p-button>
             <p-button *ngIf=" this.Request.ID>0" [raised]="true" (onClick)="Save()" severity="success"
-              label="حفظ تعديل الحجز وطباعة" icon="pi pi-save" class="btn-lg p-1 fw-bold shadow-sm"></p-button>
+              label="Save Reservation Changes & Print" icon="pi pi-save" class="btn-lg p-1 fw-bold shadow-sm"></p-button>
             <p-button *ngIf=" this.Request.ID>0" [raised]="true" (onClick)="PrintCleck()" severity="success"
-              label="طباعة الحجز" icon="pi pi-print" class="btn-lg p-1 fw-bold shadow-sm"></p-button>
+              label="Print Reservation" icon="pi pi-print" class="btn-lg p-1 fw-bold shadow-sm"></p-button>
             <p-button *ngIf=" this.Request.ID>0" [raised]="true" (onClick)="delete()" severity="danger"
-              label="حذف الحجز" icon="pi pi-trash" class="btn-lg p-1 fw-bold shadow-sm"></p-button>
-            <p-button *ngIf=" this.Request.ID>0" [raised]="true" (onClick)="AddNew()" severity="info" label="حجز جديدة"
+              label="Delete Reservation" icon="pi pi-trash" class="btn-lg p-1 fw-bold shadow-sm"></p-button>
+            <p-button *ngIf=" this.Request.ID>0" [raised]="true" (onClick)="AddNew()" severity="info" label="New Reservation"
               icon="pi pi-plus" class="btn-lg p-1 fw-bold shadow-sm"></p-button>
             <p-button *ngIf=" this.Request.ID>0" [raised]="true" (onClick)="AddInhert()" severity="info"
-              label="حجز جديدة بنفس البيانات" icon="pi pi-plus" severity="info"
+              label="New Reservation with Same Data" icon="pi pi-plus" severity="info"
               class="btn-lg p-1 fw-bold shadow-sm"></p-button>
           </div>
         </div>
@@ -305,7 +304,7 @@
   </div>
 
 </div>
-<p-dialog header="اضافة شركة جديدة" [modal]="true" [style]="{'width':'50%'}" [(visible)]="AddCompany">
+<p-dialog header="Add New Company" [modal]="true" [style]="{'width':'50%'}" [(visible)]="AddCompany">
   <iframe  [src]="safeUrl" width="100%" 
       height="600px"></iframe>
 </p-dialog>

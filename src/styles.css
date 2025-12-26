@@ -2,10 +2,21 @@
 @import "primeicons/primeicons.css";
 
 * {
-    margin: 0px;
+    margin : 0px;
     padding: 0px;
 }
-::ng-deep .p-dialog-header{
-    direction: ltr !important;
+
+::ng-deep .p-dialog-header {
+    direction      : ltr !important;
     justify-content: end !important;
+}
+
+html,
+body {
+    direction : ltr !important;
+    text-align: left;
+}
+
+* {
+    direction: ltr;
 }

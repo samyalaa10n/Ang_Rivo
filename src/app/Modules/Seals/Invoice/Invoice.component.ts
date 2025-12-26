@@ -38,14 +38,14 @@ export class InvoiceComponent implements OnInit {
 
   async ngOnInit() {
     await this.UpdateLockUp();
-    this.ColumnsInput.push(new Column('ITEM_ID', "رقم الصنف"))
-    this.ColumnsInput.push(new Column('NAME', "اسم الصنف"))
-    this.ColumnsInput.push(new Column('UNIT', "وحدة الصنف"))
-    this.ColumnsInput.push(new Column('PRICE', "السعر في الفاتورة", "numberWithFraction"))
-    this.ColumnsInput.push(new Column('COUNT', "الكمية في الفاتورة", "numberWithFraction"))
-    this.ColumnsInput.push(new Column('COUNT_REQUEST', "الكمية المطلوبة"))
-    this.ColumnsInput.push(new Column('COUNT_INVOICE', "الكمية المنفذه"))
-    this.ColumnsInput.push(new Column('', "الكمية المتبقية للعميل"))
+    this.ColumnsInput.push(new Column('ITEM_ID', "Item Number"))
+    this.ColumnsInput.push(new Column('NAME', "Item Name"))
+    this.ColumnsInput.push(new Column('UNIT', "Item Unit"))
+    this.ColumnsInput.push(new Column('PRICE', "Invoice Price", "numberWithFraction"))
+    this.ColumnsInput.push(new Column('COUNT', "Invoice Quantity", "numberWithFraction"))
+    this.ColumnsInput.push(new Column('COUNT_REQUEST', "Requested Quantity"))
+    this.ColumnsInput.push(new Column('COUNT_INVOICE', "Executed Quantity"))
+    this.ColumnsInput.push(new Column('', "Remaining Quantity for Customer"))
     this.ColumnsInput[this.ColumnsInput.length - 1].DynamicShow = (item: RealItem) => {
       if (this.Invoice.TYPE == 1) {
         return ((item?.COUNT_REQUEST ?? 0) - (item?.COUNT_INVOICE ?? 0)).toString();
@@ -54,8 +54,8 @@ export class InvoiceComponent implements OnInit {
         return ((item?.COUNT_REQUEST ?? 0) + (item?.COUNT_INVOICE ?? 0)).toString();
       }
     }
-    this.ColumnsInput.push(new Column('COUNT_STOCK', "الكمية المخزنة"))
-    this.ColumnsInput.push(new Column('', "الكمية المتبقية في المخزن"))
+    this.ColumnsInput.push(new Column('COUNT_STOCK', "Stock Quantity"))
+    this.ColumnsInput.push(new Column('', "Remaining Quantity in Warehouse"))
     this.ColumnsInput[this.ColumnsInput.length - 1].DynamicShow = (item: RealItem) => {
       if (this.Invoice.TYPE == 1) {
         return ((item?.COUNT_STOCK ?? 0) - item.COUNT).toString();
@@ -64,7 +64,7 @@ export class InvoiceComponent implements OnInit {
         return ((item?.COUNT_STOCK ?? 0) + item.COUNT).toString();
       }
     }
-    this.ColumnsInput.push(new Column('TOTAL_COUNT', "اجمالي السعر"))
+    this.ColumnsInput.push(new Column('TOTAL_COUNT', "Total Price"))
   }
   ngAfterViewInit() {
     this._tools.waitExecuteFunction(100, () => {
@@ -81,7 +81,7 @@ export class InvoiceComponent implements OnInit {
               await this.InputFastItems.GetOldData();
             }
             else {
-              this._tools.Toaster.showError("تم حذف الفاتوره")
+              this._tools.Toaster.showError("Invoice has been deleted")
               this._router.navigate(['Main', 'InvoiceList']);
             }
           }
@@ -192,7 +192,7 @@ export class InvoiceComponent implements OnInit {
         this.InputFastItems.oldData = [];
         await this.InputFastItems.UpdateOnSave();
         this._tools.waitExecuteFunction(500, async () => {
-          let disc = await this._tools.Confermation.show("هل تريد عرض السعر في الفاتورة")
+          let disc = await this._tools.Confermation.show("Do you want to display price on the invoice?")
           this.print(disc);
           this._tools.waitExecuteFunction(500, () => {
             this._router.navigate(['Main', 'Invoice'], { queryParams: { ID: `${this.Invoice.ID}` } });
@@ -228,7 +228,7 @@ export class InvoiceComponent implements OnInit {
 
   }
   async AddInhert() {
-    this.somePricies = await this._tools.Confermation.show("هل تريد نسخ الأسعار ايضا مع الكميات", "استفسار")
+    this.somePricies = await this._tools.Confermation.show("Do you want to copy prices as well with quantities?", "Question")
     this.Invoice.ID = 0;
     this.Invoice.ROW_NUMBER = -1;
     this.Invoice.ITEMS.forEach(item => {

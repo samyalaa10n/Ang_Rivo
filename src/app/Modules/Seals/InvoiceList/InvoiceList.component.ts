@@ -24,22 +24,22 @@ export class InvoiceListComponent implements OnInit {
   InvoiceList: Array<InvoiceOrder> = [];
   constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _printService: PrintService, private _router: Router) {
     this.Request.START.setDate(1);
-    this.Request.END =_tools.DateTime.convertDataToMoment(this.Request.START).add(30,"day").toDate();
-   }
+    this.Request.END = _tools.DateTime.convertDataToMoment(this.Request.START).add(30, "day").toDate();
+  }
 
   async ngOnInit() {
     this.Customers = await this._tools.Network.getAsync<any>('Customer');
-    this.Columns.push(new Column('ID', 'رقم الفاتورة', "lapel"))
-    this.Columns.push(new Column('CUSTOMER_NAME', 'اسم العميل', "lapel"))
-    this.Columns.push(new Column('DATE_TIME', ' تاريخ الفاتورة', "lapel", "date"))
+    this.Columns.push(new Column('ID', 'Invoice Number', "lapel"))
+    this.Columns.push(new Column('CUSTOMER_NAME', 'Customer Name', "lapel"))
+    this.Columns.push(new Column('DATE_TIME', 'Invoice Date', "lapel", "date"))
     this.Columns[this.Columns.length - 1].Style_Show = (value) => {
       return this._tools.DateTime.EditFormateData(value);
     }
-    this.Columns.push(new Column('TOTAL', 'المبلغ ', "lapel", "numeric"))
-    this.Columns.push(new Column('DESCOUND_PERCENT', 'نسبة الخصم ', "lapel", "numeric"))
-    this.Columns.push(new Column('PRICE_AFTER_DESCOUND', 'المبلغ بعد الخصم ', "lapel", "numeric"))
-    this.Columns.push(new Column('PAYMENT', 'المدفوع ', "lapel", "numeric"))
-    this.Columns.push(new Column('TOTAL_AFTER_PAYMENT', ' المبلغ المتبقي', "lapel", "numeric"))
+    this.Columns.push(new Column('TOTAL', 'Amount', "lapel", "numeric"))
+    this.Columns.push(new Column('DESCOUND_PERCENT', 'Discount %', "lapel", "numeric"))
+    this.Columns.push(new Column('PRICE_AFTER_DESCOUND', 'Amount After Discount', "lapel", "numeric"))
+    this.Columns.push(new Column('PAYMENT', 'Paid Amount', "lapel", "numeric"))
+    this.Columns.push(new Column('TOTAL_AFTER_PAYMENT', 'Remaining Amount', "lapel", "numeric"))
   }
   AddNew() {
     this._router.navigate(['Main', 'Invoice'], { queryParams: { ID: `0` } })
@@ -52,23 +52,22 @@ export class InvoiceListComponent implements OnInit {
 
   }
   RenderItem(e: { item: InvoiceOrder }) {
-    e.item.DATE_TIME=this._tools.DateTime.getDataFromJson(e.item.DATE_TIME as any)
-    e.item.CUSTOMER_NAME = this.Customers.find(Z=>Z.ID==e.item.CUSTOMER)?.NAME??'';
+    e.item.DATE_TIME = this._tools.DateTime.getDataFromJson(e.item.DATE_TIME as any)
+    e.item.CUSTOMER_NAME = this.Customers.find(Z => Z.ID == e.item.CUSTOMER)?.NAME ?? '';
     e.item.TOTAL = e.item.ITEMS.reduce((num, item) => { return num += (item.COUNT * item.PRICE) }, 0);
     e.item.PRICE_AFTER_DESCOUND = e.item.TOTAL - (e.item.TOTAL * (e.item.DESCOUND_PERCENT / 100));
-    e.item.TOTAL_AFTER_PAYMENT=e.item.PRICE_AFTER_DESCOUND-e.item.PAYMENT;
+    e.item.TOTAL_AFTER_PAYMENT = e.item.PRICE_AFTER_DESCOUND - e.item.PAYMENT;
   }
-  GridLoaded(dataGrid:DataGridComponent)
-  {
-    dataGrid.AllowUpdate=false;
-    dataGrid.AllowDelete=false;
-    dataGrid.AllowDeleteSelected=false;
-    dataGrid.AllowSave=false;
-    dataGrid.AllowAdd=false;
-    dataGrid.AllowEdit=true;
-    dataGrid.canSelectRow=false;
-    dataGrid.onEditItem=(item:RequestOrder)=>{
-      this._router.navigate(['Main', 'Invoice'],{queryParams:{ID:item.ID}})
+  GridLoaded(dataGrid: DataGridComponent) {
+    dataGrid.AllowUpdate = false;
+    dataGrid.AllowDelete = false;
+    dataGrid.AllowDeleteSelected = false;
+    dataGrid.AllowSave = false;
+    dataGrid.AllowAdd = false;
+    dataGrid.AllowEdit = true;
+    dataGrid.canSelectRow = false;
+    dataGrid.onEditItem = (item: RequestOrder) => {
+      this._router.navigate(['Main', 'Invoice'], { queryParams: { ID: item.ID } })
     }
   }
 

@@ -22,16 +22,16 @@ export class UserComponent implements OnInit {
    */
   async ngOnInit() {
     let RuleGroup = await this._tools.Network.getAsync("RuleGroup") as Array<any>;
-    this.Columns.push(new Column('ID', "الكود", "lapel", "text"))
-    this.Columns.push(new Column('USER_HRCODE', "كود الموظف", "text", "text"))
-    this.Columns.push(new Column('EMAIL', "البريد الالكتروني", "text", "text"))
-    this.Columns.push(new Column('NAME', "اسم المستخدم", "text", "text"))
-    this.Columns.push(new Column('PASSWORD', "كلمة المرور", "text", "text"))
-    this.Columns.push(new Column('IS_ACTIVE', "مفعل ام لأ", "yes-no", "yes-no"))
-    this.Columns.push(new Column('GROUP_ID', "نوع المستخدم", "comboBox", "comboBox"))
+    this.Columns.push(new Column('ID', "Code", "lapel", "text"))
+    this.Columns.push(new Column('USER_HRCODE', "Employee Code", "text", "text"))
+    this.Columns.push(new Column('EMAIL', "Email", "text", "text"))
+    this.Columns.push(new Column('NAME', "Username", "text", "text"))
+    this.Columns.push(new Column('PASSWORD', "Password", "text", "text"))
+    this.Columns.push(new Column('IS_ACTIVE', "Active", "yes-no", "yes-no"))
+    this.Columns.push(new Column('GROUP_ID', "User Type", "comboBox", "comboBox"))
     this.Columns[6].columnComboBoxOptionValue="ID";
     this.Columns[6].columnComboBoxOptionLabel="NAME";
-    this.Columns[6].columnComboBoxPlaceholder="اختر نوع المستخدم";
+    this.Columns[6].columnComboBoxPlaceholder="Select User Type";
     this.Columns[6].columnComboBoxDataSource=RuleGroup;
   
   }
@@ -47,4 +47,3 @@ export class UserComponent implements OnInit {
     this.Columns[5].columnComboBoxDataSource=RuleGroup;
   }
 }
-

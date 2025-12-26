@@ -1,26 +1,9 @@
-<nav dir="rtl" class="navbar navbar-expand-lg bg-dark " *ngIf="!_tools.transfareSherdData.sherdMood">
-  <div class="container-fluid">
-    <p-button size="small" class="fs-4" icon="pi pi-align-justify " (onClick)="openNave()" aria-label="Save" />
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <li class="nav-item mx-2" routerLink="/Main" routerLinkActive="router-link-active">
-          <img src="PrandIcon.ico" style="width: 50px;border-radius: 50%;" alt="" srcset="">
-        </li>
-        <li class="nav-item mx-2">
-          <a class="nav-link text-white"> {{this._tools.Network._LoginName}}
-            <i class="pi pi-user"></i></a>
-        </li>
-      </ul>
-      <div class="d-flex">
-        <div class="btn btn-dark me-4" (click)="logOut()" *ngIf="this._tools.Network._LoginName==''">
-          تسجيل الخروج
-          <i dir="rtl" class="pi pi-power-off"></i>
-        </div>
-        <div class="btn btn-dark me-4" (click)="logOut()" *ngIf="this._tools.Network._LoginName!=''">
-          تسجيل الخروج
-          <i dir="rtl" class="pi pi-power-off"></i>
-        </div>
-      </div>
-    </div>
+<div class="Header-App d-flex justify-content-start">
+  <button (click)="openNave()" class="header-btn-Menu mx-2  ">
+    <i class="pi pi-align-justify"></i>
+  </button>
+  <div class="logo-text mx-2">COPPERMELT</div>
+  <div class="w-100 px-2">
+    <div class="logo-text fs-6 mx-2 text-end"><i class="pi pi-user"></i> {{this._tools.Network._LoginName}}   </div>
   </div>
-</nav>
+</div>

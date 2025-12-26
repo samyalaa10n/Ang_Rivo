@@ -11,8 +11,8 @@
     width: 100%;
 }
 
-::ng-deep .p-drawer-right {
-    background: #212529 !important;
+::ng-deep .p-drawer-left {
+    background: #191a2f !important;
     border: 0px !important;
     color: white !important;
 }
@@ -21,9 +21,9 @@
     background-color: transparent !important;
     border: 0.5 solid blue !important;
 }
-::ng-deep .p-icon{
+/* ::ng-deep .p-icon{
     transform: rotateY(180deg) !important;
-}
+} */
 ::ng-deep .p-panelmenu-header-link,::ng-deep  .p-panelmenu-item-link{
     color: white !important;
 }

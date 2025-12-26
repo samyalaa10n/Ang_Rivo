@@ -16,12 +16,12 @@ export class WareHousesComponent implements OnInit {
 
   async ngOnInit() {
     let Departs = await this._tools.Network.getAsync("Depart") as Array<any>;
-    this.Columns.push(new Column('ID', "الكود", "lapel", "text"))
-    this.Columns.push(new Column('NAME', "الأسم", "text", "text", 400))
-    this.Columns.push(new Column('DEPART', "القسم", "comboBox", "comboBox", 200));
+    this.Columns.push(new Column('ID', "Code", "lapel", "text"))
+    this.Columns.push(new Column('NAME', "Name", "text", "text", 400))
+    this.Columns.push(new Column('DEPART', "Department", "comboBox", "comboBox", 200));
     this.Columns[this.Columns.length - 1].columnComboBoxOptionLabel = "NAME";
     this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "ID";
-    this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "اختر القسم التابعة لة المخزن"
+    this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "Select the Department for this Warehouse"
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = Departs;
   }
 

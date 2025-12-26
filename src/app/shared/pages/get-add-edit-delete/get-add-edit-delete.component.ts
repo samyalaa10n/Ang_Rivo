@@ -38,8 +38,8 @@ export class GetAddEditDeleteComponent implements OnInit {
   ngAfterViewInit() {
     this._tools.waitExecuteFunction(100, () => {
       if (this.Columns.length == 0) {
-        this.Columns.push(new Column('ID', "الكود", "lapel", "text"))
-        this.Columns.push(new Column('NAME', "الأسم", "text", "text", 600))
+        this.Columns.push(new Column('ID', "Code", "lapel", "text"))
+        this.Columns.push(new Column('NAME', "Name", "text", "text", 600))
         this.grid.Columns = this.Columns
       }
       else {
@@ -67,7 +67,7 @@ export class GetAddEditDeleteComponent implements OnInit {
     let data: any = await this._tools.Network.putAsync(this.ApiPage + '/EditMore', dataSaved, this.FilterInEdit)
     if (data) {
       if (Array.isArray(data)) {
-        this._tools.Toaster.showSuccess("تم التحديث بنجاح");
+        this._tools.Toaster.showSuccess("Update Successful");
         if (this.GetApiPage == "" || this.GetApiPage == null) {
           this.grid.dataSource = data
         }

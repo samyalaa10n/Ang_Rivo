@@ -17,7 +17,7 @@ export class ConfermationComponent implements OnInit {
   ngOnInit() {
     this._tools.Confermation = this;
   }
-  show(message: string="هل انت متأكد من الحذف", header: string = 'تأكيد', acceptLabel: string = "نعم", rejectLabel: string = "لا"): Promise<boolean> {
+  show(message: string="Are you sure you want to delete?", header: string = 'Confirm', acceptLabel: string = "Yes", rejectLabel: string = "No"): Promise<boolean> {
     return new Promise((resolve) => {
       this._ConfirmMessage.confirm(
         {

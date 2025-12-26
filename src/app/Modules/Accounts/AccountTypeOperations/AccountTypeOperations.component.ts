@@ -15,14 +15,14 @@ export class AccountTypeOperationsComponent implements OnInit {
   Columns: Array<Column> = [];
   constructor(private _tools: Tools) { }
   ngOnInit() {
-    this.Columns.push(new Column("ID","الكود"))
-    this.Columns.push(new Column("NAME","الأسم","text"))
-    this.Columns.push(new Column("IS_ADDED","الحساب يضيف الي خزنة الشركة","yes-no"))
-    this.Columns.push(new Column("IS_ADDED_IN_BANK","الحساب يضيف الي حساب الشركة","yes-no"))
-    this.Columns.push(new Column("IS_MINIS","الحساب يخصم من خزنة الشركة","yes-no"))
-    this.Columns.push(new Column("IS_MINIS_IN_BANK","الحساب يخصم من حساب الشركة","yes-no"))
-    this.Columns.push(new Column("IS_AGAL_ADD","الحساب يضيف بالأجل","yes-no"))
-    this.Columns.push(new Column("IS_AGAL_MINIS","الحساب يخصم بالأجل","yes-no"))
+    this.Columns.push(new Column("ID","Code"))
+    this.Columns.push(new Column("NAME","Name","text"))
+    this.Columns.push(new Column("IS_ADDED","Account Adds to Company Treasury","yes-no"))
+    this.Columns.push(new Column("IS_ADDED_IN_BANK","Account Adds to Company Bank Account","yes-no"))
+    this.Columns.push(new Column("IS_MINIS","Account Deducts from Company Treasury","yes-no"))
+    this.Columns.push(new Column("IS_MINIS_IN_BANK","Account Deducts from Company Bank Account","yes-no"))
+    this.Columns.push(new Column("IS_AGAL_ADD","Account Adds on Credit","yes-no"))
+    this.Columns.push(new Column("IS_AGAL_MINIS","Account Deducts on Credit","yes-no"))
   }
 
 }

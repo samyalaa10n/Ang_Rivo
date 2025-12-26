@@ -19,20 +19,13 @@ export class DepartComponent implements OnInit {
   constructor(private _tools: Tools) { }
   async ngOnInit() {
     let companies = await this._tools.Network.getAsync("Company") as Array<any>;
-    this.Columns.push(new Column('ID', "الكود", "lapel", "text"))
-    this.Columns.push(new Column('NAME', "الأسم", "text", "text", 400))
-    this.Columns.push(new Column('COMPANY_ID', "الشركة", "comboBox", "comboBox", 200));
+    this.Columns.push(new Column('ID', "Code", "lapel", "text"))
+    this.Columns.push(new Column('NAME', "Name", "text", "text", 400))
+    this.Columns.push(new Column('COMPANY_ID', "Company", "comboBox", "comboBox", 200));
     this.Columns[this.Columns.length - 1].columnComboBoxOptionLabel = "NAME";
     this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "ID";
-    this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "اختر الشركة التابعة لة القسم"
+    this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "Select the Company for this Department"
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = companies;
-
-    // this.Columns[this.Columns.length - 1].columnMultiOptionLabel = "POSATION";
-    // this.Columns[this.Columns.length - 1].columnMultiPlaceholder = "الاوضاع الوظيفية الموجود بها القسم";
-    // this.Columns[this.Columns.length - 1].columnMultiSelectDataSource = Mangements;
-    // this.Columns[this.Columns.length - 1].columnMultiSelectselectIdKey = "DEPART_ID";
-    // this.Columns[this.Columns.length - 1].columnMultiSelectOptionValue = "POSATION_ID";
-    // this.Columns[this.Columns.length - 1].columnMultiSelectpropertyBind = "In_POSATIONS";
   }
   async update() {
     let companies = await this._tools.Network.getAsync("Company") as Array<any>;

@@ -1,5 +1,5 @@
-<div dir="rtl">
-  <p-button  [raised]="true" [routerLink]="['/Main/AccountOperationList']" routerLinkActive="router-link-active"  severity="info" label="رجوع الي قائمة القيود" icon="pi pi-arrow-right" class=" btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
+<div dir="ltr">
+  <p-button  [raised]="true" [routerLink]="['/Main/AccountOperationList']" routerLinkActive="router-link-active"  severity="info" label="Back to Entries List" icon="pi pi-arrow-left" class=" btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
   <div class="row justify-content-center my-3">
     <div class="col-12 col-xl-10">
 
@@ -12,19 +12,19 @@
                 <div class="col-12 col-md-6">
                   <h2 class="mb-0 fw-bold text-primary" *ngIf="AccountOperation.ID==0">
                     <i class="pi pi-shopping-cart me-2"></i>
-                    إنشاء قيد جديدة
+                    Create New Entry
                   </h2>
                   <h2 class="mb-0 fw-bold text-primary" *ngIf="AccountOperation.ID>0">
                     <i class="pi pi-shopping-cart me-2"></i>
-                    بيانات القيد
+                    Entry Details
                   </h2>
                 </div>
                 <div class="col-12 col-md-6 mt-3 mt-md-0">
                   <div class="form-floating">
-                    <input type="text" [(ngModel)]="AccountOperation.ID" class="form-control" placeholder="رقم القيد"
+                    <input type="text" [(ngModel)]="AccountOperation.ID" class="form-control" placeholder="Entry Number"
                       readonly>
                     <label class="text-muted">
-                      <i class="pi pi-hashtag me-2"></i>رقم القيد
+                      <i class="pi pi-hashtag me-2"></i>Entry Number
                     </label>
                   </div>
                 </div>
@@ -37,12 +37,12 @@
       <!-- Main Form -->
       <div class="row g-4">
 
-        <!-- Right Section - Form Fields -->
+        <!-- Left Section - Form Fields -->
         <div class="col-12 col-lg-8">
           <div class="card shadow-sm border-0 h-100">
             <div class="card-body p-4">
 
-              <!-- Customer Selection -->
+              <!-- Account Selection -->
               <div class="row mb-4  my-4">
                 <div class="col-12">
                   <div class="form-floating">
@@ -50,20 +50,20 @@
                       apiPathDataSource="Accounts" [(SelectedValue)]="AccountOperation.ACCOUNT"
                       class="form-control"></app-comboBox>
                     <label class="text-muted">
-                      <i class="pi pi-user me-2"></i>الحساب
+                      <i class="pi pi-user me-2"></i>Account
                     </label>
                   </div>
                 </div>
               </div>
 
-              <!-- Payment & Discount Section -->
+              <!-- Amount & Type Section -->
               <div class="row mb-4">
                 <div class="col-12 col-md-6 mb-3 mb-md-0">
                   <div class="form-floating">
                     <p-inputNumber [(ngModel)]="AccountOperation.VALUE" [minFractionDigits]="0" [maxFractionDigits]="3"
                       class="form-control" styleClass="w-100"></p-inputNumber>
                     <label class="text-muted">
-                      <i class="pi pi-money-bill me-2"></i>المبلغ
+                      <i class="pi pi-money-bill me-2"></i>Amount
                     </label>
                   </div>
                 </div>
@@ -71,9 +71,9 @@
                   <div class="form-floating">
                     <app-comboBox [NormalStyle]="true" [dataSource]="AccountTypes" apiPathDataSource="AccountType"
                       [(SelectedValue)]="AccountOperation.TYPE" optionLabel="NAME" optionValue="ID"
-                      placeholder="طريقة الدفع" class="form-control"></app-comboBox>
+                      placeholder="Transaction Type" class="form-control"></app-comboBox>
                     <label class="text-muted">
-                      <i class="pi pi-credit-card me-2"></i>نوع التحويل
+                      <i class="pi pi-credit-card me-2"></i>Transaction Type
                     </label>
                   </div>
                 </div>
@@ -82,7 +82,7 @@
           </div>
         </div>
 
-        <!-- Left Section - Calculations & Notes -->
+        <!-- Right Section - Notes -->
         <div class="col-12 col-lg-4">
           <div class="row g-3">
 
@@ -91,14 +91,14 @@
               <div class="card shadow-sm border-0">
                 <div class="card-header bg-light border-0">
                   <h5 class="mb-0 fw-bold text-secondary">
-                    <i class="pi pi-comment me-2"></i>تفاصيل القيد
+                    <i class="pi pi-comment me-2"></i>Entry Details
                   </h5>
                 </div>
                 <div class="card-body p-3">
                   <div class="form-floating">
                     <textarea [(ngModel)]="AccountOperation.NOTS" class="form-control" style="height: 300px; resize: vertical;"
-                      placeholder="اكتب تفاصيل القيد هنا ..."></textarea>
-                    <label class="text-muted">اكتب تفاصيل القيد هنا ...</label>
+                      placeholder="Write entry details here..."></textarea>
+                    <label class="text-muted">Write entry details here...</label>
                   </div>
                 </div>
               </div>
@@ -108,20 +108,20 @@
       </div>
 
 
-      <!-- Save Button -->
+      <!-- Action Buttons -->
       <div class="row mt-4">
         <div class="col-12">
           <div class="d-grid gap-2 d-md-flex justify-content-md-center">
             <p-button *ngIf=" this.AccountOperation.ID==0" [raised]="true" (onClick)="Save()" severity="success"
-              label="اضافة القيد وطباعة" icon="pi pi-save" class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
+              label="Add Entry & Print" icon="pi pi-save" class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
             <p-button *ngIf=" this.AccountOperation.ID>0" [raised]="true" (onClick)="Save()" severity="success"
-              label="حفظ تعديل القيد وطباعة" icon="pi pi-save" class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
+              label="Save Changes & Print" icon="pi pi-save" class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
             <p-button *ngIf=" this.AccountOperation.ID>0" [raised]="true" (onClick)="delete()" severity="danger"
-              label="حذف القيد" icon="pi pi-trash" class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
+              label="Delete Entry" icon="pi pi-trash" class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
             <p-button *ngIf=" this.AccountOperation.ID>0" [raised]="true" (onClick)="AddNew()" severity="info"
-              label="قيد جديدة" icon="pi pi-plus" class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
+              label="New Entry" icon="pi pi-plus" class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
             <p-button *ngIf=" this.AccountOperation.ID>0" [raised]="true" (onClick)="AddInhert()" severity="info"
-              label="قيد جديدة بنفس البيانات" icon="pi pi-plus" severity="info" class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
+              label="Duplicate Entry" icon="pi pi-copy" severity="info" class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
           </div>
         </div>
       </div>

@@ -16,9 +16,9 @@ export class AccountsComponent implements OnInit {
   constructor(private _tools: Tools) { }
 
   ngOnInit() {
-    this.Columns.push(new Column("ID","الكود"))
-    this.Columns.push(new Column("NAME","الأسم","text"))
-    this.Columns.push(new Column("NOTS","الملاحظات","textarea"))
+    this.Columns.push(new Column("ID","Code"))
+    this.Columns.push(new Column("NAME","Name","text"))
+    this.Columns.push(new Column("NOTS","Nots","textarea"))
   }
 
 }

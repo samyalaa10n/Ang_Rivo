@@ -19,26 +19,26 @@ export class ToasterComponent implements OnInit {
     this._tools.Network.Toaster=this;
   }
   showSuccess(detail:string) {
-    this.messageService.add({ severity: 'success', summary: 'تم بنجاح', detail: detail });
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: detail });
   }
 
   showInfo(detail:string) {
-    this.messageService.add({ severity: 'info', summary: 'معلومة', detail: detail});
+    this.messageService.add({ severity: 'info', summary: 'Info', detail: detail});
   }
 
   showWarn(detail:string) {
-    this.messageService.add({ severity: 'warn', summary: 'انتبة', detail: detail });
+    this.messageService.add({ severity: 'warn', summary: 'Warning', detail: detail });
   }
 
   showError(detail:string) {
-    this.messageService.add({ severity: 'error', summary: 'خطأ', detail: detail });
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: detail });
   }
 
   showContrast(detail:string) {
-    this.messageService.add({ severity: 'contrast', summary: 'خطأ', detail: detail });
+    this.messageService.add({ severity: 'contrast', summary: 'Error', detail: detail });
   }
 
   showSecondary(detail:string) {
-    this.messageService.add({ severity: 'secondary', summary: 'معلومة', detail: detail });
+    this.messageService.add({ severity: 'secondary', summary: 'Info', detail: detail });
   }
 }

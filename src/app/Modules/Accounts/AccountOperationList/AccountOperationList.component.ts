@@ -33,15 +33,15 @@ export class AccountOperationListComponent implements OnInit {
   async ngOnInit() {
     this.AccountTypes = (await this._tools.Network.getAsync<any>("AccountType") as Array<AccountType>);
     this.Accounts = (await this._tools.Network.getAsync<any>("Accounts") as Array<any>);
-    this.Columns.push(new Column('ID', 'رقم العملية', "lapel"))
-    this.Columns.push(new Column('ACCOUNT_NAME', 'اسم الحساب', "lapel"))
-    this.Columns.push(new Column('DATE_TIME', ' تاريخ الأرسال', "lapel", "date"))
+    this.Columns.push(new Column('ID', 'Operation Number', "lapel"))
+    this.Columns.push(new Column('ACCOUNT_NAME', 'Account Name', "lapel"))
+    this.Columns.push(new Column('DATE_TIME', 'Sending Date', "lapel", "date"))
     this.Columns[this.Columns.length - 1].Style_Show = (value) => {
       return this._tools.DateTime.EditFormateData(value);
     }
-    this.Columns.push(new Column('TYPE_NAME', 'نوع العملية', "lapel"))
-    this.Columns.push(new Column('VALUE', 'المبلغ', "lapel"))
-    this.Columns.push(new Column('NOTS', 'تفاصيل القيد', "lapel"))
+    this.Columns.push(new Column('TYPE_NAME', 'Operation Type', "lapel"))
+    this.Columns.push(new Column('VALUE', 'Amount', "lapel"))
+    this.Columns.push(new Column('NOTS', 'Entry Details', "lapel"))
   }
   AddNew() {
     this._router.navigate(['Main', 'AccountOperation'], { queryParams: { ID: `0` } })

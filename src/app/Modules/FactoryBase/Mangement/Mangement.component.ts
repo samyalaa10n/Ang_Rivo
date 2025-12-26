@@ -19,17 +19,17 @@ export class MangementComponent implements OnInit {
   async ngOnInit() {
     let fateherMangement = await this._tools.Network.getAsync("Mangement") as Array<any>;
     let Departs = await this._tools.Network.getAsync("Depart") as Array<any>;
-    this.Columns.push(new Column('ID', "الكود", "lapel", "text"))
-    this.Columns.push(new Column('POSATION', "الأسم", "text", "text", 400))
-    this.Columns.push(new Column('POSATION_FATHER_ID', "المدير", "comboBox", "comboBox", 200));
+    this.Columns.push(new Column('ID', "Code", "lapel", "text"))
+    this.Columns.push(new Column('POSATION', "Name", "text", "text", 400))
+    this.Columns.push(new Column('POSATION_FATHER_ID', "Manager", "comboBox", "comboBox", 200));
     this.Columns[this.Columns.length - 1].columnComboBoxOptionLabel = "POSATION";
     this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "ID";
-    this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "اختر المدير"
+    this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "Select Manager"
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = fateherMangement;
-    this.Columns.push(new Column('DEPART_ID', "القسم", "comboBox", "comboBox", 200));
+    this.Columns.push(new Column('DEPART_ID', "Department", "comboBox", "comboBox", 200));
     this.Columns[this.Columns.length - 1].columnComboBoxOptionLabel = "NAME";
     this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "ID";
-    this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "اختر القسم"
+    this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "Select Department"
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = Departs;
 
   }

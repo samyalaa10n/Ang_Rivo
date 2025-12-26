@@ -30,26 +30,26 @@ export class RequstesListComponent implements OnInit {
   async ngOnInit() {
     this.Customers = await this._tools.Network.getAsync<any>('Customer');
     this.Plases = await this._tools.Network.getAsync<any>('Place');
-    this.Columns.push(new Column('ID', 'رقم حجز', "lapel"))
-    this.Columns.push(new Column('PLACE_NAME', 'الفرع', "lapel"))
-    this.Columns.push(new Column('CUSTOMER_NAME', 'اسم الشركة', "lapel"))
-    this.Columns.push(new Column('CUSTOMER_BUY_NAME', 'اسم العميل', "lapel"))
-    this.Columns.push(new Column('PHONE', 'رقم التلفون', "lapel"))
-    this.Columns.push(new Column('SELLER', 'مسئول المبيعات', "lapel"))
-    this.Columns.push(new Column('SEND_DATE', ' تاريخ الأرسال', "lapel", "date"))
+    this.Columns.push(new Column('ID', 'Reservation Number', "lapel"))
+    this.Columns.push(new Column('PLACE_NAME', 'Branch', "lapel"))
+    this.Columns.push(new Column('CUSTOMER_NAME', 'Company Name', "lapel"))
+    this.Columns.push(new Column('CUSTOMER_BUY_NAME', 'Customer Name', "lapel"))
+    this.Columns.push(new Column('PHONE', 'Phone Number', "lapel"))
+    this.Columns.push(new Column('SELLER', 'Sales Representative', "lapel"))
+    this.Columns.push(new Column('SEND_DATE', 'Sending Date', "lapel", "date"))
     this.Columns[this.Columns.length - 1].Style_Show = (value) => {
       return this._tools.DateTime.EditFormateData(value);
     }
-    this.Columns.push(new Column('RESAVE_DATE', ' تاريخ التسليم', "lapel", "date"))
+    this.Columns.push(new Column('RESAVE_DATE', 'Delivery Date', "lapel", "date"))
     this.Columns[this.Columns.length - 1].Style_Show = (value) => {
       return this._tools.DateTime.EditFormateData(value);
     }
     
-    this.Columns.push(new Column('TOTAL', 'السعر ', "lapel", "numeric"))
-    this.Columns.push(new Column('DESCOUND_PERCENT', 'نسبة الخصم ', "lapel", "numeric"))
-    this.Columns.push(new Column('PRICE_AFTER_DESCOUND', 'السعر بعد الخصم ', "lapel", "numeric"))
-    this.Columns.push(new Column('DEPOST', 'العربون ', "lapel", "numeric"))
-    this.Columns.push(new Column('TOTAL_AFTER_DEPOST', ' السعر المتبقي', "lapel", "numeric"))
+    this.Columns.push(new Column('TOTAL', 'Price', "lapel", "numeric"))
+    this.Columns.push(new Column('DESCOUND_PERCENT', 'Discount %', "lapel", "numeric"))
+    this.Columns.push(new Column('PRICE_AFTER_DESCOUND', 'Price After Discount', "lapel", "numeric"))
+    this.Columns.push(new Column('DEPOST', 'Deposit', "lapel", "numeric"))
+    this.Columns.push(new Column('TOTAL_AFTER_DEPOST', 'Remaining Price', "lapel", "numeric"))
   }
   AddNew() {
     this._router.navigate(['Main', 'Requstes'], { queryParams: { ID: `0` } })

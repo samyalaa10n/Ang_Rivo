@@ -10,7 +10,7 @@ import { Router, RouterLink } from '@angular/router';
   selector: 'app-Login',
   templateUrl: './Login.component.html',
   styleUrls: ['./Login.component.css'],
-  imports: [FormsModule, InputTextModule, ButtonModule,RouterLink]
+  imports: [FormsModule, InputTextModule, ButtonModule, RouterLink]
 })
 export class LoginComponent implements OnInit {
   logInfo = { NAME: "", PASSWORD: "" }
@@ -21,9 +21,10 @@ export class LoginComponent implements OnInit {
     if (localStorage.getItem("logInfo") != null) {
       this._router.navigate(['Main'])
     }
-  
+
   }
   async login() {
+    debugger
     this._tools.Network.postAsync("Login", this.logInfo).then((response: any) => {
       if (response) {
         if (response.TOKEN != "" && response.TOKEN != null) {
@@ -34,4 +35,16 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  togglePassword() {
+    const passwordInput:any = document.getElementById('password');
+    const toggle:any = document.querySelector('.password-toggle');
+
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      toggle.textContent = '🙈';
+    } else {
+      passwordInput.type = 'password';
+      toggle.textContent = '👁️';
+    }
+  }
 }

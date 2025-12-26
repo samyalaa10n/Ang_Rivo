@@ -30,12 +30,12 @@ export class OperationComponent implements OnInit {
   constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _printService: PrintService, private _router: Router) { }
   async ngOnInit() {
     this.WareHouses = await this._tools.Network.getAsync<any>("WareHouse")
-    this.ColumnsInput.push(new Column('ITEM_ID', "رقم الصنف"))
-    this.ColumnsInput.push(new Column('NAME', "اسم الصنف"))
-    this.ColumnsInput.push(new Column('UNIT', "وحدة الصنف"))
-    this.ColumnsInput.push(new Column('COUNT', "الكمية", "numberWithFraction"))
-    this.ColumnsInput.push(new Column('COUNT_STOCK', "الرصيد"))
-    this.ColumnsInput.push(new Column('', "الرصيد الجديد في المخزن"))
+    this.ColumnsInput.push(new Column('ITEM_ID', "Item Number"))
+    this.ColumnsInput.push(new Column('NAME', "Item Name"))
+    this.ColumnsInput.push(new Column('UNIT', "Item Unit"))
+    this.ColumnsInput.push(new Column('COUNT', "Quantity", "numberWithFraction"))
+    this.ColumnsInput.push(new Column('COUNT_STOCK', "Balance"))
+    this.ColumnsInput.push(new Column('', "New Balance in Warehouse"))
     this.ColumnsInput[this.ColumnsInput.length - 1].DynamicShow = (item: RealItem) => {
       if (this.Operation.TYPE == 1) {
         return ((item?.COUNT_STOCK ?? 0) + item.COUNT).toString();
@@ -62,7 +62,7 @@ export class OperationComponent implements OnInit {
               this.ColumnsInput[this.ColumnsInput.length - 1].InShow = false;
             }
             else {
-              this._tools.Toaster.showError("تم حذف العملية")
+              this._tools.Toaster.showError("Operation has been deleted")
               this._router.navigate(['Main', 'OperationList']);
             }
           }

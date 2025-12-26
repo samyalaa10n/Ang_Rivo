@@ -1,5 +1,5 @@
 ::ng-deep .p-select-clear-icon {
-    left : 10px !important;
+    right : 10px !important;
     right: unset !important;
 }
 
@@ -17,7 +17,7 @@
 }
 
 ::ng-deep p-iconfield p-inputicon {
-    left: 8px !important;
+    right: 8px !important;
 }
 
 ::ng-deep p-selectitem li {

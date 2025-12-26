@@ -35,7 +35,7 @@ export class AccountOperationComponent implements OnInit {
               this.AccountOperation = response;
             }
             else{
-              this._tools.Toaster.showError("تم حذف القيد")
+              this._tools.Toaster.showError('The entry has been deleted')
               this._router.navigate(['Main', 'AccountOperationList']);
             }
           }

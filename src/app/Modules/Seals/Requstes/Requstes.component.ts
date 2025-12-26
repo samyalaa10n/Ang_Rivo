@@ -51,13 +51,13 @@ export class RequstesComponent implements OnInit {
     this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
       `${location.protocol}//${location.host}/#/Main/Customer?TYPE=sherd`
     );
-    this.ColumnsInput.push(new Column('ITEM_ID', "رقم الصنف"))
-    this.ColumnsInput.push(new Column('NAME', "اسم الصنف"))
-    this.ColumnsInput.push(new Column('UNIT', "وحدة الصنف"))
-    this.ColumnsInput.push(new Column('PRICE', "السعر في الحجز", "numberWithFraction", "numeric"))
-    this.ColumnsInput.push(new Column('COUNT', "الكمية", "numberWithFraction", "numeric"))
-    this.ColumnsInput.push(new Column('TOTAL_COUNT', "اجمالي السعر", "lapel", "numeric"))
-    this.ColumnsInput.push(new Column('COMMENTS', "ملاحظات علي الصنف", "text"))
+    this.ColumnsInput.push(new Column('ITEM_ID', "Item Number"))
+    this.ColumnsInput.push(new Column('NAME', "Item Name"))
+    this.ColumnsInput.push(new Column('UNIT', "Item Unit"))
+    this.ColumnsInput.push(new Column('PRICE', "Price in Reservation", "numberWithFraction", "numeric"))
+    this.ColumnsInput.push(new Column('COUNT', "Quantity", "numberWithFraction", "numeric"))
+    this.ColumnsInput.push(new Column('TOTAL_COUNT', "Total Price", "lapel", "numeric"))
+    this.ColumnsInput.push(new Column('COMMENTS', "Item Comments", "text"))
   }
   ngAfterViewInit() {
     this._tools.waitExecuteFunction(100, () => {
@@ -73,7 +73,7 @@ export class RequstesComponent implements OnInit {
 
             }
             else {
-              this._tools.Toaster.showError("تم حذف الطلبية")
+              this._tools.Toaster.showError("Reservation has been deleted")
               this._router.navigate(['Main', 'RequstesList']);
             }
           }
@@ -182,7 +182,7 @@ export class RequstesComponent implements OnInit {
     })
   }
   async AddInhert() {
-    this.somePricies = await this._tools.Confermation.show("هل تريد نسخ الأسعار ايضا مع الكميات", "استفسار")
+    this.somePricies = await this._tools.Confermation.show("Do you want to copy prices as well with quantities?", "Question")
     this.Request.ID = 0;
     this.Request.ROW_NUMBER = -1;
     this.Request.ITEMS.forEach(item => {

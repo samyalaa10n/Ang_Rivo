@@ -2,9 +2,9 @@
 {
   <div dir="rtl" class="combo">
     <p-iftalabel dir="rtl">
-      <p-select [id]="placeholder" [placeholder]="'أختر القيمة ...'"  [loading]="IsLoading" appendTo="body" (onShow)="onShow()"  [(ngModel)]="selected" (ngModelChange)="selectedItem($event)"
-        (onClear)="clear()" [showClear]="showClear" emptyMessage="لا يوجد بيانات" [filter]="optionLabel"
-         [optionLabel]="optionLabel" [options]="dataSource" emptyFilterMessage="لا يوجد">
+      <p-select [id]="placeholder" [placeholder]="'Choose the value ...'"  [loading]="IsLoading" appendTo="body" (onShow)="onShow()"  [(ngModel)]="selected" (ngModelChange)="selectedItem($event)"
+        (onClear)="clear()" [showClear]="showClear" emptyMessage="No data available" [filter]="optionLabel"
+         [optionLabel]="optionLabel" [options]="dataSource" emptyFilterMessage="Not found">
       </p-select>
       <label [for]="placeholder" class="pb-2 comboLabel">{{placeholder}}</label>
     </p-iftalabel>
@@ -12,9 +12,9 @@
 }
 @if(NormalStyle && !ShowMode)
 {
-  <p-select [id]="placeholder" [placeholder]="'أختر القيمة ...'"  [loading]="IsLoading" appendTo="body" (onShow)="onShow()"  [(ngModel)]="selected" (ngModelChange)="selectedItem($event)"
-  (onClear)="clear()" [showClear]="showClear" emptyMessage="لا يوجد بيانات" fi [filter]="optionLabel"
-   [optionLabel]="optionLabel" [options]="dataSource" emptyFilterMessage="لا يوجد">
+  <p-select [id]="placeholder" [placeholder]="'Choose the value ...'"  [loading]="IsLoading" appendTo="body" (onShow)="onShow()"  [(ngModel)]="selected" (ngModelChange)="selectedItem($event)"
+  (onClear)="clear()" [showClear]="showClear" emptyMessage="No data available" fi [filter]="optionLabel"
+   [optionLabel]="optionLabel" [options]="dataSource" emptyFilterMessage="Not found">
   </p-select>
 }
 @if(ShowMode)

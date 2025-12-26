@@ -187,10 +187,10 @@ export class RestaurantCashierComponent implements OnInit {
     this.Invoice.ID = 0;
     this.Invoice.PAYMENT_TYPE = this.paymentMethod.id;
     if (this.selectedTable == -2) {
-      this.Invoice.NOTS = "بيع من الفرع مباشر";
+      this.Invoice.NOTS = "Direct sale from branch";
     }
     else {
-      this.Invoice.NOTS = "مسجل من الكاشير طاولة رقم " + this.selectedTable + " بتاريخ " + new Date().toLocaleDateString();
+      this.Invoice.NOTS = "Registered from cashier table number " + this.selectedTable + " dated " + new Date().toLocaleDateString();
     }
     this.Invoice.ITEMS = this.cart.map(x => { return { COUNT: x.quantity, ITEM_ID: x.id, CATEGORY: "", PRICE: x.price, ROW_NUMBER: -1, UNIT: x.UNIT, TYPE: "", NAME: x.name, TOTAL_COUNT: x.price * x.quantity, MAIN_PRICE: x.price, COUNT_INVOICE: 0, COUNT_REQUEST: 0, COUNT_STOCK: 0, ID: -1 } })
     this.Invoice.PAYMENT = this.paidAmount;
@@ -219,7 +219,7 @@ export class RestaurantCashierComponent implements OnInit {
   }
   print(showPrice: boolean = true) {
     let Inv = this._myTools.cloneObject(this.Invoice) as InvoiceOrder;
-    Inv.CUSTOMER_NAME = "المطعم";
+    Inv.CUSTOMER_NAME = "Restaurant";
     Inv.PAYMENT_NAME = this.AccountTypes.find(x => x.id == Inv.PAYMENT_TYPE)?.name;
     Inv.ITEMS = Inv.ITEMS.filter(x => x.COUNT > 0);
     this._myTools.printService.printInvoice(Inv, false, showPrice)

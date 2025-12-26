@@ -39,7 +39,7 @@ export class NaveComponent implements OnInit {
         icon: 'pi pi-home',
         items: [
           {
-            label: 'User Type',
+            label: 'User Roles',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'RuleGroup']);
@@ -55,7 +55,7 @@ export class NaveComponent implements OnInit {
         ]
       },
       {
-        label: 'Basic System Data',
+        label: 'Master Data',
         icon: 'pi pi-home',
         items: [
           {
@@ -73,7 +73,7 @@ export class NaveComponent implements OnInit {
             },
           },
           {
-            label: 'Work Places',
+            label: 'Locations',
             icon: 'pi pi-database',
             shortcut: '⌘+S',
             command: (event) => {
@@ -81,7 +81,7 @@ export class NaveComponent implements OnInit {
             },
           },
           {
-            label: 'Administrative Structure',
+            label: 'Organization Structure',
             icon: 'pi pi-database',
             shortcut: '⌘+S',
             command: (event) => {
@@ -91,7 +91,7 @@ export class NaveComponent implements OnInit {
         ]
       },
       {
-        label: 'Warehouses',
+        label: 'Inventory',
         icon: 'pi pi-database',
         items: [
           {
@@ -116,14 +116,14 @@ export class NaveComponent implements OnInit {
             },
           },
           {
-            label: 'Units of Measurement',
+            label: 'Units',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'Units']);
             },
           },
           {
-            label: 'Warehouse Operations',
+            label: 'Stock Transactions',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'OperationList']);
@@ -136,35 +136,35 @@ export class NaveComponent implements OnInit {
         icon: 'pi pi-database',
         items: [
           {
-            label: 'Reservations',
+            label: 'Bookings',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'RequstesList'])
             },
           },
           {
-            label: 'Cashier',
+            label: 'POS',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'Cashier']);
             },
           },
           {
-            label: 'Seasons Data',
+            label: 'Seasons',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'Season']);
             },
           },
           {
-            label: 'Special Discount Rates',
+            label: 'Customer Discounts',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'SpecialDescound']);
             },
           },
           {
-            label: 'Special Prices',
+            label: 'Special Pricing',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'SpecialPrice']);
@@ -187,7 +187,7 @@ export class NaveComponent implements OnInit {
         ]
       },
       {
-        label: 'Accounts',
+        label: 'Accounting',
         icon: 'pi pi-database',
         items: [
           {
@@ -198,7 +198,7 @@ export class NaveComponent implements OnInit {
             },
           },
           {
-            label: 'Operation Types',
+            label: 'Transaction Types',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'AccountTypeOperations']);
@@ -231,7 +231,7 @@ export class NaveComponent implements OnInit {
     ]
 
     let accseptedPage = JSON.parse(localStorage.getItem("logInfo") ?? '{}').MYPAGESD as Array<any>
-    this.items = this.items.filter(x => accseptedPage.includes(x.label) || x.label == "تسجيل خروج")
+    this.items = this.items.filter(x => accseptedPage.includes(x.label) || x.label == "Logout")
   }
   closeNave() {
     this.showNave = false

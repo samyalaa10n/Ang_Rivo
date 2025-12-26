@@ -17,17 +17,17 @@ export class SpecialDescoundComponent implements OnInit {
   async ngOnInit() {
     let Customers = await this._tools.Network.getAsync("Customer") as Array<any>;
     let Seasons = await this._tools.Network.getAsync("Season") as Array<any>;
-    this.Columns.push(new Column('ID',"الكود","lapel"))
-    this.Columns.push(new Column('ID_CUSTOMER',"العميل","comboBox"))
+    this.Columns.push(new Column('ID',"Code","lapel"))
+    this.Columns.push(new Column('ID_CUSTOMER',"Customer","comboBox"))
     this.Columns[this.Columns.length - 1].columnComboBoxOptionLabel = "NAME";
     this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "ID";
-    this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "اختر العميل"
+    this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "Select Customer"
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = Customers;
-    this.Columns.push(new Column('DESCOUND',"نسبة الخصم","numberWithFraction"))
-    this.Columns.push(new Column('SESON',"الموسم","comboBox"))
+    this.Columns.push(new Column('DESCOUND',"Discount %","numberWithFraction"))
+    this.Columns.push(new Column('SESON',"Season","comboBox"))
     this.Columns[this.Columns.length - 1].columnComboBoxOptionLabel = "NAME";
     this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "ID";
-    this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "اختر الموسم"
+    this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "Select Season"
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = Seasons;
   }
 

@@ -15,9 +15,9 @@ export class SeasonComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.Columns.push(new Column("ID",'رقم الموسم'))
-    this.Columns.push(new Column("NAME",'اسم الموسم',"text"))
-    this.Columns.push(new Column("IS_ACTIVE",'الموسم الحالي',"yes-no"))
+    this.Columns.push(new Column("ID",'Season Number'))
+    this.Columns.push(new Column("NAME",'Season Name',"text"))
+    this.Columns.push(new Column("IS_ACTIVE",'Current Season',"yes-no"))
   }
 
 }

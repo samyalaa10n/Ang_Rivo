@@ -28,7 +28,7 @@ export class DateTimeComponent implements OnInit {
   @Input() showTimeOnly: boolean = false
   @Input() forceMaxOrEqualDay: boolean = false
   @Input() view: 'date' | 'month' | 'year' = "date"
-  @Input() placeholder: string = "أكتب التاريخ ..."
+  @Input() placeholder: string = "Enter date..."
   @Output() selectedDateChange: EventEmitter<any> = new EventEmitter()
   constructor(public _tools: Tools, private el: ElementRef<HTMLElement>) { }
 
@@ -81,7 +81,7 @@ export class DateTimeComponent implements OnInit {
         let data_now = new Date(new Date().toLocaleDateString("en") + " GMT")
         data_now.setDate(1);
         if (value < data_now) {
-          this._tools.Toaster.showError("يجب ادخال تاريخ اكبر من تاريخ الشهر او يساوي")
+          this._tools.Toaster.showError("Date must be greater than or equal to current month")
           this.selectedDate = null;
           return
         }
@@ -99,4 +99,3 @@ export class DateTimeComponent implements OnInit {
 
 
 }
-
