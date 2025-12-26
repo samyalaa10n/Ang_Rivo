@@ -20,36 +20,44 @@ import { NgIf } from '@angular/common';
 import { RequestOrder } from '../../../shared/Types/Request';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PrintService } from '../../../shared/service/Print.service';
-import e from 'express';
+import { Dialog } from "primeng/dialog";
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+
 
 
 @Component({
   selector: 'app-Requstes',
   templateUrl: './Requstes.component.html',
   styleUrls: ['./Requstes.component.css'],
-  imports: [DateTimeComponent, ComboBoxComponent, Button, InputNumber, FormsModule, InputFastItemsComponent, NgIf, RouterLink]
+  imports: [DateTimeComponent, ComboBoxComponent, Button, InputNumber, FormsModule, InputFastItemsComponent, NgIf, RouterLink, Dialog]
 })
 export class RequstesComponent implements OnInit {
   @ViewChild('InputFastItems') InputFastItems!: InputFastItemsComponent
   AccountTypes: Array<AccountType> = [];
   ColumnsInput: Array<Column> = []
   Customers: Array<any> = []
+  Places: Array<any> = []
   SpecialDescound: Array<any> = []
   SpecialItemPrice: Array<any> = []
   SesonActive: number = 0;
   somePricies: boolean = false;
-  Request: RequestOrder = { ID: 0, ROW_NUMBER: -1, CUSTOMER_NAME: '', CUSTOMER: 0, DEPOST: 0, DESCOUND_PERCENT: 0, SEND_DATE: new Date(), RESAVE_DATE: new Date(), ITEMS: [], PRICE_AFTER_DESCOUND: 0, NOTS: '', PAYMENT_TYPE: 0 }
-  constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _printService: PrintService, private _router: Router) { }
+  AddCompany: boolean = false;
+  safeUrl!: SafeResourceUrl;
+  Request: RequestOrder = { ID: 0, ROW_NUMBER: -1, CUSTOMER_NAME: '', CUSTOMER: 0, DEPOST: 0, DESCOUND_PERCENT: 0, SEND_DATE: new Date(), RESAVE_DATE: new Date(), ITEMS: [], PRICE_AFTER_DESCOUND: 0, NOTS: '', PAYMENT_TYPE: 0, CUSTOMER_BUY_NAME: '', SELLER: '', PHONE: '', PLACE: 0, ADDRESS: "" };
+  constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _printService: PrintService, private _router: Router, private sanitizer: DomSanitizer) { }
 
   async ngOnInit() {
     await this.UpdetLockep();
-    this.AccountTypes = this.AccountTypes.filter(x => x.IS_ADDED == true && x.IS_AGAL == false);
+    this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+      `${location.protocol}//${location.host}/#/Main/Customer?TYPE=sherd`
+    );
     this.ColumnsInput.push(new Column('ITEM_ID', "رقم الصنف"))
     this.ColumnsInput.push(new Column('NAME', "اسم الصنف"))
     this.ColumnsInput.push(new Column('UNIT', "وحدة الصنف"))
-    this.ColumnsInput.push(new Column('PRICE', "السعر في الطلبية", "numberWithFraction"))
-    this.ColumnsInput.push(new Column('COUNT', "الكمية", "numberWithFraction"))
-    this.ColumnsInput.push(new Column('TOTAL_COUNT', "اجمالي السعر"))
+    this.ColumnsInput.push(new Column('PRICE', "السعر في الحجز", "numberWithFraction", "numeric"))
+    this.ColumnsInput.push(new Column('COUNT', "الكمية", "numberWithFraction", "numeric"))
+    this.ColumnsInput.push(new Column('TOTAL_COUNT', "اجمالي السعر", "lapel", "numeric"))
+    this.ColumnsInput.push(new Column('COMMENTS', "ملاحظات علي الصنف", "text"))
   }
   ngAfterViewInit() {
     this._tools.waitExecuteFunction(100, () => {
@@ -79,8 +87,11 @@ export class RequstesComponent implements OnInit {
     })
   };
   async UpdetLockep() {
+    this.Places = await this._tools.Network.getAsync("Place") as Array<any>;
     this.Customers = await this._tools.Network.getAsync<any>("Customer")
     this.AccountTypes = (await this._tools.Network.getAsync<any>("AccountType") as Array<AccountType>);
+    this.AccountTypes = this.AccountTypes.filter(x => x.IS_ADDED == true || x.IS_ADDED_IN_BANK == true || x.IS_AGAL_ADD == true);
+
     this.SpecialDescound = await this._tools.Network.getAsync<any>("SpecialDescound")
     this.SpecialItemPrice = await this._tools.Network.getAsync<any>("SpecialItemPrice")
     this.SesonActive = (await this._tools.Network.getAsync<any>("Season/GetActiveSeson") as any)?.SESON ?? 0
@@ -109,10 +120,10 @@ export class RequstesComponent implements OnInit {
     if (this.Request.ROW_NUMBER < 0) {
       this.Request.DESCOUND_PERCENT = desc?.DESCOUND ?? 0;
     }
-    if(this.InputFastItems && this.InputFastItems.ITEMS_INPUT)
-    this.InputFastItems.ITEMS_INPUT.forEach(item => {
-      this.calculate(item, true)
-    })
+    if (this.InputFastItems && this.InputFastItems.ITEMS_INPUT)
+      this.InputFastItems.ITEMS_INPUT.forEach(item => {
+        this.calculate(item, true)
+      })
   }
   Total(): number {
     return this.InputFastItems?.ITEMS_INPUT?.map(x => x.TOTAL_COUNT)?.reduce((a, b) => a + b, 0);
@@ -143,13 +154,14 @@ export class RequstesComponent implements OnInit {
       }
     })
   }
-  async print() {
+  async print(InAnotherPage: boolean = true) {
     let Req = this._tools.cloneObject(this.Request) as RequestOrder;
     Req.CUSTOMER_NAME = this.Customers.find(x => x.ID == Req.CUSTOMER)?.NAME;
+    Req.PLACE_NAME = this.Places.find(x => x.ID == Req.PLACE)?.NAME;
     Req.PAYMENT_NAME = this.AccountTypes.find(x => x.ID == Req.PAYMENT_TYPE)?.NAME;
     Req.ITEMS = this.InputFastItems.ITEMS_INPUT;
     Req.ITEMS = Req.ITEMS.filter(x => x.COUNT > 0);
-    await this._printService.printRequest(Req, { Total: this.Total(), TotalAfterDepost: this.TotalAfterDepost(), TotalAfterDescound: this.TotalAfterDescound() }, true)
+    await this._printService.printRequest(Req, { Total: this.Total(), TotalAfterDepost: this.TotalAfterDepost(), TotalAfterDescound: this.TotalAfterDescound() }, InAnotherPage)
 
   }
   AddNew() {
@@ -180,5 +192,14 @@ export class RequstesComponent implements OnInit {
     this.InputFastItems.ITEMS_INPUT = this.Request.ITEMS;
     this.InputFastItems.ItemsRecorded = [];
     this.InputFastItems.reSelect();
+  }
+  async PrintCleck() {
+    this._tools.waitExecuteFunction(500, async () => {
+      await this.print();
+      this._tools.waitExecuteFunction(500, () => {
+        this._router.navigate(['Main', 'Requstes'], { queryParams: { ID: `${this.Request.ID}` } });
+        window.location.reload();
+      })
+    })
   }
 }

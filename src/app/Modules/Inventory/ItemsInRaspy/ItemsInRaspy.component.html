@@ -1,0 +1,13 @@
+<div class="container-fluid" dir="rtl">
+  <div class="row">
+    <p-button [raised]="true" (onClick)="Back()" routerLinkActive="router-link-active" severity="info"
+      label="رجوع للمكونات" icon="pi pi-arrow-right" class=" btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
+    <div class="col-12 p-2">
+      <div class="border border-1 rounded-2">
+        <app-get-add-edit-delete *ngIf="Columns.length>0" #CurdOperation [Columns]="Columns" (onUpdate)="update()"
+          (onConfigGrid)="onConfigGrid($event)" [GetApiPage]="GetItemsForRaspy()" ApiPage="ResapyItems" header="الوصفات">
+        </app-get-add-edit-delete>
+      </div>
+    </div>
+  </div>
+</div>

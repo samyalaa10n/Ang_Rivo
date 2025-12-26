@@ -191,6 +191,7 @@
                         [placeholder]="column.columnComboBoxPlaceholder"
                         [optionLabel]="column.columnComboBoxOptionLabel"
                         [DefaultClearValue]="column.DefaultClearValue"
+                        [refreshSource]="{func:column?.columnComboBoxRefreshSource?.func,item:item}"
                         (selectedChange)="column.columnComboBoxChange($event,item,comboBox);onGridAction({EVENT:$event,itemEdit:item,ActonType:'SELECT',COLUMN:column})"
                         [(SelectedValue)]="item[column.name]"></app-comboBox>
                     }

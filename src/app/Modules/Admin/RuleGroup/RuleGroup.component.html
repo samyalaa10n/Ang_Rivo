@@ -1,12 +1,3 @@
-<app-get-add-edit-delete #CardOperation *ngIf="Columns.length>0" [Columns]="Columns" ApiPage="RuleGroup" header="حسابات مستخدمين النظام" ></app-get-add-edit-delete>
-<ng-template  [appCustomColumn]="columnsChildGrid[1]" let-item let-Grid="Grid">
-    <div class="d-flex justify-content-center">
-        <p-button class="mx-2"  (onClick)="showDialogAddSitting=true;select(item)" label="اعدادات الصلاحيات" ></p-button>
-        <p-button  (onClick)="delete(item)" label="حذف" ></p-button>
-    </div>
-</ng-template>
-<p-dialog [(visible)]="showDialogAddSitting" [maximizable]="true" [modal]="true"  header="الصلاحيات" [style]="{'width':'70%','height':'70%'}">
-    <div class="header" dir="rtl">
-        <app-comboBox [dataSource]="Promotions" [(SelectedValue)]="PromotionSelected.PERMITION_ID" optionValue="ID" optionLabel="LAPEL"></app-comboBox>
-    </div>
-</p-dialog>
+<app-get-add-edit-delete #CardOperation *ngIf="Columns.length>0" [Columns]="Columns" ApiPage="RuleGroup" header="مجموعات التحكم في النظام" ></app-get-add-edit-delete>
+
+

@@ -1,11 +1,11 @@
-<app-dataGrid [paginator]="false" (onGridLoaded)="onGridLoaded($event)"  (RenderItemSource)="RenderItemSource($event)"  (GridAction)="GridAction($event)" [(dataSource)]="ITEMS_INPUT" [StopAllButtons]="true"  >
+<app-dataGrid [paginator]="false" scrollHeight="600px" (onGridLoaded)="onGridLoaded($event)" [AllowSearch]="false"  (RenderItemSource)="RenderItemSource($event)"  (GridAction)="GridAction($event)" [(dataSource)]="ITEMS_INPUT" [StopAllButtons]="true"  >
   <div header>
     <h4 class="my-2" >{{Header}}</h4>
     <div class="row my-2" *ngIf="!ShowMode">
       <div class="col-12 my-2">
         <app-multiselect class="mx-2" [(dataSelected)]="CategorySelected" (dataSelectedChange)="SelectCategory()"  placeholder="التصنيف" optionLabel="NAME" optionValue="ID" [dataSource]="Category" ></app-multiselect>        
       </div>
-      <div class="col-12 col-lg-3 my-2 d-flex justify-content-center align-items-center " >
+      <div class="col-12 col-lg-6 my-2 d-flex justify-content-center align-items-center " >
         <p-autocomplete class="d-flex justify-content-center align-items-center my-3" (onKeyUp)="Enter($event,2)" #StepInput1 class="d-block w-100" [forceSelection]="true" placeholder="اسم الصنف" [suggestions]="filteredData" emptyMessage="لا يوجد"
         (onSelect)="Selected($event)" (completeMethod)="filterEmploy($event)" optionLabel="NAME" />
       </div>
@@ -21,8 +21,8 @@
       </div>
       <div class="col-12 my-2 row">
         <p-button #StepInput4 [raised]="true" (onClick)="SetItem()" label="اضافة" class="font-bold mx-1 my-2 col-12 col-lg-2" icon="pi pi-plus" />
-        <p-button  [raised]="true" (onClick)="Claer()" severity="danger" label="تفريغ البيانات" class="font-bold mx-1 my-2 col-12 col-lg-2" />
-        <p-button  [raised]="true" (onClick)="Back()"  label="الغاء التفريغ" class="font-bold mx-1 my-2 col-12 col-lg-2"  />
+        <p-button [raised]="true" (onClick)="Claer()" severity="danger" label="تفريغ البيانات" class="font-bold mx-1 my-2 col-12 col-lg-2" />
+        <p-button hidden  [raised]="true" (onClick)="Back()"  label="الغاء التفريغ" class="font-bold mx-1 my-2 col-12 col-lg-2"  />
       </div>
     </div>
   </div>

@@ -1,0 +1,19 @@
+<div class="container-fluid" dir="rtl">
+    <div class="row" *ngIf="this.ItemInfo">
+        <label>الصنف</label>
+        <p-button [raised]="true" [routerLink]="['/Main/Items']" routerLinkActive="router-link-active" severity="info"
+            label="رجوع الأصناف" icon="pi pi-arrow-right" class=" btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
+        <div class="col-12 p-2">
+            <div class="border border-1 rounded-2">
+                <app-get-add-edit-delete *ngIf="Columns.length>0" #CurdOperation [Columns]="Columns" (onUpdate)="update()"
+                    (onConfigGrid)="onConfigGrid($event)" [GetApiPage]="GetRaspyForItems()" ApiPage="Resapy"
+                    [header]="'وصفات تصنيع صنف '+this.ItemInfo.NAME">
+                    <ng-template [appCustomColumn]="CurdOperation.grid" let-item>
+                        <p-button class="mx-2 " (onClick)="openItemRaspy(item)" size="small" variant="text" [raised]="true"
+                            label="مكونات الوصفة"></p-button>
+                    </ng-template>
+                </app-get-add-edit-delete>
+            </div>
+        </div>
+    </div>
+</div>

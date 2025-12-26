@@ -1,14 +1,14 @@
 <div class="row my-2">
   <div class="col-12 col-lg-4 p-1">
-    <app-comboBox placeholder="اختر حساب المطعم" [dataSource]="Customers" optionValue="ID" optionLabel="NAME"
+    <app-comboBox CashId="Acount_cash" placeholder="اختر حساب المطعم" [dataSource]="Customers" optionValue="ID" optionLabel="NAME"
       [(SelectedValue)]="Invoice.CUSTOMER" class="form-control"></app-comboBox>
   </div>
   <div class="col-12 col-lg-4 p-1">
-    <app-comboBox placeholder="اختر المكان" optionValue="ID" optionLabel="NAME" apiPathDataSource="Place"
+    <app-comboBox  CashId="PLACE_REQUEST" placeholder="اختر المكان" [dataSource]="Places" optionValue="ID" optionLabel="NAME" apiPathDataSource="Place"
       (selectedChange)="getTabels($event)"></app-comboBox>
   </div>
   <div class="col-12 col-lg-4 p-1">
-    <app-comboBox placeholder="اختر المخزن" [dataSource]="WareHouses" optionValue="ID" optionLabel="NAME"
+    <app-comboBox CashId="werhouse_cash" placeholder="اختر المخزن" [dataSource]="WareHouses" optionValue="ID" optionLabel="NAME"
       apiPathDataSource="WareHouse" [(SelectedValue)]="Invoice.WAREHOUSE" class="form-control"></app-comboBox>
   </div>
 </div>

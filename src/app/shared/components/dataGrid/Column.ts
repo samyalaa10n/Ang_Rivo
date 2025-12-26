@@ -22,7 +22,7 @@ export class Column {
     columnComboBoxChange(selectNewItem: any, rowItem: any, comboBox: ComboBoxComponent) {
 
     }
-
+    columnComboBoxRefreshSource: { func: any } = { func: null };
     columnMultiOptionLabel: string = ''
     columnMultiPlaceholder: string = ''
     columnMultiSelectpropertyBind: string = ''

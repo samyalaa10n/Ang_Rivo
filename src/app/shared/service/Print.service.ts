@@ -999,87 +999,305 @@ export class PrintService {
         return htmlRes
     }
     async printRequest(_Request: RequestOrder, Totals: { Total: number, TotalAfterDescound: number, TotalAfterDepost: number }, InSumPage: boolean = false): Promise<void> {
-        const html = `
-    <div style="max-width: 800px; margin: 0 auto; font-family: 'Arial', sans-serif; font-size: 14px; color: #000;">
-  
-  <!-- رأس الصفحة -->
-  <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
-    <div>
-      <!-- اسم الشركة ورقم التليفون يكتب يدويًا أو يُملأ ديناميكيًا -->
-      <p style="margin: 4px 0;"><strong>اسم الشركة:</strong>FOCUS CAFA</p>
+        const html = `<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>فاتورة حجز</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 11px;
+      line-height: 1.3;
+      color: #000;
+      background: #fff;
+    }
+    
+    .invoice {
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 8mm;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #000;
+    }
+    
+    .company-name {
+      font-size: 16px;
+      font-weight: bold;
+    }
+    
+    .invoice-title {
+      background: #000;
+      color: #fff;
+      padding: 6px 12px;
+      margin: 8px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .invoice-title h1 {
+      font-size: 14px;
+      font-weight: bold;
+    }
+    
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    
+    .info-box {
+      border: 1px solid #000;
+      padding: 6px 8px;
+    }
+    
+    .info-box h3 {
+      font-size: 11px;
+      font-weight: bold;
+      margin-bottom: 4px;
+      background: #000;
+      color: #fff;
+      padding: 2px 6px;
+      margin: -6px -8px 4px;
+    }
+    
+    .info-row {
+      display: flex;
+      font-size: 10px;
+      margin: 2px 0;
+    }
+    
+    .info-label {
+      font-weight: bold;
+      min-width: 70px;
+    }
+    
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0;
+      font-size: 10px;
+    }
+    
+    .items-table thead {
+      background: #000;
+      color: #fff;
+    }
+    
+    .items-table th,
+    .items-table td {
+      border: 1px solid #000;
+      padding: 4px 6px;
+      text-align: center;
+    }
+    
+    .items-table th {
+      font-weight: bold;
+      font-size: 10px;
+    }
+    
+    .items-table td:first-child {
+      text-align: right;
+    }
+    
+    .summary {
+      margin-top: 8px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    
+    .summary-box {
+      border: 2px solid #000;
+      padding: 6px 10px;
+      min-width: 280px;
+    }
+    
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 0;
+      font-size: 11px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .summary-row:last-child {
+      border-bottom: none;
+      font-weight: bold;
+      font-size: 12px;
+      margin-top: 3px;
+      padding-top: 5px;
+      border-top: 2px solid #000;
+    }
+    
+    .summary-label {
+      font-weight: bold;
+    }
+    
+    @media print {
+      .invoice {
+        padding: 0;
+      }
+      
+      body {
+        font-size: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="invoice">
+    <!-- Header -->
+    <div class="header">
+      <div>
+        <div class="company-name">FOCUS CAFA</div>
+      </div>
+      <div style="font-size: 10px; text-align: left;">
+        <div><strong>التاريخ:</strong> 25/12/2024</div>
+        <div><strong>تاريخ التسليم:</strong> 28/12/2024 14:30</div>
+      </div>
     </div>
-    <div>
-      <img src="favicon.ico" alt="Logo" >
+    
+    <!-- Invoice Title -->
+    <div class="invoice-title">
+      <h1>حجز رقم: #12345</h1>
+      <span>الفرع: القاهرة</span>
     </div>
-  </header>
-
-  <!-- عنوان الطلبية -->
-  <div style="text-align: center; margin-bottom: 20px;">
-    <h2 style="margin: 0; font-size: 22px;">طلبية رقم: ${_Request.ID}</h2>
-    <p style="margin: 5px 0;">التاريخ: ${this._Tools.DateTime.convertDataToMoment(_Request.SEND_DATE).format('DD/MM/yyyy')}</p>
-  </div>
-
-  <!-- بيانات العميل -->
-  <section style="margin-bottom: 15px;">
-    <h3 style="margin-bottom: 8px; border-bottom: 1px solid #ccc; padding-bottom: 4px;">بيانات العميل</h3>
-    <p style="margin: 4px 0;"><strong>الاسم:</strong> ${_Request.CUSTOMER_NAME}</p>
-    <p style="margin: 4px 0;"><strong>العربون:</strong> ${_Request.DEPOST}</p>
-    <p style="margin: 4px 0;"><strong>طريقة الدفع:</strong> ${_Request?.PAYMENT_NAME ?? ''}</p>
-  </section>
-
-  <!-- جدول الأصناف -->
-  <section>
-    <h3 style="margin-bottom: 8px; border-bottom: 1px solid #ccc; padding-bottom: 4px;">تفاصيل الطلبية</h3>
-    <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+    
+    <!-- Customer & Payment Info -->
+    <div class="info-grid">
+      <div class="info-box">
+        <h3>بيانات العميل</h3>
+        <div class="info-row">
+          <span class="info-label">الشركة:</span>
+          <span>شركة النور للتجارة</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">الاسم:</span>
+          <span>أحمد محمد علي</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">التليفون:</span>
+          <span>01012345678</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">العنوان:</span>
+          <span>15 شارع النصر، مدينة نصر، القاهرة</span>
+        </div>
+      </div>
+      
+      <div class="info-box">
+        <h3>معلومات الدفع</h3>
+        <div class="info-row">
+          <span class="info-label">طريقة الدفع:</span>
+          <span>نقدي</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">العربون:</span>
+          <span>500 جنيه</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">نسبة الخصم:</span>
+          <span>10%</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Items Table -->
+    <table class="items-table">
       <thead>
-        <tr style="background-color: #eee;">
-          <th style="border: 1px solid #ccc; padding: 8px;">الصنف</th>
-          <th style="border: 1px solid #ccc; padding: 8px;">الوحدة</th>
-          <th style="border: 1px solid #ccc; padding: 8px;">الكمية</th>
-          <th style="border: 1px solid #ccc; padding: 8px;">السعر</th>
-          <th style="border: 1px solid #ccc; padding: 8px;">المجموع</th>
+        <tr>
+          <th>الصنف</th>
+          <th style="width: 60px;">الوحدة</th>
+          <th style="width: 50px;">الكمية</th>
+          <th style="width: 60px;">السعر</th>
+          <th style="width: 70px;">المجموع</th>
+          <th style="width: 120px;">ملاحظات</th>
         </tr>
       </thead>
       <tbody>
-        ${_Request.ITEMS.map((item: RealItem, index) => `
-          <tr>
-            <td style="border: 1px solid #ccc; padding: 6px;"><span>${index + 1}</span> - ${item.NAME}</td>
-            <td style="border: 1px solid #ccc; padding: 6px; text-align: center;">${item.UNIT}</td>
-            <td style="border: 1px solid #ccc; padding: 6px; text-align: center;">${item.COUNT}</td>
-            <td style="border: 1px solid #ccc; padding: 6px; text-align: center;">${item.PRICE}</td>
-            <td style="border: 1px solid #ccc; padding: 6px; text-align: center;">${item.TOTAL_COUNT}</td>
-          </tr>
-        `).join('')}
+        <tr>
+          <td>1 - كيك شوكولاتة 2 كيلو</td>
+          <td>قطعة</td>
+          <td>1</td>
+          <td>350</td>
+          <td>350</td>
+          <td>بدون سكر</td>
+        </tr>
+        <tr>
+          <td>2 - تارت فواكه صغير</td>
+          <td>قطعة</td>
+          <td>3</td>
+          <td>50</td>
+          <td>150</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>3 - كب كيك فانيليا</td>
+          <td>علبة</td>
+          <td>2</td>
+          <td>100</td>
+          <td>200</td>
+          <td>12 قطعة/علبة</td>
+        </tr>
+        <tr>
+          <td>4 - بيتي فور مشكل</td>
+          <td>كيلو</td>
+          <td>2</td>
+          <td>200</td>
+          <td>400</td>
+          <td>-</td>
+        </tr>
       </tbody>
     </table>
-  </section>
-
-  <!-- ملخص الحساب -->
-  <section style="margin-top: 20px;">
-    <h3 style="margin-bottom: 8px; border-bottom: 1px solid #ccc; padding-bottom: 4px;">الملخص المالي</h3>
-    <p style="margin: 4px 0;"><strong>الإجمالي:</strong> ${Totals.Total}</p>
-    <p style="margin: 4px 0;"><strong>الإجمالي بعد الخصم:</strong> ${Totals.TotalAfterDescound}</p>
-    <p style="margin: 4px 0;"><strong>نسبة الخصم:</strong> ${_Request.DESCOUND_PERCENT} %</p>
-    <p style="margin: 4px 0;"><strong>العربون:</strong> ${_Request.DEPOST}</p>
-    <p style="margin: 4px 0;"><strong>المتبقي:</strong> ${Totals.TotalAfterDepost}</p>
-  </section>
-
-  <!-- الختم / التوقيع -->
-  <footer style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 50px; border-top: 1px solid #ccc; padding-top: 10px;">
-    <div style="text-align: left;">
-      <p><strong>الختم / التوقيع:</strong></p>
-      <div style="width: 160px; height: 60px; border: 1px dashed #999;"></div>
+    
+    <!-- Summary -->
+    <div class="summary">
+      <div class="summary-box">
+        <div class="summary-row">
+          <span class="summary-label">الإجمالي:</span>
+          <span>1,100 جنيه</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">الخصم (10%):</span>
+          <span>-110 جنيه</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">الإجمالي بعد الخصم:</span>
+          <span>990 جنيه</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">العربون المدفوع:</span>
+          <span>-500 جنيه</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">المتبقي:</span>
+          <span>490 جنيه</span>
+        </div>
+      </div>
     </div>
-    <div style="text-align: right;">
-      <p style="font-size: 12px; color: #666;">شكراً لتعاملكم معنا</p>
-    </div>
-  </footer>
-</div>
-
+  </div>
+</body>
+</html>
     `;
 
         await this.printHTML(html, InSumPage, {
-            title: `طلبية رقم ${_Request.ID}`,
+            title: `حجز رقم ${_Request.ID}`,
             orientation: 'portrait',
             paperSize: 'A4'
         });

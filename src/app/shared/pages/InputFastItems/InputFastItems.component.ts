@@ -37,7 +37,7 @@ export class InputFastItemsComponent implements OnInit {
   ItemsRecorded: Array<RealItem> = [];
   @Input() ITEMS_INPUT: Array<RealItem> = [];
   @Input() showPrice: boolean = true;
-  @Input() Header: string = 'أصناف الطلبية';
+  @Input() Header: string = 'الأصناف ';
   @Input() ShowMode: boolean = false;
   constructor(private _tools: Tools) { }
   async ngOnInit() {
@@ -47,6 +47,8 @@ export class InputFastItemsComponent implements OnInit {
   async GetOldData() {
     this.Category = await this._tools.Network.getAsync("Category") as Array<any>;
     this.ITEMS = await this._tools.Network.getAsync("Items") as Array<any>;
+    this.suggestionsData = this.ITEMS.map(x => { return { NAME: ` ${x.ID} - ${x.NAME} - ${this.Category.find(e=>e.ID==x.CATEGORY)?.NAME??''}`, ID: x.ID, CAT: x.CATEGORY } });
+
     if (this.ITEMS_INPUT.length > 0) {
       let ItemsSelect = this.ITEMS.filter(item => this.ITEMS_INPUT.map(real_item => real_item.ITEM_ID).includes(item.ID))
       this.CategorySelected = this.Category.filter(cat => ItemsSelect.map(z => z.CATEGORY).includes(cat.ID));
@@ -72,16 +74,13 @@ export class InputFastItemsComponent implements OnInit {
     }
     grid.Pest = async () => {
       var data = JSON.parse(await navigator.clipboard.readText()) as Array<RealItem>;
-
       let D_Price = false;
       let rs = await this._tools.DecisionMaker.Show("هل تريد لصق السعر مع الكمية", ["نعم", 'لا'])
-      if(rs==null)
-      {
+      if (rs == null) {
         return;
       }
-      if(this.showPrice && rs=="نعم")
-      {
-        D_Price=true;
+      if (this.showPrice && rs == "نعم") {
+        D_Price = true;
       }
       if (Array.isArray(data) && data.length > 0) {
         let cats = data.map(z => this.ITEMS.find(x => x.ID == z.ITEM_ID)?.CATEGORY);
@@ -91,11 +90,12 @@ export class InputFastItemsComponent implements OnInit {
           this.ITEMS_INPUT.forEach(item => {
             let SELECTED = data.find(x => x.ITEM_ID == item.ITEM_ID);
             if (SELECTED) {
-              if(D_Price)
-              {
+              if (D_Price) {
                 item.PRICE = SELECTED.PRICE
               }
               item.COUNT = SELECTED.COUNT
+              item.COMMENTS = SELECTED.COMMENTS
+              console.log(SELECTED)
               this.GridAction({ itemEdit: item });
             }
           })
@@ -107,19 +107,17 @@ export class InputFastItemsComponent implements OnInit {
   }
   reSelect() {
     this.ITEMS_INPUT.forEach(item => { this.oldData.push(this._tools.cloneObject(item)) });
-    this.ITEMS_INPUT = this.ITEMS.filter(z => this.CategorySelected.map(X => X.ID).includes(z.CATEGORY)).map(m_Item => { return { ID: this.ITEMS_INPUT.find(x => x.ITEM_ID == m_Item.ID)?.ID ?? -1, ITEM_ID: m_Item.ID, NAME: m_Item.NAME, UNIT: m_Item.UNIT, TYPE: m_Item.TYPE, MAIN_PRICE: m_Item.PRICE_SEAL, PRICE: this.getLastElemnt(m_Item.ID)?.PRICE ?? m_Item.PRICE_SEAL, COUNT: this.getLastElemnt(m_Item.ID)?.COUNT ?? 0, TOTAL_COUNT: 0, ROW_NUMBER: this.ITEMS_INPUT.find(x => x.ITEM_ID == m_Item.ID) != null ? 1 : -1, CATEGORY: this.Category.find(z => z.ID == m_Item.CATEGORY)?.NAME ?? '' } });
-    this.suggestionsData = this.ITEMS_INPUT.map(x => { return { NAME: ` ${x.ITEM_ID} - ${x.NAME}`, ID: x.ITEM_ID } });
+    this.ITEMS_INPUT = this.ITEMS.filter(z => this.CategorySelected.map(X => X.ID).includes(z.CATEGORY)).map(m_Item => { return { ID: this.ITEMS_INPUT.find(x => x.ITEM_ID == m_Item.ID)?.ID ?? -1, ITEM_ID: m_Item.ID, NAME: m_Item.NAME, UNIT: m_Item.UNIT, TYPE: m_Item.TYPE, MAIN_PRICE: m_Item.PRICE_SEAL, PRICE: this.getLastElemnt(m_Item.ID)?.PRICE ?? m_Item.PRICE_SEAL, COUNT: this.getLastElemnt(m_Item.ID)?.COUNT ?? 0, TOTAL_COUNT: 0, ROW_NUMBER: this.ITEMS_INPUT.find(x => x.ITEM_ID == m_Item.ID) != null ? 1 : -1, CATEGORY: this.Category.find(z => z.ID == m_Item.CATEGORY)?.NAME ?? '', COMMENTS: this.getLastElemnt(m_Item.ID)?.COMMENTS ?? '' } });
   }
   getLastElemnt(ITEM_ID: number): RealItem | null {
     return this.oldData.filter(x => x.ITEM_ID == ITEM_ID)[this.oldData.filter(x => x.ITEM_ID == ITEM_ID).length - 1]
   }
-  OnSelectedItems()
-  {
-    
+  OnSelectedItems() {
+
   }
   SelectCategory() {
     this.reSelect()
-    this._tools.waitExecuteFunction(100,()=>{
+    this._tools.waitExecuteFunction(100, () => {
       this.OnSelectedItems();
     })
   }
@@ -135,9 +133,21 @@ export class InputFastItemsComponent implements OnInit {
     }
   }
   async Selected(e: { value: RealItem }) {
-    let selected = this.ITEMS_INPUT.find(x => x.ITEM_ID == e.value.ID);
+    let selected = this.ITEMS.find(x => x.ID == e.value.ID);
     if (selected) {
-      this.SelectedItem = this._tools.cloneObject(selected);
+      let NCselected = this.Category.find(cat => cat.ID == selected.CATEGORY);
+      let oldSelected = this._tools.cloneObject(this.CategorySelected)
+      if (NCselected) {
+        if (this.CategorySelected.find(x => x.ID == NCselected?.ID) == null) {
+          oldSelected.push(NCselected)
+        }
+      }
+      this.CategorySelected=oldSelected
+      this.SelectCategory();
+      let selectedOnList = this.ITEMS_INPUT.find(x => x.ITEM_ID == e.value.ID);
+      if (selectedOnList) {
+        this.SelectedItem = this._tools.cloneObject(selectedOnList);
+      }
       this.next(2)
     }
   }
@@ -150,6 +160,7 @@ export class InputFastItemsComponent implements OnInit {
     if (selected) {
       selected.COUNT = this.SelectedItem.COUNT;
       selected.PRICE = this.SelectedItem.PRICE;
+      selected.COMMENTS = this.SelectedItem.COMMENTS;
       this.GridAction({ itemEdit: selected });
       this._tools.Toaster.showInfo("تم التسجيل")
       this.next(1)
@@ -216,7 +227,6 @@ export class InputFastItemsComponent implements OnInit {
       }
     })
     DataOutPut = distincit;
-    console.log(DataOutPut)
     return DataOutPut;
   }
 

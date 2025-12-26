@@ -20,6 +20,7 @@ export class Tools {
   _LinkComponent:BehaviorSubject<any>=new BehaviorSubject(null);
   Authentication: any = null
   tempData: any = null
+  transfareSherdData:any={};
   Loading!: LoadingComponent
   Toaster!: ToasterComponent
   Confermation!: ConfermationComponent

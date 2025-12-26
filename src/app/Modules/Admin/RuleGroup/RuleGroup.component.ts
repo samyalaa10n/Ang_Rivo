@@ -15,7 +15,7 @@ import { ComboBoxComponent } from "../../../shared/components/comboBox/comboBox.
   selector: 'app-RuleGroup',
   templateUrl: './RuleGroup.component.html',
   styleUrls: ['./RuleGroup.component.css'],
-  imports: [GetAddEditDeleteComponent, NgIf, DialogModule, ButtonModule, CustomColumnDirective, ComboBoxComponent]
+  imports: [GetAddEditDeleteComponent, NgIf, DialogModule, ButtonModule]
 })
 export class RuleGroupComponent implements OnInit {
   Columns: Array<Column> = [];
@@ -27,7 +27,8 @@ export class RuleGroupComponent implements OnInit {
   constructor(private _tools: Tools) { }
 
   async ngOnInit() {
-   // this.Promotions = await this._tools.getAsync("RuleGroup/GetPromotions") as Array<any>;
+    debugger
+    this.Promotions = await this._tools.Network.getAsync("RuleGroup/GetPromotions") as Array<any>;
     this.Columns.push(new Column('ID', "الكود", "lapel", "text"))
     this.Columns.push(new Column('NAME', "اسم المجموعة", "text", "text"))
     this.Columns.push(new Column('IS_ACTIVE', "مفعل ام لا","yes-no", "yes-no"))
@@ -42,23 +43,33 @@ export class RuleGroupComponent implements OnInit {
 
     this._tools.waitExecuteFunction(100, () => {
       this.CardOperation.grid.Columns = this.Columns
-      this.CardOperation.grid.IsHasChild = true;
+      this.CardOperation.grid.AllowCurdOperation=false;
+      this.CardOperation.grid.AllowAdd=false;
+      this.CardOperation.grid.AllowEdit=false;
+      this.CardOperation.grid.canSelectRow=false;
+      this.CardOperation.grid.AllowSearch=false;
+      this.CardOperation.grid.AllowDelete=false;
+      this.CardOperation.grid.AllowDeleteSelected=false;
+      this.CardOperation.grid.AllowSearch=false;
+      this.CardOperation.grid.AllowSave=false;
+      this.CardOperation.grid.AllowExportExcel=false;
+      //this.CardOperation.grid.IsHasChild = true;
       // this.CardOperation.grid.onSaveChanges = (e: any) => this.SaveData(e, this.CardOperation.grid)
-      this.CardOperation.grid.onLoadedChildDataGrid = async (parent, child, row) => {
-        child.AddNew=async ()=>{
-          this.showDialogAddSitting=true;
-        }
-        child.Columns = this.columnsChildGrid;
-        child.AllowDelete = false;
-        child.AllowEdit = false;
-        child.AllowSave = false;
-        child.AllowAdd = true;
-        child.AllowUpdate = false;
-        child.AllowDeleteSelected = false;
-        child.canSelectRow = false;
-        child.canSelectedSomeColumns = false;
-        child.dataSource=row.PREMOTION_RULEGROUPDTO
-      }
+      // this.CardOperation.grid.onLoadedChildDataGrid = async (parent, child, row) => {
+      //   child.AddNew=async ()=>{
+      //     this.showDialogAddSitting=true;
+      //   }
+      //   child.Columns = this.columnsChildGrid;
+      //   child.AllowDelete = false;
+      //   child.AllowEdit = false;
+      //   child.AllowSave = false;
+      //   child.AllowAdd = true;
+      //   child.AllowUpdate = false;
+      //   child.AllowDeleteSelected = false;
+      //   child.canSelectRow = false;
+      //   child.canSelectedSomeColumns = false;
+      //   child.dataSource=row.PREMOTION_RULEGROUPDTO
+      // }
     })
   }
   select(item:any)

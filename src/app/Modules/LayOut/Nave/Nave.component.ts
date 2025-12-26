@@ -6,19 +6,20 @@ import { MenuItem } from 'primeng/api';
 import { Tools } from '../../../shared/service/Tools.service';
 import { DrawerModule } from 'primeng/drawer';
 import { PanelMenuModule } from 'primeng/panelmenu';
+import { NgIf } from '@angular/common';
 @Component({
   selector: 'app-Nave',
   templateUrl: './Nave.component.html',
   styleUrls: ['./Nave.component.css'],
   standalone: true,
-  imports: [DrawerModule, ButtonModule, MenuModule, PanelMenuModule],
-  providers:[PanelMenuModule,DrawerModule]
+  imports: [DrawerModule, ButtonModule, MenuModule, PanelMenuModule, NgIf],
+  providers: [PanelMenuModule, DrawerModule]
 })
 export class NaveComponent implements OnInit {
   showNave: boolean = false;
   showSmallNave: boolean = false;
   items: MenuItem[] | undefined;
-  constructor(private _tools: Tools, private _router: Router, private el: ElementRef<HTMLElement>) { }
+  constructor(public _tools: Tools, private _router: Router, private el: ElementRef<HTMLElement>) { }
 
   ngOnInit() {
     this._tools._LinkComponent.subscribe({
@@ -31,20 +32,21 @@ export class NaveComponent implements OnInit {
         }
       }
     })
+
     this.items = [
       {
-        label: 'التحكم في النظام',
+        label: 'System Control',
         icon: 'pi pi-home',
         items: [
           {
-            label: 'نوع المستخدم',
+            label: 'User Type',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'RuleGroup']);
             },
           },
           {
-            label: 'المستخدمين',
+            label: 'Users',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'Users']);
@@ -53,25 +55,25 @@ export class NaveComponent implements OnInit {
         ]
       },
       {
-        label: 'بيانات النظام الأساسية',
+        label: 'Basic System Data',
         icon: 'pi pi-home',
         items: [
           {
-            label: 'الشركات',
+            label: 'Companies',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'Companies']);
             },
           },
           {
-            label: 'الاقسام',
+            label: 'Departments',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'Departs']);
             },
           },
           {
-            label: 'اماكن اعمل',
+            label: 'Work Places',
             icon: 'pi pi-database',
             shortcut: '⌘+S',
             command: (event) => {
@@ -79,7 +81,7 @@ export class NaveComponent implements OnInit {
             },
           },
           {
-            label: 'الهيكل الأداري',
+            label: 'Administrative Structure',
             icon: 'pi pi-database',
             shortcut: '⌘+S',
             command: (event) => {
@@ -89,229 +91,121 @@ export class NaveComponent implements OnInit {
         ]
       },
       {
-        label: "الموارد البشرية",
-        icon: "pi pi-user",
-        items: [
-          {
-            label: 'الموظفين',
-            icon: 'pi pi-database',
-            command: (event) => {
-              this._router.navigate(['Main', 'Employs']);
-            },
-          },
-          {
-            label: 'المؤثرات الشهرية',
-            items: [
-              {
-                label: 'تعريف مؤثرات للنظام',
-                icon: 'pi pi-database',
-                command: (event) => {
-                  this._router.navigate(['Main', 'EffectInSystem']);
-                },
-              },
-              {
-                label: 'تعريف حقول ادخال للنظام',
-                icon: 'pi pi-database',
-                command: (event) => {
-                  this._router.navigate(['Main', 'ColumnEffect']);
-                },
-              },
-              {
-                label: 'مؤثرات الموظفين',
-                icon: 'pi pi-database',
-                command: (event) => {
-                  this._router.navigate(['Main', 'Effects']);
-                },
-              }
-            ]
-          },
-          {
-            label: 'الحضور و الأنصراف',
-            command: (event) => {
-            },
-            items: [
-              {
-                label: 'أجهزة الحضور و الانصراف',
-                icon: 'pi pi-database',
-                command: (event) => {
-                  this._router.navigate(['Main', 'AttendanceAndDepartureDevices']);
-                },
-              },
-              {
-                label: 'سجل الحضور و الانصراف',
-                icon: 'pi pi-database',
-                command: (event) => {
-                  this._router.navigate(['Main', 'AttendanceRecord']);
-                },
-              },
-              {
-                label: 'ورديات العمل',
-                icon: 'pi pi-database',
-                command: (event) => {
-                  this._router.navigate(['Main', 'shifts']);
-                },
-              },
-              // {
-              //   label: 'مواعيد خاصة',
-              //   icon: 'pi pi-database',
-              //   command: (event) => {
-              //     this._router.navigate(['Main', 'SomeEmployRule']);
-              //   },
-              // },
-              {
-                label: 'الأجازات',
-                icon: 'pi pi-database',
-                command: (event) => {
-                  this._router.navigate(['Main', 'Holiday']);
-                },
-              },
-              {
-                label: 'النواقص',
-                icon: 'pi pi-database',
-                command: (event) => {
-                  this._router.navigate(['Main', 'ForgatInOut']);
-                },
-              },
-              {
-                label: 'حساب ساعات العمل',
-                icon: 'pi pi-database',
-                command: (event) => {
-                  this._router.navigate(['Main', 'AttendanceCalculator']);
-                },
-              }
-            ]
-          },
-          {
-            label: 'البدلات',
-            icon: 'pi pi-database',
-            command: (event) => {
-              this._router.navigate(['Main', 'ALLOWANCES']);
-            },
-          },
-          {
-            label: 'الرواتب الشهرية',
-            icon: 'pi pi-database',
-            command: (event) => {
-              this._router.navigate(['Main', 'Companies']);
-            },
-          },
-
-        ]
-      }
-      ,
-      {
-        label: 'المخازن',
+        label: 'Warehouses',
         icon: 'pi pi-database',
         items: [
           {
-            label: 'المخازن',
+            label: 'Warehouses',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'WareHouses']);
             },
           },
           {
-            label: 'التصنيفات',
+            label: 'Categories',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'Category']);
             },
-          }
-          ,
+          },
           {
-            label: 'الأصناف',
+            label: 'Items',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'Items']);
             },
-          }
-          ,
+          },
           {
-            label: 'العمليات المخزنية',
+            label: 'Units of Measurement',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'Units']);
+            },
+          },
+          {
+            label: 'Warehouse Operations',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'OperationList']);
             },
           }
         ]
-      }
-      ,
+      },
       {
-        label: 'المبيعات',
+        label: 'Sales',
         icon: 'pi pi-database',
         items: [
-           {
-            label: 'الكاشير',
+          {
+            label: 'Reservations',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'RequstesList'])
+            },
+          },
+          {
+            label: 'Cashier',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'Cashier']);
             },
           },
           {
-            label: 'بيانات المواسم',
+            label: 'Seasons Data',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'Season']);
             },
           },
           {
-            label: 'نسب خصم لعملاء مميزين',
+            label: 'Special Discount Rates',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'SpecialDescound']);
             },
           },
           {
-            label: 'اسعار خاصة لعملاء مميزين',
+            label: 'Special Prices',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'SpecialPrice']);
             },
           },
           {
-            label: 'العملاء',
+            label: 'Customers',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'Customer']);
             },
           },
           {
-            label: 'الفواتير',
+            label: 'Invoices',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'InvoiceList']);
             },
           }
-          ,
-          {
-            label: 'الطلبيات',
-            icon: 'pi pi-database',
-            command: (event) => {
-              this._router.navigate(['Main', 'RequstesList'])
-            },
-          }
         ]
       },
       {
-        label: 'الحسابات',
+        label: 'Accounts',
         icon: 'pi pi-database',
         items: [
           {
-            label: 'قائمة الحسابات',
+            label: 'Chart of Accounts',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'Accounts']);
             },
           },
           {
-            label: 'انواع العمليات',
+            label: 'Operation Types',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'AccountTypeOperations']);
             },
           },
           {
-            label: 'قيود محاسبية',
+            label: 'Journal Entries',
             icon: 'pi pi-database',
             command: (event) => {
               this._router.navigate(['Main', 'AccountOperationList']);
@@ -320,17 +214,14 @@ export class NaveComponent implements OnInit {
         ]
       },
       {
-
-        label: 'التقارير',
+        label: 'Reports',
         icon: 'pi pi-database',
         command: (event) => {
           this._router.navigate(['Main', 'Report']);
         },
-      }
-      ,
+      },
       {
-
-        label: 'تسجيل خروج',
+        label: 'Logout',
         icon: 'pi pi-power-off',
         command: (event) => {
           localStorage.removeItem("logInfo")
@@ -339,6 +230,8 @@ export class NaveComponent implements OnInit {
       }
     ]
 
+    let accseptedPage = JSON.parse(localStorage.getItem("logInfo") ?? '{}').MYPAGESD as Array<any>
+    this.items = this.items.filter(x => accseptedPage.includes(x.label) || x.label == "تسجيل خروج")
   }
   closeNave() {
     this.showNave = false

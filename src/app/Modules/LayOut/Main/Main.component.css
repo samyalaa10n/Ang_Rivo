@@ -3,13 +3,6 @@
     padding-top   : 10px;
 }
 
-::ng-deep body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background : unset;
-    min-height : unset;
-    overflow-x : unset;
-    position   : unset;
-}
 
 * {
     margin    : 0;
@@ -19,7 +12,7 @@
 
 ::ng-deep body {
     font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background : linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #333333 100%);
+    background : linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #333333 100%) !important;
     color      : #ffffff;
 }
 

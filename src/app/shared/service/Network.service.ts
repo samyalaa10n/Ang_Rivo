@@ -75,7 +75,9 @@ export class Network {
           response = response.DATA;
         }
         else {
+          this.Loading.stopLoading();
           this.Toaster.showError(response.MESSAGE)
+          return [] as any;
         }
       }
       return response

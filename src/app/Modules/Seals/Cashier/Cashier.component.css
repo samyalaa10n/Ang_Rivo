@@ -5,7 +5,7 @@
 }
 
 ::ng-deep body {
-    background-color: white !important;
+     background: white !important;
 }
 ::ng-deep .combo .p-iftalabel{
     padding-top: 0px !important;

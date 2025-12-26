@@ -1,3 +1,7 @@
+::ng-deep body {
+  background: white !important;
+  color      : black !important;
+}
 [appResizableColumn] {
     position: relative;
 }
@@ -67,7 +71,7 @@
 }
 
 .fixed-column {
-    position        : static;
+    position        : sticky;
     left            : 0px;
     background-color: #f1f5f9 !important;
     z-index         : 20;

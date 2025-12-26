@@ -18,6 +18,7 @@ import { Column } from '../../../shared/components/dataGrid/Column';
 })
 export class RequstesListComponent implements OnInit {
   Customers: Array<any> = []
+  Plases: Array<any> = []
   Columns: Array<Column> = []
   Request: { CUSTOMER: number, START: Date, END: Date } = { CUSTOMER: 0, START: new Date(), END: new Date() }
   RequestLest: Array<RequestOrder> = [];
@@ -28,8 +29,13 @@ export class RequstesListComponent implements OnInit {
 
   async ngOnInit() {
     this.Customers = await this._tools.Network.getAsync<any>('Customer');
-    this.Columns.push(new Column('ID', 'رقم الطلبية', "lapel"))
-    this.Columns.push(new Column('CUSTOMER_NAME', 'اسم العميل', "lapel"))
+    this.Plases = await this._tools.Network.getAsync<any>('Place');
+    this.Columns.push(new Column('ID', 'رقم حجز', "lapel"))
+    this.Columns.push(new Column('PLACE_NAME', 'الفرع', "lapel"))
+    this.Columns.push(new Column('CUSTOMER_NAME', 'اسم الشركة', "lapel"))
+    this.Columns.push(new Column('CUSTOMER_BUY_NAME', 'اسم العميل', "lapel"))
+    this.Columns.push(new Column('PHONE', 'رقم التلفون', "lapel"))
+    this.Columns.push(new Column('SELLER', 'مسئول المبيعات', "lapel"))
     this.Columns.push(new Column('SEND_DATE', ' تاريخ الأرسال', "lapel", "date"))
     this.Columns[this.Columns.length - 1].Style_Show = (value) => {
       return this._tools.DateTime.EditFormateData(value);
@@ -38,6 +44,7 @@ export class RequstesListComponent implements OnInit {
     this.Columns[this.Columns.length - 1].Style_Show = (value) => {
       return this._tools.DateTime.EditFormateData(value);
     }
+    
     this.Columns.push(new Column('TOTAL', 'السعر ', "lapel", "numeric"))
     this.Columns.push(new Column('DESCOUND_PERCENT', 'نسبة الخصم ', "lapel", "numeric"))
     this.Columns.push(new Column('PRICE_AFTER_DESCOUND', 'السعر بعد الخصم ', "lapel", "numeric"))
@@ -58,6 +65,7 @@ export class RequstesListComponent implements OnInit {
     e.item.SEND_DATE=this._tools.DateTime.getDataFromJson(e.item.SEND_DATE as any)
     e.item.RESAVE_DATE=this._tools.DateTime.getDataFromJson(e.item.RESAVE_DATE as any)
     e.item.CUSTOMER_NAME = this.Customers.find(Z=>Z.ID==e.item.CUSTOMER)?.NAME??'';
+    e.item.PLACE_NAME = this.Plases.find(Z=>Z.ID==e.item.PLACE)?.NAME??'';
     e.item.TOTAL = e.item.ITEMS.reduce((num, item) => { return num += (item.COUNT * item.PRICE) }, 0);
     e.item.PRICE_AFTER_DESCOUND = e.item.TOTAL - (e.item.TOTAL * (e.item.DESCOUND_PERCENT / 100));
     e.item.TOTAL_AFTER_DEPOST=e.item.PRICE_AFTER_DESCOUND-e.item.DEPOST;

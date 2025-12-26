@@ -191,12 +191,11 @@ export class DataGridComponent implements OnInit {
         this.startDataSource = this._tools.cloneObject(data);
       }
     })
-
   }
   onRenderItemSource(item: any, index: number) {
 
   }
-  isPine: boolean = false;
+  isPine: boolean = true;
   pinColumn() {
     if (this.isPine) {
       let AllTd = Array.from(document.querySelectorAll('.fixed-column')) as Array<HTMLElement>

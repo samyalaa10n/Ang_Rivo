@@ -4,17 +4,21 @@ import { Column } from '../../../shared/components/dataGrid/Column';
 import { Tools } from '../../../shared/service/Tools.service';
 import { NgIf } from '@angular/common';
 import { GetAddEditDeleteComponent } from "../../../shared/pages/get-add-edit-delete/get-add-edit-delete.component";
+import { Button } from "primeng/button";
+import { CustomColumnDirective } from '../../../shared/components/dataGrid/CustomColumn.directive';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-Items',
   templateUrl: './Items.component.html',
   styleUrls: ['./Items.component.css'],
-  imports: [NgIf, GetAddEditDeleteComponent]
+  imports: [NgIf, GetAddEditDeleteComponent, Button, CustomColumnDirective]
 })
 export class ItemsComponent implements OnInit {
   Category: Array<any> = [];
   Columns: Array<Column> = [];
-  constructor(private _tools: Tools) { }
+  constructor(private _tools: Tools, private _router: Router) { }
   async ngOnInit() {
     this.Category = await this._tools.Network.getAsync("Category") as Array<any>;
     this.Columns.push(new Column("ID", "رقم الصنف"))
@@ -24,7 +28,7 @@ export class ItemsComponent implements OnInit {
     this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "ID";
     this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "اختر التصنيف"
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = this.Category;
-    this.Columns.push(new Column("UNIT", "الوحدة", "text"))
+    this.Columns.push(new Column("UNIT", "وحدة البيع", "text"))
     this.Columns.push(new Column("TYPE", "نوع الصنف", "comboBox"))
     this.Columns[this.Columns.length - 1].columnComboBoxOptionLabel = "NAME";
     this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "NAME";
@@ -41,7 +45,7 @@ export class ItemsComponent implements OnInit {
     this.Columns[2].columnComboBoxDataSource = this.Category
   }
   onConfigGrid(config: DataGridComponent) {
-    config.AllowCopyPest=true
+    config.AllowCopyPest = true
     config.importExcel = (e) => {
       this._tools.Excel.ExcelFileChange(e, (Data) => {
         if (Array.isArray(Data)) {
@@ -56,10 +60,39 @@ export class ItemsComponent implements OnInit {
       })
     }
     config.Pest = async () => {
-    this._tools.Toaster.showInfo("لا يمكن الصق في هذه القائمة")
+      var data = await navigator.clipboard.readText();
+      console.log(data);
+      if (data && typeof data == "string") {
+        let rows = data.split('\r');
+        let clondata = this._tools.cloneObject(config.dataSource);
+        for (let i = 0; i < rows.length; i++) {
+          let cells = rows[i].replace('\n', '').trim().split('\t');
+          if (cells[1]?.trim() != '' && cells[1]?.trim() != null) {
+            let Nitem = {
+              ID: -1,
+              NAME: cells[1].trim() ?? '',
+              CATEGORY: this.Category.find(x => x.NAME == cells[0]?.trim())?.ID ?? 0,
+              UNIT: cells[2].trim() ?? '',
+              TYPE: "منتج تام",
+              PRICE_GET: 0,
+              PRICE_SEAL: Number.parseFloat(cells[3] != '' && cells[3] != null ? cells[3].trim() : '0') ? parseFloat(cells[3]) : 0,
+              TEX: 0,
+              NOTS: "",
+              ROW_NUMBER: -1
+            }
+            clondata.push(Nitem);
+          }
+        }
+        config.dataSource = clondata;
+      }
     }
     config.AllowImportExcel = true;
     config.IsHasChild = true;
+    config.onRenderItemSource = (item) => {
+      if (item.PRICE_SEAL == 0 && item.TYPE != "منتج تام") {
+        item.PRICE_SEAL = item.PRICE_GET
+      }
+    }
     config.onLoadedChildDataGrid = (pernt, child, row) => {
       child.StopAllButtons = true;
       child.paginator = false;
@@ -86,5 +119,8 @@ export class ItemsComponent implements OnInit {
         return Item1.ID > Item2.ID ? 1 : -1;
       })
     }
+  }
+  openRaspy(item: any) {
+    this._router.navigate(['Main', 'Raspy'], { queryParams: { ID: item.ID } })
   }
 }

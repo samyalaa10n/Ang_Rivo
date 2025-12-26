@@ -56,6 +56,7 @@ export class RestaurantCashierComponent implements OnInit {
   AccountTypes: AccountType[] = [];
   selectedTable: number = 0;
   Customers: Array<any> = []
+  Places: Array<any> = []
   selectedCategory = 1;
   showPaymentModal = false;
   paymentMethod!: AccountType;
@@ -68,6 +69,7 @@ export class RestaurantCashierComponent implements OnInit {
     await this.getPayAway();
     this.WareHouses = await this._myTools.Network.getAsync<any>("WareHouse")
     this.Customers = await this._myTools.Network.getAsync<any>("Customer")
+    this.Places = await this._myTools.Network.getAsync<any>("Place")
     this.SpecialDescound = await this._myTools.Network.getAsync<any>("SpecialDescound")
     this.SpecialItemPrice = await this._myTools.Network.getAsync<any>("SpecialItemPrice")
     this.SesonActive = (await this._myTools.Network.getAsync<any>("Season/GetActiveSeson") as any)?.SESON ?? 0
@@ -77,14 +79,18 @@ export class RestaurantCashierComponent implements OnInit {
     this.Invoice.TOTAL_AFTER_PAYMENT = this.TotalAfterPayment()
   }
 
-
   selectTable(table: ResTable): void {
     this.selectedTable = table.id;
     this.cart = table.itemsCared || [];
   }
-
   selectCategory(category: number): void {
     this.selectedCategory = category;
+    if (document) {
+      let el = document.querySelector('.menu-grid') as HTMLElement
+      if (el && el.firstChild) {
+        (el.firstChild as HTMLElement).scrollIntoView({ behavior: "smooth" })
+      }
+    }
   }
 
   getItemsByCategory(): MenuItem[] {
@@ -225,45 +231,7 @@ export class RestaurantCashierComponent implements OnInit {
     }
   }
 
-  cashData() {
-    // Get all enumerable properties of the component
-    const componentData: any = {};
 
-    for (const key in this) {
-      if (this.hasOwnProperty(key)) {
-        const value = this[key];
-
-        // Skip functions and Angular internal properties
-        if (typeof value !== 'function' && !key.startsWith('_')) {
-          try {
-            // Test if the property is serializable
-            JSON.stringify(value);
-            componentData[key] = value;
-          } catch (e) {
-            // Skip properties that can't be serialized
-            console.warn(`Cannot serialize property: ${key}`);
-          }
-        }
-      }
-    }
-
-    localStorage.setItem("cashier_seal_data", JSON.stringify(componentData));
-  }
-  loadCashData() {
-    const savedData = localStorage.getItem("cashier_seal_data");
-    if (savedData) {
-      try {
-        const parsedData = JSON.parse(savedData);
-
-        // Restore all properties
-        Object.keys(parsedData).forEach(key => {
-          (this as any)[key] = parsedData[key];
-        });
-      } catch (e) {
-        console.error('Error loading cached data:', e);
-      }
-    }
-  }
   // API Calls
   public async getCategories(): Promise<Category[]> {
     const response = await this._myTools.Network.getAsync("Category") as Array<any>;

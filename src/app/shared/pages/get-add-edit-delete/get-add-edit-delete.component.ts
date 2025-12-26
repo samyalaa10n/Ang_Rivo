@@ -17,6 +17,7 @@ import { Table } from 'primeng/table';
 })
 export class GetAddEditDeleteComponent implements OnInit {
   @ViewChild('grid') grid!: DataGridComponent
+  table: Table | null = null;
   @Input() ApiPage: string = ""
   @Input() GetApiPage: string = ""
   @Input() header: string = ""
@@ -30,9 +31,9 @@ export class GetAddEditDeleteComponent implements OnInit {
   ngOnInit() {
   }
   ngOnChanges() {
-    this.ApiPage=this.ApiPage
-    this.GetApiPage=this.GetApiPage
-    this.FilterInEdit=this.FilterInEdit
+    this.ApiPage = this.ApiPage
+    this.GetApiPage = this.GetApiPage
+    this.FilterInEdit = this.FilterInEdit
   }
   ngAfterViewInit() {
     this._tools.waitExecuteFunction(100, () => {
@@ -46,14 +47,16 @@ export class GetAddEditDeleteComponent implements OnInit {
       }
       this.onConfigGrid.emit(this.grid);
       this.grid.onSaveChanges = (data: any) => this.saveChanges(data);
-      this.grid.onUpdate = (e) => this.Update(e);
       this.grid.dataKey = "ID";
       this.grid.IsLoading = true;
-      this._tools.Network.getAsync(this.GetApiPage==""?this.ApiPage:this.GetApiPage).then((data: any) => {
+      this._tools.Network.getAsync(this.GetApiPage == "" ? this.ApiPage : this.GetApiPage).then((data: any) => {
         this.grid.IsLoading = false;
         this.grid.dataSource = data
       })
-      this.grid.onUpdate=(t)=>this.Update(t);
+      this.grid.onUpdate = async (t) => {
+        this.table = t
+        await this.Update();
+      }
     })
   }
   deleteItem(item: any) {
@@ -61,11 +64,16 @@ export class GetAddEditDeleteComponent implements OnInit {
     this.grid.dt.reset();
   }
   async saveChanges(dataSaved: any = null) {
-    let data: any = await this._tools.Network.putAsync(this.ApiPage + '/EditMore', dataSaved,this.FilterInEdit)
+    let data: any = await this._tools.Network.putAsync(this.ApiPage + '/EditMore', dataSaved, this.FilterInEdit)
     if (data) {
       if (Array.isArray(data)) {
         this._tools.Toaster.showSuccess("تم التحديث بنجاح");
-        this.grid.dataSource = data
+        if (this.GetApiPage == "" || this.GetApiPage == null) {
+          this.grid.dataSource = data
+        }
+        else {
+          data = await this.Update();
+        }
         this.onUpdate.emit(data)
       }
       else {
@@ -78,9 +86,9 @@ export class GetAddEditDeleteComponent implements OnInit {
     }
     return data
   }
-  async Update(table: Table) {
-    table.loading = true;
-    let data: any = await this._tools.Network.getAsync(this.GetApiPage==""?this.ApiPage:this.GetApiPage)
+  async Update() {
+    if (this.table) this.table.loading = true;
+    let data: any = await this._tools.Network.getAsync(this.GetApiPage == "" ? this.ApiPage : this.GetApiPage)
     if (data) {
       this.grid.dataSource = data
       this.onUpdate.emit(data)
@@ -89,8 +97,10 @@ export class GetAddEditDeleteComponent implements OnInit {
       this.grid.dataSource = []
       this.onUpdate.emit([])
     }
-    table.reset()
-    table.loading = false;
+    if (this.table) {
+      this.table.reset()
+      this.table.loading = false;
+    }
     return data
   }
 }

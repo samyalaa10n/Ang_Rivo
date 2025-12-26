@@ -1,3 +1,1 @@
-<p>
-  UnitsControl works!
-</p>
+<app-get-add-edit-delete *ngIf="Columns.length>0" (onUpdate)="update()" [Columns]="Columns" ApiPage="Units" header="التصنيفات" ></app-get-add-edit-delete>
