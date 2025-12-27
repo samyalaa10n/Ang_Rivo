@@ -28,8 +28,8 @@ export class RuleGroupComponent implements OnInit {
 
   async ngOnInit() {
     this.Promotions = await this._tools.Network.getAsync("RuleGroup/GetPromotions") as Array<any>;
-    this.Columns.push(new Column('ID', "Code", "lapel", "text"))
-    this.Columns.push(new Column('NAME', "Group Name", "text", "text"))
+    this.Columns.push(new Column('ID', "Code", "lapel"))
+    this.Columns.push(new Column('NAME', "Group Name"))
     this.Columns.push(new Column('IS_ACTIVE', "Active","yes-no", "yes-no"))
     this.columnsChildGrid.push(new Column("NAME_PERMITION", "Permission Name"))
     this.columnsChildGrid.push(new Column("VALUES", "Properties", "custom"))

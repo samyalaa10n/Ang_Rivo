@@ -234,11 +234,11 @@ export class DataGridComponent implements OnInit {
   }
   Copy() {
     navigator.clipboard.writeText(JSON.stringify(this.dataSource));
-    this._tools.Toaster.showInfo("تم النسخ")
+    this._tools.Toaster.showInfo("Data copied to clipboard")
   }
   CopyItem(e: any) {
     navigator.clipboard.writeText(JSON.stringify(e));
-    this._tools.Toaster.showInfo("تم النسخ")
+    this._tools.Toaster.showInfo("Data copied to clipboard")
   }
   async Pest() {
     var data = JSON.parse(await navigator.clipboard.readText());
@@ -249,7 +249,7 @@ export class DataGridComponent implements OnInit {
         this.dataSource.push(item)
       })
       this.dataSource = this.dataSource
-      this._tools.Toaster.showInfo("تم اللصق")
+      this._tools.Toaster.showInfo("Data pasted successfully")
     }
   }
   async PestItem(e: any) {
@@ -259,7 +259,7 @@ export class DataGridComponent implements OnInit {
     if (!Array.isArray(item)) {
       item.ID = OldItem.ID
       this.dataSource[this.dataSource.indexOf(e)] = { ...item };
-      this._tools.Toaster.showInfo("تم اللصق")
+      this._tools.Toaster.showInfo("Data pasted successfully")
     }
   }
   async onPrint(table: Table) {
@@ -335,7 +335,7 @@ export class DataGridComponent implements OnInit {
 
   // }
   DeleteSelectedData() {
-    this._tools.Confermation.show("هل انت متأكد من الحذف").then(result => {
+    this._tools.Confermation.show("Are you sure you want to delete?").then(result => {
       if (result) {
         this.dataSource = this.dataSource.filter(x => this.selectedItems.includes(x) == false);
         this.dt.reset();
@@ -376,7 +376,7 @@ export class DataGridComponent implements OnInit {
 
   }
   onDeleteItem(item: any) {
-    this._tools.Confermation.show("هل انت متأكد من الحذف").then(result => {
+    this._tools.Confermation.show("Are you sure you want to delete?").then(result => {
       if (result) {
         this.dataSource.splice(this.dataSource.indexOf(item), 1)
         this.dt.reset();

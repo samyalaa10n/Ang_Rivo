@@ -11,219 +11,224 @@ export const routes: Routes = [
   { path: '', redirectTo: 'Home', pathMatch: 'full' },
   {
     path: 'Login',
-    title: 'تسجيل الدخول',
+    title: 'Login',
     component: LoginComponent
   },
   {
     path: 'Home',
-    title: 'الترحيب',
+    title: 'Welcome',
     component: HomeComponent
   },
   {
     path: 'Main',
-    title: 'الرئيسية',
+    title: 'Dashboard',
     canActivateChild: [authGuard],
     component: MainComponent,
     children: [
-
+      {
+        path: 'RequestPrint',
+        data: { REQ: '' },
+        title: 'Print Reservations',
+        loadComponent: () => import('./shared/pages/RequestPrintComponent/RequestPrintComponent.component').then(m => m.RequestPrintComponentComponent)
+      },
       {
         path: 'EffectInSystem',
-        title: 'مؤثرات النظام',
+        title: 'System Effects',
         loadComponent: () => import('./Modules/HR/EffectInSystem/EffectInSystem.component').then(m => m.EffectInSystemComponent)
       },
       {
         path: 'ColumnEffect',
-        title: 'بنود المؤثر',
+        title: 'Effect Items',
         loadComponent: () => import('./Modules/HR/ColumnEffect/ColumnEffect.component').then(m => m.ColumnEffectComponent)
       },
       {
         path: 'Employs',
-        title: 'قائمة الموظفين',
+        title: 'Employees List',
         loadComponent: () => import('./Modules/HR/EmployesRecordies/EmploysRecodes.component').then(m => m.EmploysRecodesComponent)
       },
       {
         path: 'Employs/Control',
-        title: 'بيانات الموظف',
+        title: 'Employee Data',
         loadComponent: () => import('./Modules/HR/Employes/Employes.component').then(m => m.EmployesComponent)
       },
       {
         path: 'Companies',
-        title: 'الشركات',
+        title: 'Companies',
         loadComponent: () => import('./Modules/FactoryBase/Company/Company.component').then(m => m.CompanyComponent)
       },
       {
         path: 'Departs',
-        title: 'الأقسام',
+        title: 'Departments',
         loadComponent: () => import('./Modules/FactoryBase/Depart/Depart.component').then(m => m.DepartComponent)
       },
       {
         path: 'Places',
-        title: 'أماكن العمل',
+        title: 'Work Places',
         loadComponent: () => import('./Modules/FactoryBase/Place/Place.component').then(m => m.PlaceComponent)
       },
       {
         path: 'Mangements',
-        title: 'الهيكل الإداري',
+        title: 'Organizational Structure',
         loadComponent: () => import('./Modules/FactoryBase/Mangement/Mangement.component').then(m => m.MangementComponent)
       },
       {
         path: 'Holiday',
-        title: 'تسجيل الإجازات',
+        title: 'Holidays Registration',
         loadComponent: () => import('./Modules/HR/holidayRecords/holidayRecords.component').then(m => m.HolidayRecodesComponent)
       },
       {
         path: 'ForgatInOut',
-        title: 'نواقص الحضور والانصراف',
+        title: 'Attendance Deficiencies',
         loadComponent: () => import('./Modules/HR/ForgatInOut/ForgatInOut.component').then(m => m.ForgatInOutComponent)
       },
       {
         path: 'Effects',
-        title: 'المؤثرات',
+        title: 'Effects',
         loadComponent: () => import('./Modules/HR/EffectRecodes/EffectRecodes.component').then(m => m.EffectRecodesComponent)
       },
       {
         path: 'Effects/Add',
-        title: 'إضافة مؤثر',
+        title: 'Add Effect',
         loadComponent: () => import('./Modules/HR/Effect/Effect.component').then(m => m.EffectComponent)
       },
       {
         path: 'Users',
-        title: 'المستخدمين',
+        title: 'Users',
         loadComponent: () => import('./Modules/Admin/User/User.component').then(m => m.UserComponent)
       },
       {
         path: 'RuleGroup',
-        title: 'نوع المستخدم',
+        title: 'User Type',
         loadComponent: () => import('./Modules/Admin/RuleGroup/RuleGroup.component').then(m => m.RuleGroupComponent)
       },
       {
         path: 'AttendanceAndDepartureDevices',
-        title: 'أجهزة الحضور والانصراف',
+        title: 'Attendance Devices',
         loadComponent: () => import('./Modules/HR/AttendanceAndDepartureDevices/AttendanceAndDepartureDevices.component').then(m => m.AttendanceAndDepartureDevicesComponent)
       },
       {
         path: 'AttendanceRecord',
-        title: 'سجل الحضور والانصراف',
+        title: 'Attendance Records',
         loadComponent: () => import('./Modules/HR/AttendanceRecord/AttendanceRecord.component').then(m => m.AttendanceRecordComponent)
       },
       {
         path: 'ALLOWANCES',
-        title: 'البدلات',
+        title: 'Allowances',
         loadComponent: () => import('./Modules/HR/Allowance/Allowance.component').then(m => m.AllowanceComponent)
       }
       ,
       {
         path: 'SomeEmployRule',
-        title: 'مواعيد خاصة',
+        title: 'Special Schedules',
         loadComponent: () => import('./Modules/HR/SomeEmployRule/SomeEmployRule.component').then(m => m.SomeEmployRuleComponent)
       }
       ,
       {
         path: 'shifts',
-        title: 'ورديات العمل',
+        title: 'Work Shifts',
         loadComponent: () => import('./Modules/HR/Shifts/Shifts.component').then(m => m.ShiftsComponent)
       }
       ,
       {
         path: 'AttendanceCalculator',
-        title: 'حساب الساعات',
+        title: 'Hours Calculator',
         loadComponent: () => import('./Modules/HR/AttendanceCalculator/AttendanceCalculator.component').then(m => m.AttendanceCalculatorComponent)
       }
       ,
       {
         path: 'WareHouses',
-        title: 'المخازن',
+        title: 'Warehouses',
         loadComponent: () => import('./Modules/Inventory/WareHouses/WareHouses.component').then(m => m.WareHousesComponent)
       }
       ,
       {
         path: 'Category',
-        title: 'التصنيفات',
+        title: 'Categories',
         loadComponent: () => import('./Modules/Inventory/Category/Category.component').then(m => m.CategoryComponent)
       }
       ,
       {
         path: 'Items',
-        title: 'الأصناف',
+        title: 'Items',
         loadComponent: () => import('./Modules/Inventory/Items/Items.component').then(m => m.ItemsComponent)
 
       }
       ,
       {
         path: 'Units',
-        title: 'وحدات القياس',
+        title: 'Units of Measurement',
         loadComponent: () => import('./Modules/Inventory/UnitsControl/UnitsControl.component').then(m => m.UnitsControlComponent)
       }
       ,
       {
         path: 'OperationList',
-        title: 'العمليات المخزنية',
+        title: 'Warehouse Operations',
         loadComponent: () => import('./Modules/Inventory/OperationList/OperationList.component').then(m => m.OperationListComponent)
       }
       ,
       {
         path: 'Operation',
         data: { ID: 0 },
-        title: 'عملية مخزنية',
+        title: 'Warehouse Operation',
         loadComponent: () => import('./Modules/Inventory/Operation/Operation.component').then(m => m.OperationComponent)
       }
       ,
       {
         path: 'Raspy',
         data: { ID: 0 },
-        title: 'مكونات الصنف',
+        title: 'Item Components',
         loadComponent: () => import('./Modules/Inventory/Raspy/Raspy.component').then(m => m.RaspyComponent)
       }
       ,
       {
         path: 'ItemsInRaspy',
         data: { ItemId: 0, RaspyId: 0 },
-        title: 'مكونات الصنف',
+        title: 'Item Components',
         loadComponent: () => import('./Modules/Inventory/ItemsInRaspy/ItemsInRaspy.component').then(m => m.ItemsInRaspyComponent)
       }
       ,
       {
         path: 'Season',
-        title: 'المواسم',
+        title: 'Seasons',
         loadComponent: () => import('./Modules/Seals/Season/Season.component').then(m => m.SeasonComponent)
       }
       ,
       {
         path: 'Customer',
         data: { Type: 0 },
-        title: 'العملاء',
+        title: 'Customers',
         loadComponent: () => import('./Modules/Seals/Customer/Customer.component').then(m => m.CustomerComponent)
       }
       ,
       {
         path: 'SpecialPrice',
-        title: 'اسعار خاصة',
+        title: 'Special Prices',
         loadComponent: () => import('./Modules/Seals/SpeciaPrice/SpeciaPrice.component').then(m => m.SpeciaPriceComponent)
       }
       ,
       {
         path: 'SpecialDescound',
-        title: 'نسب خصم خاصة',
+        title: 'Special Discounts',
         loadComponent: () => import('./Modules/Seals/SpecialDescound/SpecialDescound.component').then(m => m.SpecialDescoundComponent)
       }
       ,
       {
         path: 'InvoiceList',
-        title: 'الفواتير',
+        title: 'Invoices',
         loadComponent: () => import('./Modules/Seals/InvoiceList/InvoiceList.component').then(m => m.InvoiceListComponent)
       }
       ,
       {
         path: 'Invoice',
         data: { ID: 0 },
-        title: 'فاتورة',
+        title: 'Invoice',
         loadComponent: () => import('./Modules/Seals/Invoice/Invoice.component').then(m => m.InvoiceComponent)
 
       }
       ,
       {
         path: 'Cashier',
-        title: 'الكاشير',
+        title: 'Cashier',
         loadComponent: () => import('./Modules/Seals/Cashier/Cashier.component').then(m => m.RestaurantCashierComponent)
       }
       ,
@@ -231,46 +236,46 @@ export const routes: Routes = [
       {
         path: 'Requstes',
         data: { ID: 0 },
-        title: 'الطلبيات',
+        title: 'Orders',
         loadComponent: () => import('./Modules/Seals/Requstes/Requstes.component').then(m => m.RequstesComponent)
 
       }
       ,
       {
         path: 'RequstesList',
-        title: 'الطلبيات',
+        title: 'Orders List',
         loadComponent: () => import('./Modules/Seals/RequstesList/RequstesList.component').then(m => m.RequstesListComponent)
       }
 
       ,
       {
         path: 'Accounts',
-        title: 'الحسابات',
+        title: 'Accounts',
         loadComponent: () => import('./Modules/Accounts/Accounts/Accounts.component').then(m => m.AccountsComponent)
       }
       ,
       {
         path: 'AccountTypeOperations',
-        title: 'انواع العمليات المحاسبية',
+        title: 'Operation Types',
         loadComponent: () => import('./Modules/Accounts/AccountTypeOperations/AccountTypeOperations.component').then(m => m.AccountTypeOperationsComponent)
       }
       ,
       {
         path: 'AccountOperationList',
-        title: 'القيود المحاسبية',
+        title: 'Accounting Entries',
         loadComponent: () => import('./Modules/Accounts/AccountOperationList/AccountOperationList.component').then(m => m.AccountOperationListComponent)
       }
       ,
       {
         path: 'AccountOperation',
         data: { ID: 0 },
-        title: 'قيد محاسبي',
+        title: 'Accounting Entry',
         loadComponent: () => import('./Modules/Accounts/AccountOperation/AccountOperation.component').then(m => m.AccountOperationComponent)
       }
       ,
       {
         path: 'Report',
-        title: 'التقارير',
+        title: 'Reports',
         loadComponent: () => import('./Modules/Report/Report.component').then(m => m.ReportComponent)
       }
 
@@ -281,9 +286,8 @@ export const routes: Routes = [
   {
     path: 'Show_QR',
     data: { TEXT: '', TYPE: '' },
-    title: 'عرض',
+    title: 'Display',
     loadComponent: () => import('./shared/pages/Show_QR_Code/Show_QR_Code.component').then(m => m.Show_QR_CodeComponent)
   },
   { path: '**', redirectTo: 'Main/Home', pathMatch: 'full' }
 ];
-

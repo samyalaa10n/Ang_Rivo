@@ -1,0 +1,95 @@
+<div class="print-container">
+
+  <div *ngFor="let order of orders; let last = last" class="page-break">
+
+    @if(order.ITEMS.length>0)
+    {
+    <!-- Order Invoice -->
+    <div class="invoice-wrapper">
+      <!-- Header with QR -->
+      <div class="header-top">
+        <div class="header-left">
+          <h1 class="company-name">COPPERMELT</h1>
+          <p class="tagline">Premium Bakery & Desserts</p>
+        </div>
+        <div class="header-qr">
+          <img [src]="getQRCode(order.ID)" class="qr-code-small" alt="Order QR" />
+          <p class="qr-label">Order #{{ order.ID }}</p>
+        </div>
+      </div>
+      <div class="order-info">
+        <div class="info-item">
+          <span class="label">Order #:</span>
+          <span class="value">{{ order.ID }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Date:</span>
+          <span class="value">{{ order.SEND_DATE | date: 'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Delivery:</span>
+          <span class="value">{{ order.RESAVE_DATE | date: 'dd/MM/yyyy hh:mm' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Customer:</span>
+          <span class="value">{{ order.CUSTOMER_NAME }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Location:</span>
+          <span class="value" style="font-size: 14px; font-weight: bold; color: #8b6f47;">{{ order.PLACE_NAME }}</span>
+        </div>
+        <div class="info-item full-width">
+          <span class="label">Selected Depart:</span>
+          <span class="value" style="font-size: 14px; font-weight: bold; color: #8b6f47;">{{
+            DEPART_SELECTED_NAME}}</span>
+        </div>
+        <div class="info-item full-width">
+          <span class="label">Address:</span>
+          <span class="value" style="font-size: 14px; font-weight: bold; color: #8b6f47;">{{ order.ADDRESS }}</span>
+        </div>
+      </div>
+
+
+      <!-- Items Table -->
+      <div class="items-section">
+        <table class="items-table">
+          <thead>
+            <tr>
+              <th style="width: 5%">#</th>
+              <th style="width: 25%">Item</th>
+              <th style="width: 15%">Category</th>
+              <th style="width: 10%">Depart</th>
+              <th style="width: 10%">Unit</th>
+              <th style="width: 10%">Qty</th>
+              <th style="width: 30%">Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of order.ITEMS; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ item.NAME }}</td>
+              <td>{{ item.CATEGORY }}</td>
+              <td>{{ item.Depart }}</td>
+              <td>{{ item.UNIT }}</td>
+              <td>{{ item.COUNT }}</td>
+              <td class="notes-cell">{{ item.COMMENTS || '-' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Order Notes -->
+      <div class="order-notes" *ngIf="order.NOTS">
+        <div class="notes-header">Special Instructions:</div>
+        <div class="notes-content">{{ order.NOTS }}</div>
+      </div>
+      <!-- Footer -->
+      <div class="footer">
+        <p>Hotline: 15938 | Thank you!</p>
+      </div>
+    </div>
+    }
+    
+  </div>
+  
+</div>

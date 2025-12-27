@@ -20,7 +20,7 @@
                 <fa-icon [icon]="faArrowLeft"></fa-icon>
 
             </button>
-            <button class="btn btn-dark mx-1 px-3" style="font-size: 18px; " (click)="saveData()"
+            <button *ngIf="!Configuration.StopControlSaveBtn" class="btn btn-dark mx-1 px-3" style="font-size: 18px; " (click)="saveData()"
             [disabled]="Configuration.disableSave">{{Configuration.HeaderSave}}
             <fa-icon [icon]="faSave"></fa-icon></button>
         </div>

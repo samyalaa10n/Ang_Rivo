@@ -11,7 +11,7 @@ import { NgIf } from '@angular/common';
   templateUrl: './Header.component.html',
   styleUrls: ['./Header.component.css'],
   standalone: true,
-  imports: [ButtonModule, RouterLink, NgIf]
+  imports: [ButtonModule, RouterLink,NgIf]
 })
 export class HeaderComponent implements OnInit {
   constructor(public _tools: Tools, private _router: Router) { }

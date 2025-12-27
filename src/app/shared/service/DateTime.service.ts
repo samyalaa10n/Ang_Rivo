@@ -30,9 +30,9 @@ export class TDateTime {
   GetNumberOfYear(): number {
     return this.EditData(new Date()).getFullYear();
   }
-  EditData(dateTime: Date,GMT:any=''): Date {
-    if (dateTime instanceof Date) return new Date(dateTime.toLocaleDateString("en") + ' GMT+'+GMT)
-    else if (typeof dateTime == "string") return new Date(dateTime + ' GMT+'+GMT)
+  EditData(dateTime: Date, GMT: any = ''): Date {
+    if (dateTime instanceof Date) return new Date(dateTime.toLocaleDateString("en") + ' GMT+' + GMT)
+    else if (typeof dateTime == "string") return new Date(dateTime + ' GMT+' + GMT)
     return new Date()
   }
   convertNumberToData(_number: any): Date {
@@ -161,5 +161,49 @@ export class TDateTime {
       // Cross-midnight case (e.g., 22:00 to 03:00)
       return time.isSameOrAfter(start) || time.isSameOrBefore(end);
     }
+  }
+  // 1. إذا كنت تحفظ الوقت كـ string وتريد تحويله بشكل صحيح
+  fixTimezoneIssue(dateString:string, offsetHours = 2) {
+    const date = new Date(dateString);
+    // أضف الفرق الزمني
+    date.setHours(date.getHours() + offsetHours);
+    return date;
+  }
+
+  // 2. تحويل التاريخ مع تصحيح التايم زون
+  convertToLocalTimezone(dateString:string) {
+    const date = new Date(dateString);
+    const offset = date.getTimezoneOffset(); // بالدقائق
+    const correctedDate = new Date(date.getTime() - offset * 60 * 1000);
+    return correctedDate;
+  }
+
+  // 3. الطريقة الأفضل - استخدم ISO format مع التصحيح
+  getCorrectDateTime(dateString:string, timezoneOffset:number = 2) {
+    const date = new Date(dateString);
+    // حول إلى UTC أولاً ثم أضف المنطقة الزمنية
+    const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+    const localDate = new Date(utcDate.getTime() + timezoneOffset * 60 * 60 * 1000);
+    return localDate;
+  }
+
+  // 4. إذا كنت تريد حفظ الوقت بشكل صحيح في database
+  saveWithCorrectTimezone(date:Date, timezoneOffset = 2) {
+    // احفظ كـ UTC في database
+    const utcDate = new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
+    return utcDate.toISOString();
+  }
+
+  // 5. واسترجع الوقت الصحيح من database
+  getWithCorrectTimezone(isoString:string, timezoneOffset = 2) {
+    const date = new Date(isoString);
+    const localDate = new Date(date.getTime() + timezoneOffset * 60 * 60 * 1000);
+    return localDate;
+  }
+
+  // 6. صيغة formatted للعرض
+  formatWithTimezone(dateString:string, timezoneOffset = 2) {
+    const date = this.getCorrectDateTime(dateString, timezoneOffset);
+    return date.toLocaleString('ar-EG'); // تنسيق عربي
   }
 }

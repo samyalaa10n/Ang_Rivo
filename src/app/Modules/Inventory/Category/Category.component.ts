@@ -26,7 +26,7 @@ export class CategoryComponent implements OnInit {
     this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "ID";
     this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "Parent Category"
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = Category;
-    this.Columns.push(new Column('DEPART', "Department", "comboBox", "comboBox", 200));
+    this.Columns.push(new Column('DEPART_ID', "Department", "comboBox", "comboBox", 200));
     this.Columns[this.Columns.length - 1].columnComboBoxOptionLabel = "NAME";
     this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "ID";
     this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "Select the Department for this Category"

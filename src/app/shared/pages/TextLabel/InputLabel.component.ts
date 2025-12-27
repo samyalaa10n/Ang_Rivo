@@ -73,7 +73,6 @@ export class InputLabelComponent implements OnInit {
       this.effectSelected.EFFECT_INFO.Value = value;
       this.effectSelected.EFFECT_INFO.ForceValue = false;
     }
-    debugger
     this.effectSelected.EFFECT_INFO.calcByHours = this.Effect.CONFIGURATION.calculatedByHours;
   }
 }

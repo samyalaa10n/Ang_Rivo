@@ -4,7 +4,7 @@
 }
 
 ::ng-deep .p-select-label {
-    padding-right: 10px !important;
+    padding-left: 10px !important;
 }
 
 ::ng-deep p-select {
@@ -13,7 +13,7 @@
 }
 
 ::ng-deep [pinputtext] {
-    direction: rtl !important;
+    /* direction: rtl !important; */
 }
 
 ::ng-deep p-iconfield p-inputicon {
@@ -21,7 +21,7 @@
 }
 
 ::ng-deep p-selectitem li {
-    direction: rtl !important;
+    /* direction: rtl !important; */
 }
 
 ::ng-deep .p-select-empty-message {

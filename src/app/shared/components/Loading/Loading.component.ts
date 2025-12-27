@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { Tools } from '../../service/Tools.service';
-import { NgIf } from '@angular/common';
+import { NgIf, NgForOf } from '@angular/common';
 
 @Component({
   selector: 'app-Loading',
   templateUrl: './Loading.component.html',
   styleUrls: ['./Loading.component.css'],
   standalone: true,
-  imports: [ButtonModule, NgIf]
+  imports: [ButtonModule, NgIf, NgForOf]
 })
 export class LoadingComponent implements OnInit {
 

@@ -1,29 +1,42 @@
-<app-dataGrid [paginator]="false" scrollHeight="600px" (onGridLoaded)="onGridLoaded($event)" [AllowSearch]="false"  (RenderItemSource)="RenderItemSource($event)"  (GridAction)="GridAction($event)" [(dataSource)]="ITEMS_INPUT" [StopAllButtons]="true"  >
+<app-dataGrid [paginator]="false" scrollHeight="600px" (onGridLoaded)="onGridLoaded($event)" [AllowSearch]="false"
+  (RenderItemSource)="RenderItemSource($event)" (GridAction)="GridAction($event)" [(dataSource)]="ITEMS_INPUT"
+  [StopAllButtons]="true">
   <div header>
-    <h4 class="my-2" >{{Header}}</h4>
+    <h4 class="my-2">{{Header}}</h4>
     <div class="row my-2" *ngIf="!ShowMode">
       <div class="col-12 my-2">
-        <app-multiselect class="mx-2" [(dataSelected)]="CategorySelected" (dataSelectedChange)="SelectCategory()"  placeholder="التصنيف" optionLabel="NAME" optionValue="ID" [dataSource]="Category" ></app-multiselect>        
+        <app-multiselect class="mx-2" [(dataSelected)]="CategorySelected" (dataSelectedChange)="SelectCategory()"
+          placeholder="Category" optionLabel="NAME" optionValue="ID" [dataSource]="Category"></app-multiselect>
       </div>
-      <div class="col-12 col-lg-6 my-2 d-flex justify-content-center align-items-center " >
-        <p-autocomplete class="d-flex justify-content-center align-items-center my-3" (onKeyUp)="Enter($event,2)" #StepInput1 class="d-block w-100" [forceSelection]="true" placeholder="اسم الصنف" [suggestions]="filteredData" emptyMessage="لا يوجد"
-        (onSelect)="Selected($event)" (completeMethod)="filterEmploy($event)" optionLabel="NAME" />
+      <div class="col-12 col-lg-6 my-2 d-flex justify-content-center align-items-center ">
+        <p-autocomplete class="d-flex justify-content-center align-items-center my-3" (onKeyUp)="Enter($event,2)"
+          #StepInput1 class="d-block w-100" [forceSelection]="true" placeholder="Item Name" [suggestions]="filteredData"
+          emptyMessage="لا يوجد" (onSelect)="Selected($event)" (completeMethod)="filterEmploy($event)"
+          optionLabel="NAME" />
       </div>
       <div class="col-12 col-lg-3 my-2 " *ngIf="showPrice">
-        <app-InputLabel placeholder="السعر">
-          <p-inputNumber class="d-block my-3" #StepInput2 (onKeyDown)="Enter($event,3)" [(ngModel)]="SelectedItem.PRICE"></p-inputNumber>
+        <app-InputLabel placeholder="Price">
+          <p-inputNumber class="d-block my-3" #StepInput2 (onKeyDown)="Enter($event,3)"
+            [(ngModel)]="SelectedItem.PRICE"></p-inputNumber>
         </app-InputLabel>
       </div>
-      <div class="col-12 col-lg-3 my-2" >
-        <app-InputLabel placeholder="الكمية">
-          <p-inputNumber class="d-block my-3" #StepInput3 (onKeyDown)="Enter($event,4)"  [(ngModel)]="SelectedItem.COUNT"></p-inputNumber>
+      <div class="col-12 col-lg-3 my-2">
+        <app-InputLabel placeholder="Quantity">
+          <p-inputNumber class="d-block my-3" #StepInput3 (onKeyDown)="Enter($event,4)"
+            [(ngModel)]="SelectedItem.COUNT"></p-inputNumber>
         </app-InputLabel>
       </div>
-      <div class="col-12 my-2 row">
-        <p-button #StepInput4 [raised]="true" (onClick)="SetItem()" label="اضافة" class="font-bold mx-1 my-2 col-12 col-lg-2" icon="pi pi-plus" />
-        <p-button [raised]="true" (onClick)="Claer()" severity="danger" label="تفريغ البيانات" class="font-bold mx-1 my-2 col-12 col-lg-2" />
-        <p-button hidden  [raised]="true" (onClick)="Back()"  label="الغاء التفريغ" class="font-bold mx-1 my-2 col-12 col-lg-2"  />
+      <div class="col-12 my-1 row d-flex justify-content-center">
+        <p-button #StepInput4 [raised]="true" (onClick)="SetItem()" label="Add"
+          class="font-bold mx-1 my-2 col-12 col-lg-2" icon="pi pi-plus" />
+        <p-button [raised]="true" (onClick)="Claer()" severity="danger" label="Clear Data"
+          class="font-bold mx-1 my-2 col-12 col-lg-2" />
+        <p-button [raised]="true" (onClick)="ByPOS()" label="By POS" class="font-bold mx-1 my-2 col-12 col-lg-2" />
+        <!-- <p-button hidden  [raised]="true" (onClick)="Back()"  label="الغاء التفريغ" class="font-bold mx-1 my-2 col-12 col-lg-2"  /> -->
       </div>
     </div>
   </div>
 </app-dataGrid>
+<p-dialog header="Add New Company" [maximizable]="true"  appendTo="body" [modal]="true"  [style]="{'width':'100%','height':'100%'}" [(visible)]="ByPOSMode">
+  <app-restaurant-cashier (SelectedEnd)="SelectedByBOS($event)" [Items]="SelectItems" [selectedTable]="-2" [sharedMode]="true"></app-restaurant-cashier>
+</p-dialog>

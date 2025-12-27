@@ -17,6 +17,7 @@
 
 .form-floating>label {
   font-weight: 500;
+  top: -8px;
 }
 
 .bg-light {

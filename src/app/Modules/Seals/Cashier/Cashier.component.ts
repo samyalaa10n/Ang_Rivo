@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, output, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Dialog } from "primeng/dialog";
@@ -7,6 +7,7 @@ import { ComboBoxComponent } from "../../../shared/components/comboBox/comboBox.
 import { InvoiceOrder } from '../../../shared/Types/InvoiceOrder';
 import QRCode from 'qrcode';
 import { InputNumber } from "primeng/inputnumber";
+import { RealItem } from '../../../shared/Types/RealItem';
 interface MenuItem {
   id: number;
   name: string;
@@ -16,7 +17,7 @@ interface MenuItem {
   UNIT: string,
 }
 
-interface CartItem extends MenuItem {
+export interface CartItem extends MenuItem {
   quantity: number;
 }
 
@@ -24,6 +25,7 @@ interface Category {
   name: string;
   icon: string;
   id: number;
+  departId: number;
 }
 interface AccountType {
   name: string;
@@ -43,8 +45,11 @@ interface ResTable {
   styleUrls: ['./Cashier.component.css'],
 })
 export class RestaurantCashierComponent implements OnInit {
-
+  @Input() sharedMode: boolean = false;
+  @Input() Items: Array<RealItem> = [];
+  @Output() SelectedEnd: EventEmitter<any> = new EventEmitter();
   categories: Category[] = [];
+  Departs: any[] = [];
   menuItems: MenuItem[] = [];
   tables: Array<ResTable> = [];
   WareHouses: Array<any> = []
@@ -54,10 +59,11 @@ export class RestaurantCashierComponent implements OnInit {
   SesonActive: number = 0;
   PayDirect: ResTable = { id: -2, itemsCared: [] }
   AccountTypes: AccountType[] = [];
-  selectedTable: number = 0;
+  @Input() selectedTable: number = 0;
   Customers: Array<any> = []
   Places: Array<any> = []
-  selectedCategory = 1;
+  selectedCategory = -1;
+  selectedDepart: number = -1;
   showPaymentModal = false;
   paymentMethod!: AccountType;
   paidAmount = 0;
@@ -70,9 +76,23 @@ export class RestaurantCashierComponent implements OnInit {
     this.WareHouses = await this._myTools.Network.getAsync<any>("WareHouse")
     this.Customers = await this._myTools.Network.getAsync<any>("Customer")
     this.Places = await this._myTools.Network.getAsync<any>("Place")
+    this.Departs = await this._myTools.Network.getAsync<any>("Depart")
     this.SpecialDescound = await this._myTools.Network.getAsync<any>("SpecialDescound")
     this.SpecialItemPrice = await this._myTools.Network.getAsync<any>("SpecialItemPrice")
     this.SesonActive = (await this._myTools.Network.getAsync<any>("Season/GetActiveSeson") as any)?.SESON ?? 0
+  }
+  ngOnChanges() {
+    this.Items.forEach(item => {
+      console.log(item)
+      this.addToCart({
+        category: this.categories.find(x => x.name == item.CATEGORY)?.id ?? 0,
+        id: item.ITEM_ID,
+        name: item.NAME,
+        price: item.PRICE,
+        UNIT: item.UNIT,
+        Tex: item.TEX ?? 0
+      })
+    })
   }
   ngAftrViewChecked(): void {
     this.Invoice.PRICE_AFTER_DESCOUND = this.TotalAfterDescound()
@@ -85,14 +105,22 @@ export class RestaurantCashierComponent implements OnInit {
   }
   selectCategory(category: number): void {
     this.selectedCategory = category;
-    if (document) {
-      let el = document.querySelector('.menu-grid') as HTMLElement
-      if (el && el.firstChild) {
-        (el.firstChild as HTMLElement).scrollIntoView({ behavior: "smooth" })
+    this._myTools.waitExecuteFunction(100, () => {
+      if (document) {
+        let el = document.querySelector('.menu-grid') as HTMLElement
+        if (el && el.firstChild) {
+          (el.firstChild as HTMLElement).scrollIntoView({ behavior: "smooth" })
+        }
       }
-    }
-  }
+    })
 
+  }
+  selectDepart(dep: number): void {
+    this.selectedDepart = dep;
+  }
+  getCategoryByDepat() {
+    return this.categories.filter(x => x.departId == this.selectedDepart)
+  }
   getItemsByCategory(): MenuItem[] {
     let selectedMenuItems = this.menuItems.filter(item => item.category === this.selectedCategory);
     selectedMenuItems.forEach(item => {
@@ -156,11 +184,16 @@ export class RestaurantCashierComponent implements OnInit {
   }
 
   openPaymentModal(): void {
+    if (this.sharedMode) {
+      this.SelectedEnd.emit(this.cart)
+      return;
+    }
     if (this.cart.length > 0 && this.selectedTable) {
       this.showPaymentModal = true;
       this.Invoice.DESCOUND_PERCENT = 0;
       this.paidAmount = this.finalTotal
     }
+
   }
 
   closePaymentModal(): void {
@@ -235,7 +268,7 @@ export class RestaurantCashierComponent implements OnInit {
   // API Calls
   public async getCategories(): Promise<Category[]> {
     const response = await this._myTools.Network.getAsync("Category") as Array<any>;
-    this.categories = response.map(item => { return { id: item.ID, name: item.NAME, icon: "" } });;
+    this.categories = response.map(item => { return { id: item.ID, name: item.NAME, icon: "", departId: item.DEPART_ID } });;
     return this.categories;
   }
   public async getItems(): Promise<MenuItem[]> {

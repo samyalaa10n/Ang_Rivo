@@ -474,7 +474,7 @@ export class PrintService {
         <!-- Header -->
         <header class="header">
             <div class="company-info">
-               <h1>FOCUS CAFA</h1>
+               <h1>COPPERMELT</h1>
                <div>01018325475</div>
             </div>
             <div class="logo-placeholder">
@@ -928,9 +928,9 @@ export class PrintService {
             <div class="header-left">
                 <img src="favicon.ico" alt="Logo" class="company-logo">
                 <div class="company-details">
-                    <h1>FOCUS CAFA</h1>
+                    <h1>COPPERMELT</h1>
                     <div>01018325475</div>
-                    <p class="invoice-info">فاتورة رقم: #${_Invoice.ID} | التاريخ: ${this._Tools.DateTime.EditFormateData(_Invoice.DATE_TIME,'DD-MM-YYYY')}</p>
+                    <p class="invoice-info">فاتورة رقم: #${_Invoice.ID} | التاريخ: ${this._Tools.DateTime.EditFormateData(_Invoice.DATE_TIME, 'DD-MM-YYYY')}</p>
                 </div>
             </div>
             <div class="header-right">
@@ -998,13 +998,40 @@ export class PrintService {
         });
         return htmlRes
     }
-    async printRequest(_Request: RequestOrder, Totals: { Total: number, TotalAfterDescound: number, TotalAfterDepost: number }, InSumPage: boolean = false): Promise<void> {
+    async printRequest(
+        _Request: RequestOrder,
+        Totals: { Total: number, TotalAfterDiscount: number, TotalAfterDeposit: number },
+        InSumPage: boolean = false
+    ): Promise<void> {
+
+        // Format dates
+        const sendDate = new Date(_Request.SEND_DATE).toLocaleDateString('en-US');
+        const receiveDate = new Date(_Request.RESAVE_DATE).toLocaleString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        // Generate items table rows
+        const itemsTableRows = _Request.ITEMS.map(item => `
+    <tr>
+      <td>${item.ID} - ${item.NAME}</td>
+      <td>${item.UNIT}</td>
+      <td>${item.COUNT}</td>
+      <td>${item.PRICE.toFixed(2)}</td>
+      <td>${item.TOTAL_COUNT.toFixed(2)}</td>
+      <td>${item.COMMENTS || '-'}</td>
+    </tr>
+  `).join('');
+
         const html = `<!DOCTYPE html>
-<html dir="rtl" lang="ar">
+<html dir="ltr" lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>فاتورة حجز</title>
+  <title>Order Invoice #${_Request.ID}</title>
   <style>
     * {
       margin: 0;
@@ -1085,7 +1112,7 @@ export class PrintService {
     
     .info-label {
       font-weight: bold;
-      min-width: 70px;
+      min-width: 100px;
     }
     
     .items-table {
@@ -1113,7 +1140,7 @@ export class PrintService {
     }
     
     .items-table td:first-child {
-      text-align: right;
+      text-align: left;
     }
     
     .summary {
@@ -1165,55 +1192,59 @@ export class PrintService {
     <!-- Header -->
     <div class="header">
       <div>
-        <div class="company-name">FOCUS CAFA</div>
+        <div class="company-name">COPPERMELT</div>
       </div>
-      <div style="font-size: 10px; text-align: left;">
-        <div><strong>التاريخ:</strong> 25/12/2024</div>
-        <div><strong>تاريخ التسليم:</strong> 28/12/2024 14:30</div>
+      <div style="font-size: 10px; text-align: right;">
+        <div><strong>Date:</strong> ${sendDate}</div>
+        <div><strong>Delivery Date:</strong> ${receiveDate}</div>
       </div>
     </div>
     
     <!-- Invoice Title -->
     <div class="invoice-title">
-      <h1>حجز رقم: #12345</h1>
-      <span>الفرع: القاهرة</span>
+      <h1>Order #${_Request.ID}</h1>
+      <span>Branch: ${_Request.PLACE_NAME || 'Cairo'}</span>
     </div>
     
     <!-- Customer & Payment Info -->
     <div class="info-grid">
       <div class="info-box">
-        <h3>بيانات العميل</h3>
+        <h3>Customer Information</h3>
         <div class="info-row">
-          <span class="info-label">الشركة:</span>
-          <span>شركة النور للتجارة</span>
+          <span class="info-label">Company:</span>
+          <span>${_Request.CUSTOMER_NAME || 'N/A'}</span>
         </div>
         <div class="info-row">
-          <span class="info-label">الاسم:</span>
-          <span>أحمد محمد علي</span>
+          <span class="info-label">Name:</span>
+          <span>${_Request.CUSTOMER_BUY_NAME || 'N/A'}</span>
         </div>
         <div class="info-row">
-          <span class="info-label">التليفون:</span>
-          <span>01012345678</span>
+          <span class="info-label">Phone:</span>
+          <span>${_Request.PHONE || 'N/A'}</span>
         </div>
         <div class="info-row">
-          <span class="info-label">العنوان:</span>
-          <span>15 شارع النصر، مدينة نصر، القاهرة</span>
+          <span class="info-label">Address:</span>
+          <span>${_Request.ADDRESS || 'N/A'}</span>
         </div>
       </div>
       
       <div class="info-box">
-        <h3>معلومات الدفع</h3>
+        <h3>Payment Information</h3>
         <div class="info-row">
-          <span class="info-label">طريقة الدفع:</span>
-          <span>نقدي</span>
+          <span class="info-label">Payment Method:</span>
+          <span>${_Request.PAYMENT_NAME || 'N/A'}</span>
         </div>
         <div class="info-row">
-          <span class="info-label">العربون:</span>
-          <span>500 جنيه</span>
+          <span class="info-label">Deposit:</span>
+          <span>${_Request.DEPOST?.toFixed(2) || '0.00'} EGP</span>
         </div>
         <div class="info-row">
-          <span class="info-label">نسبة الخصم:</span>
-          <span>10%</span>
+          <span class="info-label">Discount Rate:</span>
+          <span>${_Request.DESCOUND_PERCENT}%</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Seller:</span>
+          <span>${_Request.SELLER || 'N/A'}</span>
         </div>
       </div>
     </div>
@@ -1222,47 +1253,16 @@ export class PrintService {
     <table class="items-table">
       <thead>
         <tr>
-          <th>الصنف</th>
-          <th style="width: 60px;">الوحدة</th>
-          <th style="width: 50px;">الكمية</th>
-          <th style="width: 60px;">السعر</th>
-          <th style="width: 70px;">المجموع</th>
-          <th style="width: 120px;">ملاحظات</th>
+          <th>Item</th>
+          <th style="width: 60px;">Unit</th>
+          <th style="width: 50px;">Qty</th>
+          <th style="width: 60px;">Price</th>
+          <th style="width: 70px;">Total</th>
+          <th style="width: 120px;">Notes</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1 - كيك شوكولاتة 2 كيلو</td>
-          <td>قطعة</td>
-          <td>1</td>
-          <td>350</td>
-          <td>350</td>
-          <td>بدون سكر</td>
-        </tr>
-        <tr>
-          <td>2 - تارت فواكه صغير</td>
-          <td>قطعة</td>
-          <td>3</td>
-          <td>50</td>
-          <td>150</td>
-          <td>-</td>
-        </tr>
-        <tr>
-          <td>3 - كب كيك فانيليا</td>
-          <td>علبة</td>
-          <td>2</td>
-          <td>100</td>
-          <td>200</td>
-          <td>12 قطعة/علبة</td>
-        </tr>
-        <tr>
-          <td>4 - بيتي فور مشكل</td>
-          <td>كيلو</td>
-          <td>2</td>
-          <td>200</td>
-          <td>400</td>
-          <td>-</td>
-        </tr>
+        ${itemsTableRows}
       </tbody>
     </table>
     
@@ -1270,34 +1270,41 @@ export class PrintService {
     <div class="summary">
       <div class="summary-box">
         <div class="summary-row">
-          <span class="summary-label">الإجمالي:</span>
-          <span>1,100 جنيه</span>
+          <span class="summary-label">Subtotal:</span>
+          <span>${Totals.Total.toFixed(2)} EGP</span>
         </div>
         <div class="summary-row">
-          <span class="summary-label">الخصم (10%):</span>
-          <span>-110 جنيه</span>
+          <span class="summary-label">Discount (${_Request.DESCOUND_PERCENT}%):</span>
+          <span>-${(Totals.Total - Totals.TotalAfterDiscount).toFixed(2)} EGP</span>
         </div>
         <div class="summary-row">
-          <span class="summary-label">الإجمالي بعد الخصم:</span>
-          <span>990 جنيه</span>
+          <span class="summary-label">Total After Discount:</span>
+          <span>${Totals.TotalAfterDiscount.toFixed(2)} EGP</span>
         </div>
         <div class="summary-row">
-          <span class="summary-label">العربون المدفوع:</span>
-          <span>-500 جنيه</span>
+          <span class="summary-label">Deposit Paid:</span>
+          <span>-${_Request.DEPOST?.toFixed(2) || '0.00'} EGP</span>
         </div>
         <div class="summary-row">
-          <span class="summary-label">المتبقي:</span>
-          <span>490 جنيه</span>
+          <span class="summary-label">Balance Due:</span>
+          <span>${(Totals.TotalAfterDeposit).toFixed(2)} EGP</span>
         </div>
       </div>
     </div>
+    
+    <!-- Notes -->
+    ${_Request.NOTS ? `
+    <div style="margin-top: 12px; padding: 8px; border: 1px solid #ccc; background: #f9f9f9;">
+      <strong>Notes:</strong> ${_Request.NOTS}
+    </div>
+    ` : ''}
   </div>
 </body>
 </html>
-    `;
+  `;
 
         await this.printHTML(html, InSumPage, {
-            title: `حجز رقم ${_Request.ID}`,
+            title: `Order #${_Request.ID}`,
             orientation: 'portrait',
             paperSize: 'A4'
         });
@@ -1310,7 +1317,7 @@ export class PrintService {
   <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
     <div>
       <!-- اسم الشركة ورقم التليفون يكتب يدويًا أو يُملأ ديناميكيًا -->
-      <p style="margin: 4px 0;"><strong>اسم الشركة:</strong> FOCUS CAFA</p>
+      <p style="margin: 4px 0;"><strong>اسم الشركة:</strong> COPPERMELT</p>
     </div>
     <div>
       <img src="favicon.ico" alt="Logo">

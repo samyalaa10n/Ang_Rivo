@@ -1,21 +1,22 @@
-<div class="row my-2">
+<div class="row my-2" *ngIf="!sharedMode">
   <div class="col-12 col-lg-4 p-1">
-    <app-comboBox CashId="Acount_cash" placeholder="Select Restaurant Account" [dataSource]="Customers" optionValue="ID" optionLabel="NAME"
-      [(SelectedValue)]="Invoice.CUSTOMER" class="form-control"></app-comboBox>
+    <app-comboBox CashId="Acount_cash" placeholder="Select Restaurant Account" [dataSource]="Customers" optionValue="ID"
+      optionLabel="NAME" [(SelectedValue)]="Invoice.CUSTOMER" class="form-control"></app-comboBox>
   </div>
   <div class="col-12 col-lg-4 p-1">
-    <app-comboBox CashId="PLACE_REQUEST" placeholder="Select Location" [dataSource]="Places" optionValue="ID" optionLabel="NAME" apiPathDataSource="Place"
-      (selectedChange)="getTabels($event)"></app-comboBox>
+    <app-comboBox CashId="PLACE_REQUEST" placeholder="Select Location" [dataSource]="Places" optionValue="ID"
+      optionLabel="NAME" apiPathDataSource="Place" (selectedChange)="getTabels($event)"></app-comboBox>
   </div>
   <div class="col-12 col-lg-4 p-1">
-    <app-comboBox CashId="werhouse_cash" placeholder="Select Warehouse" [dataSource]="WareHouses" optionValue="ID" optionLabel="NAME"
-      apiPathDataSource="WareHouse" [(SelectedValue)]="Invoice.WAREHOUSE" class="form-control"></app-comboBox>
+    <app-comboBox CashId="werhouse_cash" placeholder="Select Warehouse" [dataSource]="WareHouses" optionValue="ID"
+      optionLabel="NAME" apiPathDataSource="WareHouse" [(SelectedValue)]="Invoice.WAREHOUSE"
+      class="form-control"></app-comboBox>
   </div>
 </div>
 
 <div class="container">
   <!-- Tables Section -->
-  <div class="tables-section" *ngIf="Invoice.WAREHOUSE!=0 && Invoice.CUSTOMER!=0">
+  <div class="tables-section" *ngIf="Invoice.WAREHOUSE!=0 && Invoice.CUSTOMER!=0 && !sharedMode">
     <h2>Select Table</h2>
     <div class="tables-grid">
       <button (click)="selectTable(PayDirect)" [class.Work]="PayDirect.itemsCared.length>0"
@@ -34,29 +35,42 @@
   </div>
 
   <!-- Menu Section -->
-  <div class="menu-section" *ngIf="selectedTable>0 || selectedTable==-2">
-    <h1>Menu</h1>
+  <div class="overflow-x-auto w-100">
+    <div class="menu-section" *ngIf="selectedTable>0 || selectedTable==-2 || sharedMode">
+      <h1>Menu</h1>
 
-    <!-- Categories -->
-    <div class="categories">
-      <button *ngFor="let category of categories" (click)="selectCategory(category.id)"
-        [class.active]="selectedCategory === category.id" class="category-btn">
-        {{ category.name }}
-      </button>
-    </div>
-
-    <!-- Items -->
-    <div class="menu-grid">
-      <button *ngFor="let item of getItemsByCategory()" (click)="addToCart(item)" class="menu-item">
-        <div class="item-name">{{ item.name }} [ {{ item.UNIT }} ]</div>
-        <div class="item-price">{{ item.price }} EGP</div>
-      </button>
+      <!-- Departs -->
+      <label class="my-1">Departs</label>
+      <div class="categories">
+        <button *ngFor="let Depart of Departs" (click)="selectDepart(Depart.ID)"
+          [class.active]="selectedDepart === Depart.ID" class="category-btn">
+          {{ Depart.NAME }}
+        </button>
+      </div>
+      <br>
+      <label class="my-1">Categories</label>
+      <!-- Categories -->
+      <div class="categories">
+        <button *ngFor="let category of getCategoryByDepat()" (click)="selectCategory(category.id)"
+          [class.active]="selectedCategory === category.id" class="category-btn">
+          {{ category.name }}
+        </button>
+      </div>
+      <br>
+      <!-- Items -->
+      <div class="menu-grid">
+        <button *ngFor="let item of getItemsByCategory()" (click)="addToCart(item)" class="menu-item">
+          <div class="item-name">{{ item.name }} [ {{ item.UNIT }} ]</div>
+          <div class="item-price">{{ item.price }} EGP</div>
+        </button>
+      </div>
     </div>
   </div>
 
+
   <!-- Cashier Section -->
-  <div class="cashier-section" *ngIf="selectedTable>0 || selectedTable==-2">
-    <div class="cashier-header">
+  <div class="cashier-section" *ngIf="(selectedTable >0 || selectedTable==-2)">
+    <div class="cashier-header" *ngIf="!sharedMode">
       <h2>Invoice</h2>
       <div class="order-number">Table #{{ selectedTable }}</div>
     </div>

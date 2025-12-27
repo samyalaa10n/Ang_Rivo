@@ -1,57 +1,57 @@
 <app-stepper [Configuration]="StepperConfig">
-  <ng-template stepConfig Header="كشوف الحسابات" [isViewMode]="true">
-    <div dir="rtl">
+  <!-- <ng-template stepConfig Header="Account Statements" *ngIf="GetPermations(['System Control','Accounting'])">
+    <div dir="ltr">
       <div class="row">
         <div class="col-12 col-lg-3 my-2">
-          <app-comboBox [dataSource]="Accounts" optionValue="ID" optionLabel="NAME" placeholder="الحسابات"
+          <app-comboBox [dataSource]="Accounts" optionValue="ID" optionLabel="NAME" placeholder="Accounts"
             apiPathDataSource="Accounts" [(SelectedValue)]="Account" class="form-control"></app-comboBox>
         </div>
       </div>
       <div class="row d-flex justify-content-center  align-items-center">
         <div class="col-12 col-lg-2 ">
-          <app-InputLabel placeholder="من">
-            <app-DateTime [(selectedDate)]="START_DATE" placeholder="من"></app-DateTime>
+          <app-InputLabel placeholder="From">
+            <app-DateTime [(selectedDate)]="START_DATE" placeholder="From"></app-DateTime>
           </app-InputLabel>
         </div>
         <div class="col-12 col-lg-2">
-          <app-InputLabel placeholder="الي">
-            <app-DateTime [(selectedDate)]="END_DATE" placeholder="الي"></app-DateTime>
+          <app-InputLabel placeholder="To">
+            <app-DateTime [(selectedDate)]="END_DATE" placeholder="To"></app-DateTime>
           </app-InputLabel>
         </div>
         <div class="col-12 col-lg-2">
-          <p-button [raised]="true" (onClick)="GetData()" label="عرض" class="font-bold mx-1 w-100" />
+          <p-button [raised]="true" (onClick)="GetData()" label="Show" class="font-bold mx-1 w-100" />
         </div>
       </div>
       <div class="my-3">
         <app-dataGrid [(dataSource)]="DATA_LIST" (onGridLoaded)="GridLoaded($event)" [Columns]="Columns">
           <div header>
-            <label class="p-2 rounded-2 shadow-sm  form-label"> اجمالي المعاملات : {{GetTotal()}}</label>
+            <label class="p-2 rounded-2 shadow-sm  form-label"> Total Transactions : {{GetTotal()}}</label>
           </div>
         </app-dataGrid>
       </div>
     </div>
   </ng-template>
-  <ng-template stepConfig Header="رصيد المخازن" [isViewMode]="true">
-    <div dir="rtl">
+  <ng-template stepConfig Header="Warehouse Balance" *ngIf="GetPermations(['System Control','Inventory'])" >
+    <div dir="ltr">
       <div class="row">
         <div class="col-12 col-lg-3 my-2">
-          <app-comboBox [dataSource]="WareHouses" optionValue="ID" optionLabel="NAME" placeholder="المخازن"
-             [(SelectedValue)]="WAREHOUSE" class="form-control"></app-comboBox>
+          <app-comboBox [dataSource]="WareHouses" optionValue="ID" optionLabel="NAME" placeholder="Warehouses"
+            [(SelectedValue)]="WAREHOUSE" class="form-control"></app-comboBox>
         </div>
       </div>
       <div class="row d-flex justify-content-center  align-items-center">
         <div class="col-12 col-lg-2 ">
-          <app-InputLabel placeholder="من">
-            <app-DateTime [(selectedDate)]="START_DATE" placeholder="من"></app-DateTime>
+          <app-InputLabel placeholder="From">
+            <app-DateTime [(selectedDate)]="START_DATE" placeholder="From"></app-DateTime>
           </app-InputLabel>
         </div>
         <div class="col-12 col-lg-2">
-          <app-InputLabel placeholder="الي">
-            <app-DateTime [(selectedDate)]="END_DATE" placeholder="الي"></app-DateTime>
+          <app-InputLabel placeholder="To">
+            <app-DateTime [(selectedDate)]="END_DATE" placeholder="To"></app-DateTime>
           </app-InputLabel>
         </div>
         <div class="col-12 col-lg-2">
-          <p-button [raised]="true" (onClick)="GetDataIemstock()" label="عرض" class="font-bold mx-1 w-100" />
+          <p-button [raised]="true" (onClick)="GetDataIemstock()" label="Show" class="font-bold mx-1 w-100" />
         </div>
       </div>
       <div class="my-3">
@@ -60,23 +60,23 @@
       </div>
     </div>
   </ng-template>
-  <ng-template stepConfig Header=" خطة الأنتاج " [isViewMode]="true">
-    <div dir="rtl">
+  <ng-template stepConfig Header="Production Plan"  *ngIf="GetPermations(['System Control','Inventory'])" >
+    <div dir="ltr">
       <div class="row d-flex justify-content-center  align-items-center">
         <div class="col-12 col-lg-4 ">
-          <app-comboBox [dataSource]="WareHouses" optionValue="ID" optionLabel="NAME" placeholder="المخازن"
-             [(SelectedValue)]="WAREHOUSE" class="form-control"></app-comboBox>
+          <app-comboBox [dataSource]="WareHouses" optionValue="ID" optionLabel="NAME" placeholder="Warehouses"
+            [(SelectedValue)]="WAREHOUSE" class="form-control"></app-comboBox>
         </div>
         <div class="col-12 col-lg-4">
-          <app-comboBox [dataSource]="Customers" optionValue="ID" optionLabel="NAME" placeholder="العملاء"
+          <app-comboBox [dataSource]="Customers" optionValue="ID" optionLabel="NAME" placeholder="Customers"
             [(SelectedValue)]="CUSTOMER" class="form-control"></app-comboBox>
-        </div> 
+        </div>
         <div class="col-12 col-lg-4">
-          <app-comboBox [dataSource]="SEASONS" optionValue="ID" optionLabel="NAME" placeholder="المواسم"
-             [(SelectedValue)]="SEASON" class="form-control"></app-comboBox>
+          <app-comboBox [dataSource]="SEASONS" optionValue="ID" optionLabel="NAME" placeholder="Seasons"
+            [(SelectedValue)]="SEASON" class="form-control"></app-comboBox>
         </div>
         <div class="col-12 col-lg-2 my-2">
-          <p-button [raised]="true" (onClick)="GetProductionPlan()" label="عرض" class="font-bold mx-1 w-100" />
+          <p-button [raised]="true" (onClick)="GetProductionPlan()" label="Show" class="font-bold mx-1 w-100" />
         </div>
       </div>
       <div class="my-3">
@@ -84,6 +84,38 @@
         </app-dataGrid>
       </div>
     </div>
+  </ng-template> -->
+  <ng-template stepConfig Header="Reservations Report" *ngIf="GetPermations(['System Control','Inventory'])" >
+   <div dir="ltr">
+      <div class="row">
+        <div class="col-12 col-lg-3 my-2">
+          <app-multiselect [dataSource]="Placses" optionValue="ID" optionLabel="NAME" placeholder="Place"
+            [(dataSelectedValues)]="PlacsesSelected" class="form-control" ></app-multiselect>
+        </div>
+        <div class="col-12 col-lg-3 my-2">
+          <app-multiselect [dataSource]="Departs" optionValue="ID" optionLabel="NAME" placeholder="Depart"
+            [(dataSelectedValues)]="DepartSelected"  class="form-control" ></app-multiselect>
+        </div>
+      </div>
+      <div class="row d-flex justify-content-center  align-items-center">
+        <div class="col-12 col-lg-2 ">
+          <app-InputLabel placeholder="From">
+            <app-DateTime [(selectedDate)]="START_DATE" placeholder="From"></app-DateTime>
+          </app-InputLabel>
+        </div>
+        <div class="col-12 col-lg-2">
+          <app-InputLabel placeholder="To">
+            <app-DateTime [(selectedDate)]="END_DATE" placeholder="To"></app-DateTime>
+          </app-InputLabel>
+        </div>
+        <div class="col-12 col-lg-2">
+          <p-button [raised]="true" (onClick)="GetOrdersReservations()" label="Show" class="font-bold mx-1 w-100" />
+        </div>
+      </div>
+      <div class="my-3">
+        <app-dataGrid [(dataSource)]="DATA_LIST" (onGridLoaded)="GridReservationsLoaded($event)" [Columns]="Columns">
+        </app-dataGrid>
+      </div>
+    </div>
   </ng-template>
-
 </app-stepper>

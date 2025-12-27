@@ -43,10 +43,12 @@ export class RequstesComponent implements OnInit {
   somePricies: boolean = false;
   AddCompany: boolean = false;
   safeUrl!: SafeResourceUrl;
+  OlRequest!: RequestOrder;
   Request: RequestOrder = { ID: 0, ROW_NUMBER: -1, CUSTOMER_NAME: '', CUSTOMER: 0, DEPOST: 0, DESCOUND_PERCENT: 0, SEND_DATE: new Date(), RESAVE_DATE: new Date(), ITEMS: [], PRICE_AFTER_DESCOUND: 0, NOTS: '', PAYMENT_TYPE: 0, CUSTOMER_BUY_NAME: '', SELLER: '', PHONE: '', PLACE: 0, ADDRESS: "" };
   constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _printService: PrintService, private _router: Router, private sanitizer: DomSanitizer) { }
 
   async ngOnInit() {
+
     await this.UpdetLockep();
     this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
       `${location.protocol}//${location.host}/#/Main/Customer?TYPE=sherd`
@@ -69,6 +71,7 @@ export class RequstesComponent implements OnInit {
             if (response?.ID > 0) {
               await this.UpdetLockep()
               this.Request = response;
+              this.OlRequest = this._tools.cloneObject(this.Request)
               await this.InputFastItems.GetOldData();
 
             }
@@ -154,14 +157,14 @@ export class RequstesComponent implements OnInit {
       }
     })
   }
-  async print(InAnotherPage: boolean = true) {
-    let Req = this._tools.cloneObject(this.Request) as RequestOrder;
+  async print(InAnotherPage: boolean = true, OnlyPrint: boolean = false) {
+    let Req = OnlyPrint ? this.OlRequest : this._tools.cloneObject(this.Request) as RequestOrder;
     Req.CUSTOMER_NAME = this.Customers.find(x => x.ID == Req.CUSTOMER)?.NAME;
     Req.PLACE_NAME = this.Places.find(x => x.ID == Req.PLACE)?.NAME;
     Req.PAYMENT_NAME = this.AccountTypes.find(x => x.ID == Req.PAYMENT_TYPE)?.NAME;
     Req.ITEMS = this.InputFastItems.ITEMS_INPUT;
     Req.ITEMS = Req.ITEMS.filter(x => x.COUNT > 0);
-    await this._printService.printRequest(Req, { Total: this.Total(), TotalAfterDepost: this.TotalAfterDepost(), TotalAfterDescound: this.TotalAfterDescound() }, InAnotherPage)
+    await this._printService.printRequest(Req, { Total: this.Total(), TotalAfterDeposit: this.TotalAfterDepost(), TotalAfterDiscount: this.TotalAfterDescound() }, InAnotherPage)
 
   }
   AddNew() {
@@ -195,7 +198,7 @@ export class RequstesComponent implements OnInit {
   }
   async PrintCleck() {
     this._tools.waitExecuteFunction(500, async () => {
-      await this.print();
+      await this.print(true,true);
       this._tools.waitExecuteFunction(500, () => {
         this._router.navigate(['Main', 'Requstes'], { queryParams: { ID: `${this.Request.ID}` } });
         window.location.reload();

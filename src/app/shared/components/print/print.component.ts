@@ -137,7 +137,7 @@ export class PrintComponent implements OnInit {
       if (printWindow) {
         const printOptions = { ...this.defaultOptions, ...options };
         printWindow.document.write(`
-        <html dir="rtl">
+        <html dir="ltr">
           <head>
             <title>${printOptions.title || 'Print'}</title>
             <style>

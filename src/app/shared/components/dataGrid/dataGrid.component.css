@@ -119,7 +119,7 @@
 }
 
 .app-grid ::ng-deep .p-select-list-container {
-    direction: rtl;
+    direction: ltr;
 }
 
 .app-grid ::ng-deep .combo .p-iftalabel {
@@ -145,7 +145,7 @@
     border       : unset !important;
     border-bottom: 0.5px dotted !important;
     padding      : 1px 5px !important;
-    text-align   : start;
+    text-align   : center;
     box-shadow   : unset !important;
     border-radius: 0px !important;
     min-width: 100px !important;

@@ -82,7 +82,7 @@ export class GetAddEditDeleteComponent implements OnInit {
 
     }
     else {
-      this._tools.Toaster.showError("رجاء ادخال البيانات بشكل صحيح و كامل");
+      this._tools.Toaster.showError("Please enter all required data correctly");
     }
     return data
   }

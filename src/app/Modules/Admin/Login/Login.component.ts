@@ -24,7 +24,6 @@ export class LoginComponent implements OnInit {
 
   }
   async login() {
-    debugger
     this._tools.Network.postAsync("Login", this.logInfo).then((response: any) => {
       if (response) {
         if (response.TOKEN != "" && response.TOKEN != null) {

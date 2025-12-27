@@ -1,6 +1,6 @@
-<div dir="rtl">
+<div  dir="ltr" class="mt-3">
   <p-button [raised]="true" [routerLink]="['/Main/RequstesList']" routerLinkActive="router-link-active" severity="info"
-    label="Back to Reservations List" icon="pi pi-arrow-right" class=" btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
+    label="Back to Reservations List" icon="pi pi-arrow-left" class=" btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
   <div class="row justify-content-center my-3">
     <div class="col-12 col-xl-10">
 
@@ -45,8 +45,10 @@
               <!-- Customer Selection -->
               <div class="row mb-4  my-4">
                 <div class="col-12">
-                  <div class="form-floating text-end">
-                    <p-button [raised]="true" [size]="'small'" (onClick)="AddCompany=true"  severity="info" label="Add Company" icon="pi pi-plus" class="btn-sm fw-bold"></p-button>
+                  <div class="form-floating text-start">
+                    <div class="text-end">
+                      <p-button [raised]="true" [size]="'small'" (onClick)="AddCompany=true"  severity="info" label="Add Company" icon="pi pi-plus" class="btn-sm fw-bold"></p-button>
+                    </div>
                     <app-comboBox [NormalStyle]="true" [dataSource]="Customers" optionValue="ID" optionLabel="NAME"
                       apiPathDataSource="Customer" [(SelectedValue)]="Request.CUSTOMER"
                       (SelectedValueChange)="onSelectCustomer()" class="form-control mt-2"></app-comboBox>
@@ -89,11 +91,10 @@
                   <!-- customer name Fields -->
                   <div class="row mb-4 ">
                     <div class="col-12 ">
-                      <div class="form-floating">
+                      <div class="form-floating ">
                         <input type="text" [(ngModel)]="Request.CUSTOMER_BUY_NAME" class="form-control" />
                         <label class="text-muted">
                           Customer Name
-
                         </label>
                       </div>
                     </div>
