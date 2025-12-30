@@ -16,12 +16,13 @@ import { AutoComplete } from "primeng/autocomplete";
 import { InputFastItemsComponent } from "../../../shared/pages/InputFastItems/InputFastItems.component";
 import { RealItem } from '../../../shared/Types/RealItem';
 import { AccountType } from '../../../shared/Types/AccountType';
-import { NgIf } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { RequestOrder } from '../../../shared/Types/Request';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PrintService } from '../../../shared/service/Print.service';
 import { Dialog } from "primeng/dialog";
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { FileManagerComponent } from "../../../shared/components/FileManager/FileManager.component";
 
 
 
@@ -29,7 +30,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   selector: 'app-Requstes',
   templateUrl: './Requstes.component.html',
   styleUrls: ['./Requstes.component.css'],
-  imports: [DateTimeComponent, ComboBoxComponent, Button, InputNumber, FormsModule, InputFastItemsComponent, NgIf, RouterLink, Dialog]
+  imports: [DateTimeComponent, ComboBoxComponent, Button, InputNumber, FormsModule, InputFastItemsComponent, NgIf, RouterLink, Dialog, FileManagerComponent, CommonModule]
 })
 export class RequstesComponent implements OnInit {
   @ViewChild('InputFastItems') InputFastItems!: InputFastItemsComponent
@@ -44,7 +45,7 @@ export class RequstesComponent implements OnInit {
   AddCompany: boolean = false;
   safeUrl!: SafeResourceUrl;
   OlRequest!: RequestOrder;
-  Request: RequestOrder = { ID: 0, ROW_NUMBER: -1, CUSTOMER_NAME: '', CUSTOMER: 0, DEPOST: 0, DESCOUND_PERCENT: 0, SEND_DATE: new Date(), RESAVE_DATE: new Date(), ITEMS: [], PRICE_AFTER_DESCOUND: 0, NOTS: '', PAYMENT_TYPE: 0, CUSTOMER_BUY_NAME: '', SELLER: '', PHONE: '', PLACE: 0, ADDRESS: "" };
+  Request: RequestOrder = { ID: 0, ROW_NUMBER: -1, CUSTOMER_NAME: '', CUSTOMER: 0, DEPOST: 0, DESCOUND_PERCENT: 0, SEND_DATE: new Date(), RESAVE_DATE: new Date(), ITEMS: [], PRICE_AFTER_DESCOUND: 0, NOTS: '', PAYMENT_TYPE: 0, CUSTOMER_BUY_NAME: '', SELLER: '', PHONE: '', PLACE: 0, ADDRESS: "" ,FILES:""};
   constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _printService: PrintService, private _router: Router, private sanitizer: DomSanitizer) { }
 
   async ngOnInit() {
@@ -89,6 +90,10 @@ export class RequstesComponent implements OnInit {
       })
     })
   };
+  handleFilesChanged(files: any[]) {
+    console.log('Files uploaded:', files);
+    // اعمل حاجة بـ files
+  }
   async UpdetLockep() {
     this.Places = await this._tools.Network.getAsync("Place") as Array<any>;
     this.Customers = await this._tools.Network.getAsync<any>("Customer")
@@ -198,7 +203,7 @@ export class RequstesComponent implements OnInit {
   }
   async PrintCleck() {
     this._tools.waitExecuteFunction(500, async () => {
-      await this.print(true,true);
+      await this.print(true, true);
       this._tools.waitExecuteFunction(500, () => {
         this._router.navigate(['Main', 'Requstes'], { queryParams: { ID: `${this.Request.ID}` } });
         window.location.reload();

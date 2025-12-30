@@ -1,1 +1,1 @@
-<app-get-add-edit-delete ApiPage="Company" header="Companies" ></app-get-add-edit-delete>
+<app-get-add-edit-delete *ngIf="Columns.length>0" [Columns]="Columns" ApiPage="Company" header="Companies" ></app-get-add-edit-delete>

@@ -25,6 +25,7 @@ export class AppComponent {
 
   }
   ngOnInit() {
+    
     this.primeng.setTranslation(this._tools.DateTime.Date_Data);
 
     this.primeng.zIndex = {

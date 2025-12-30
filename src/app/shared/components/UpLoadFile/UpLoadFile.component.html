@@ -1,16 +1,5 @@
 <div class="py-3 row">
-  <div class="col-12" *ngIf="pathFile==null || pathFile==''">
-    <label for="file" class="btn btn-dark w-100 text-end"> رفع {{Header}}</label>
-    <input id="file" hidden type="file">
-  </div>
-  <div class="col-12 row" *ngIf="pathFile!=null && pathFile!=''">
-    <div class="col-6">
-      <label for="file" class="btn btn-dark w-100 text-end"> رفع {{Header}}</label>
-      <input id="file" hidden type="file">
-    </div>
-    <div class="col-6">
-      <label for="file" class="btn btn-primary w-100 text-end"> تحميل {{Header}}</label>
-      <input id="file" hidden type="file">
-    </div>
-  </div>
+<input type="file" (change)="onFileSelected($event)">
+<progress [value]="uploadProgress" max="100"></progress>
+<span>{{ uploadProgress }}%</span>
 </div>

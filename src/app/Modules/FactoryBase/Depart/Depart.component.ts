@@ -21,6 +21,7 @@ export class DepartComponent implements OnInit {
     let companies = await this._tools.Network.getAsync("Company") as Array<any>;
     this.Columns.push(new Column('ID', "Code", "lapel", "text"))
     this.Columns.push(new Column('NAME', "Name", "text", "text", 400))
+    this.Columns.push(new Column('EMAIL_IN_REQUEST', "Send Email On Request To", "text", "text", 400))
     this.Columns.push(new Column('COMPANY_ID', "Company", "comboBox", "comboBox", 200));
     this.Columns[this.Columns.length - 1].columnComboBoxOptionLabel = "NAME";
     this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "ID";
@@ -29,7 +30,7 @@ export class DepartComponent implements OnInit {
   }
   async update() {
     let companies = await this._tools.Network.getAsync("Company") as Array<any>;
-    this.Columns[2].columnComboBoxDataSource = companies;
+    this.Columns[3].columnComboBoxDataSource = companies;
   }
   configTable(grid: DataGridComponent) {
     grid.Columns = this.Columns;

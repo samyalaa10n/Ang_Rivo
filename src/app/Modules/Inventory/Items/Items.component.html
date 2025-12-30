@@ -1,6 +1,6 @@
 <app-get-add-edit-delete *ngIf="Columns.length>0" #CurdOperation [Columns]="Columns" (onUpdate)="update()"
     (onConfigGrid)="onConfigGrid($event)" ApiPage="Items" header="Items">
-<ng-template [appCustomColumn]="CurdOperation.grid" let-item>
+<!-- <ng-template [appCustomColumn]="CurdOperation.grid" let-item>
     <p-button class="mx-2 " (onClick)="openRaspy(item)" size="small" variant="text" [raised]="true" label="Preparation Recipes"></p-button>
-</ng-template>
+</ng-template> -->
 </app-get-add-edit-delete>

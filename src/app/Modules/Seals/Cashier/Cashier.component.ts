@@ -117,6 +117,7 @@ export class RestaurantCashierComponent implements OnInit {
   }
   selectDepart(dep: number): void {
     this.selectedDepart = dep;
+    this.selectedCategory=-1;
   }
   getCategoryByDepat() {
     return this.categories.filter(x => x.departId == this.selectedDepart)

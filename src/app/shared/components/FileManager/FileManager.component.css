@@ -1,0 +1,21 @@
+
+  .file-input-wrapper {
+    position: relative;
+  }
+
+  .table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+
+  .alert-sm {
+    padding: 0.5rem 1rem;
+  }
+
+  .fw-500 {
+    font-weight: 500;
+  }
+
+  .btn-group-sm .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+  }

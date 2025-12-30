@@ -17,15 +17,16 @@ import { DecisionMakerComponent } from "../pages/DecisionMaker/DecisionMaker.com
   providedIn: 'root'
 })
 export class Tools {
-  _LinkComponent:BehaviorSubject<any>=new BehaviorSubject(null);
+  environment: { APIUrl: string } = { APIUrl: "" }
+  _LinkComponent: BehaviorSubject<any> = new BehaviorSubject(null);
   Authentication: any = null
   tempData: any = null
-  transfareSherdData:any={};
+  transfareSherdData: any = {};
   Loading!: LoadingComponent
   Toaster!: ToasterComponent
   Confermation!: ConfermationComponent
   DecisionMaker!: DecisionMakerComponent
-  printService: PrintService=new PrintService(this);
+  printService: PrintService = new PrintService(this);
   _countries = [
     {
       "code": "AD",
@@ -1299,6 +1300,7 @@ export class Tools {
     { name: "اخري", Id: 4 },
   ]
   constructor(public _httpClient: HttpClient, public _router: Router, public DateTime: TDateTime, public Network: Network, public Excel: Excel, public Location: Location, public Validation: Validation) {
+    this.environment.APIUrl = `${this.Network.baseUrlApi}FileUpload/UploadFiles`;
   }
   waitExecuteFunction(delay: number, func: any) {
     let timer = setTimeout(() => {
@@ -1321,7 +1323,6 @@ export class Tools {
     }
     return 0;
   }
-
   dynamicSortMutable(data: Array<any>, onProertys: Array<string>): Array<any> {
     return data.sort((a, b) => {
       for (let index = 0; index < onProertys.length; index++) {
@@ -1339,7 +1340,6 @@ export class Tools {
             if (a[onProerty] > b[onProerty]) return 1;
           }
           else if (typeof a[onProerty] == "number") {
-
             if (a[onProerty] < b[onProerty]) return -1;
             if (a[onProerty] > b[onProerty]) return 1;
           }

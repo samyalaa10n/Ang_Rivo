@@ -1,206 +1,5 @@
-.print-container {
-  padding   : 10px;
-  background: white;
-}
 
-.page-break {
-  page-break-after : always;
-  page-break-inside: avoid;
-  margin-bottom    : 20px;
-}
-
-.invoice-wrapper {
-  width      : 100%;
-  max-width  : 900px;
-  margin     : 0 auto;
-  padding    : 20px;
-  border     : 1px solid #ddd;
-  font-family: Arial, sans-serif;
-  font-size  : 13px;
-}
-
-/* Header with QR Side by Side */
-.header-top {
-  display        : flex;
-  justify-content: space-between;
-  align-items    : flex-start;
-  border-bottom  : 3px solid #d4a574;
-  padding-bottom : 12px;
-  margin-bottom  : 12px;
-}
-
-.header-left h1.company-name {
-  margin        : 0;
-  font-size     : 24px;
-  font-weight   : bold;
-  color         : #8b6f47;
-  letter-spacing: 2px;
-}
-
-.header-left .tagline {
-  margin        : 3px 0 0 0;
-  color         : #999;
-  font-size     : 9px;
-  letter-spacing: 0.5px;
-}
-
-.header-qr {
-  text-align: center;
-}
-
-.qr-code-small {
-  width  : 70px;
-  height : 70px;
-  border : 1px solid #ddd;
-  padding: 2px;
-}
-
-.qr-label {
-  margin   : 3px 0 0 0;
-  font-size: 9px;
-  color    : #666;
-}
-
-/* Order Info Grid */
-.order-info {
-  display              : grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap                  : 8px;
-  margin-bottom        : 12px;
-  padding              : 10px;
-  background           : #f9f9f9;
-  border               : 1px solid #e0e0e0;
-}
-
-.info-item {
-  display        : flex;
-  justify-content: space-between;
-  gap            : 8px;
-}
-
-.info-item.full-width {
-  grid-column: 1 / -1;
-}
-
-.info-item .label {
-  font-weight: bold;
-  color      : #333;
-  white-space: nowrap;
-  min-width  : 70px;
-}
-
-.info-item .value {
-  color     : #666;
-  text-align: start;
-  flex      : 1;
-}
-
-/* Items Table */
-.items-section {
-  margin    : 12px 0;
-  overflow-x: auto;
-}
-
-.items-table {
-  width          : 100%;
-  border-collapse: collapse;
-}
-
-.items-table thead {
-  background: #d4a574;
-  color     : white;
-}
-
-.items-table th,
-.items-table td {
-  padding      : 6px;
-  text-align   : left;
-  border-bottom: 1px solid #ddd;
-  font-size    : 14px;
-}
-
-.items-table th {
-  font-weight: bold;
-}
-
-.items-table tbody tr:nth-child(even) {
-  background: #f9f9f9;
-}
-
-.notes-cell {
-  font-size : 13px;
-  color     : #666;
-  word-break: break-word;
-}
-
-.summary-section {
-  border-top : 2px solid #d4a574;
-  padding-top: 8px;
-  margin-top : 8px;
-}
-
-.summary-row {
-  display        : flex;
-  justify-content: space-between;
-  margin-bottom  : 4px;
-  padding        : 3px 0;
-  font-size      : 10px;
-}
-
-.summary-row.total {
-  background   : #f0f0f0;
-  padding      : 6px;
-  border-radius: 2px;
-  font-weight  : bold;
-  border       : 1px solid #d4a574;
-  margin-top   : 6px;
-}
-
-.summary-row .label {
-  font-weight: bold;
-  color      : #333;
-}
-
-.summary-row .value {
-  color: #666;
-}
-
-.summary-row.total .value {
-  color    : #8b6f47;
-  font-size: 14px;
-}
-
-/* Footer */
-.footer {
-  text-align : center;
-  margin-top : 12px;
-  padding-top: 8px;
-  border-top : 1px solid #ddd;
-  color      : #999;
-  font-size  : 9px;
-}
-
-.footer p {
-  margin: 0;
-}
-
-@media print {
-  body {
-    margin : 0;
-    padding: 0;
-  }
-
-  .print-container {
-    padding: 0;
-  }
-
-  .page-break {
-    page-break-before: always;
-    page-break-after : always;
-    margin           : 0;
-  }
-
-  .page-break:first-child {
+   .page-break:first-child {
     page-break-before: auto;
   }
 
@@ -211,10 +10,262 @@
   .page-break:empty {
     display: none;
   }
+  
+  .print-container {
+    padding: 10px;
+    background: white;
+  }
+
+  .page-break {
+    page-break-before: always;
+    page-break-after: always;
+    page-break-inside: avoid;
+    margin: 0;
+  }
+
+  .page-break:first-of-type {
+    page-break-before: auto;
+  }
 
   .invoice-wrapper {
-    border    : none;
-    box-shadow: none;
-    padding   : 15px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 15px;
+    border: 1px solid #ddd;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
   }
-}
+
+  /* Header */
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 3px solid #d4a574;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+
+  .header-left h1.company-name {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #8b6f47;
+    letter-spacing: 2px;
+  }
+
+  .header-left .tagline {
+    margin: 3px 0 0 0;
+    color: #999;
+    font-size: 9px;
+    letter-spacing: 0.5px;
+  }
+
+  .header-qr {
+    text-align: center;
+  }
+
+  .qr-code-small {
+    width: 70px;
+    height: 70px;
+    border: 1px solid #ddd;
+    padding: 2px;
+  }
+
+  .qr-label {
+    margin: 3px 0 0 0;
+    font-size: 9px;
+    color: #666;
+  }
+
+  /* Order Info */
+  .order-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-bottom: 10px;
+    padding: 8px;
+    background: #f9f9f9;
+    border: 1px solid #e0e0e0;
+  }
+
+  .info-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  .info-item.full-width {
+    grid-column: 1 / -1;
+  }
+
+  .info-item .label {
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
+    min-width: 70px;
+    font-size: 14px;
+  }
+
+  .info-item .value {
+    color: #666;
+    text-align: right;
+    flex: 1;
+    font-size: 14px;
+  }
+
+  /* Items Table */
+  .items-section {
+    margin: 10px 0;
+  }
+
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  .items-table thead {
+    background: #d4a574;
+    color: white;
+  }
+
+  .items-table th,
+  .items-table td {
+    padding: 5px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .items-table th {
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .items-table tbody tr:nth-child(even) {
+    background: #f9f9f9;
+  }
+
+  .notes-cell {
+    font-size: 14px;
+    color: #666;
+    word-break: break-word;
+  }
+
+  /* Order Notes */
+  .order-notes {
+    background: #fffacd;
+    border: 1px solid #d4a574;
+    padding: 8px;
+    margin: 10px 0;
+    border-radius: 2px;
+  }
+
+  .notes-header {
+    font-weight: bold;
+    color: #8b6f47;
+    margin-bottom: 4px;
+    font-size: 11px;
+  }
+
+  .notes-content {
+    color: #333;
+    font-size: 11px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 10px;
+    padding-top: 6px;
+    border-top: 1px solid #ddd;
+    color: #999;
+    font-size: 9px;
+  }
+
+  .footer p {
+    margin: 0;
+  }
+
+  /* Summary Page Styles */
+  .summary-page .invoice-wrapper {
+    padding: 20px;
+  }
+
+  .summary-header {
+    text-align: center;
+    border-bottom: 3px solid #d4a574;
+    padding-bottom: 12px;
+    margin-bottom: 15px;
+  }
+
+  .summary-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #8b6f47;
+  }
+
+  .summary-header p {
+    margin: 4px 0 0 0;
+    color: #666;
+    font-size: 12px;
+  }
+
+  .summary-section {
+    margin-bottom: 15px;
+  }
+
+  .section-title {
+    background: #d4a574;
+    color: white;
+    padding: 8px;
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    border-radius: 2px;
+  }
+
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .summary-table thead {
+    background: #e8dcc8;
+    color: #333;
+  }
+
+  .summary-table th,
+  .summary-table td {
+    padding: 6px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .summary-table th {
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .summary-table tbody tr:nth-child(even) {
+    background: #f9f9f9;
+  }
+
+  @media print {
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    .print-container {
+      padding: 0;
+    }
+    .invoice-wrapper {
+      border: none;
+      box-shadow: none;
+    }
+  }

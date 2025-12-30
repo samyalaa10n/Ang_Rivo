@@ -36,8 +36,11 @@ export class ItemsComponent implements OnInit {
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = [{ NAME: "Raw Material" }, { NAME: "Finished Product" }, { NAME: "Semi-Finished" }];
     this.Columns.push(new Column("PRICE_GET", "Purchase Price", "numberWithFraction"))
     this.Columns.push(new Column("PRICE_SEAL", "Selling Price", "numberWithFraction"))
-    this.Columns.push(new Column("TEX", "Tax %", "numberWithFraction"))
+    //this.Columns.push(new Column("TEX", "Tax %", "numberWithFraction"))
+    //this.Columns.push(new Column("MAX_REQUEST_IN_HOUER", "Maximum Hourly Request Limit", "number"))
     this.Columns.push(new Column("NOTS", "Notes", "textarea"))
+    this.Columns.push(new Column('EMAIL_IN_REQUEST', "Send Email On Request To", "text", "text"))
+
   }
 
   async update() {
@@ -111,8 +114,10 @@ export class ItemsComponent implements OnInit {
       child.Columns.push(new Column("TYPE", "Item Type", "lapel"))
       child.Columns.push(new Column("PRICE_GET", "Purchase Price", "lapel"))
       child.Columns.push(new Column("PRICE_SEAL", "Selling Price", "lapel"))
-      child.Columns.push(new Column("TEX", "Tax %", "lapel"))
+      //child.Columns.push(new Column("TEX", "Tax %", "lapel"))
+      //child.Columns.push(new Column("MAX_REQUEST_IN_HOUER", "Maximum Hourly Request Limit", "lapel"))
       child.Columns.push(new Column("NOTS", "Notes", "lapel"))
+      child.Columns.push(new Column('EMAIL_IN_REQUEST', "Send Email On Request To","lapel"))
       child.Columns = child.Columns;
       child.dataSource = row?.ITEM_HESTORY ?? [];
       child.dataSource = child.dataSource.sort((Item2, Item1) => {

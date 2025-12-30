@@ -1,5 +1,4 @@
 <div class="print-container">
-
   <div *ngFor="let order of orders; let last = last" class="page-break">
 
     @if(order.ITEMS.length>0)
@@ -40,8 +39,8 @@
         </div>
         <div class="info-item full-width">
           <span class="label">Selected Depart:</span>
-          <span class="value" style="font-size: 14px; font-weight: bold; color: #8b6f47;">{{
-            DEPART_SELECTED_NAME}}</span>
+          <span class="value" style="font-size: 14px; font-weight: bold; color: #8b6f47;">{{ DEPART_SELECTED_NAME
+            }}</span>
         </div>
         <div class="info-item full-width">
           <span class="label">Address:</span>
@@ -89,7 +88,72 @@
       </div>
     </div>
     }
-    
+
   </div>
-  
+
+  <!-- Summary Page -->
+  <div class="page-break summary-page">
+    <div class="invoice-wrapper">
+      <div class="summary-header">
+        <h2>Summary Report</h2>
+        <p>Total Items by Category & Department</p>
+      </div>
+
+      <!-- Summary by Items (Detailed) -->
+      <div class="summary-section">
+        <h3 class="section-title">Items Summary</h3>
+        <table class="summary-table items-summary">
+          <thead>
+            <tr>
+              <th style="width: 25%">Item</th>
+              <th style="width: 15%">Category</th>
+              <th style="width: 15%">Department</th>
+              <th style="width: 12%">Unit</th>
+              <th style="width: 33%">Department Breakdown</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of getItemsSummary()">
+              <td style="font-weight: bold;">{{ item.name }}</td>
+              <td>{{ item.category }}</td>
+              <td style="font-weight: bold; color: #8b6f47;">{{ item.depart }}</td>
+              <td style="text-align: start;">{{ item.unit }}</td>
+
+              <td>
+                <div *ngFor="let dept of item.departBreakdown" class="breakdown-line">
+                  <span class="dept-name">{{ dept.name }} : </span>
+                  <span class="dept-qty">{{ dept.qty }}</span>
+                </div>
+                <hr *ngIf="item.departBreakdown.length>1">
+                <div *ngIf="item.departBreakdown.length>1" style="font-size: 15px; font-weight: bold;" >
+                  <span  class="dept-name">Total : </span>
+                  <span  class="dept-qty">{{ item.totalQty }}</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr class="total-row">
+              <td colspan="4" style="font-weight: bold;">Total by Department:</td>
+              <td>
+                <div *ngFor="let total of getDepartmentTotals()" class="breakdown-line">
+                  <span class="dept-name">{{ total.name }}:</span>
+                  <span class="dept-qty" style="font-weight: bold;">{{ total.total }}</span>
+                </div>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <!-- Grand Total -->
+      <div class="grand-total">
+        <div class="total-row">
+          <span>Total Items:</span>
+          <span style="font-weight: bold; font-size: 14px;">{{ getTotalItems() }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>

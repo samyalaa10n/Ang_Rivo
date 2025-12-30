@@ -43,12 +43,16 @@ export class RequestPrintComponentComponent implements OnInit, OnDestroy {
             var data = await this._tools.Network.postAsync<any>(`Report/GetOrdersReservations`, Req);
             if (data != undefined && Array.isArray(data)) {
               this.orders = data;
+              this.orders = this.orders.sort((a, b) =>
+                (a.PLACE_NAME || '').localeCompare(b.PLACE_NAME || '')
+              );
               this.orders.forEach(ord => {
                 ord.ITEMS.forEach(item => {
                   item.NAME = this.ITEMS.find(x => x.ID == item.ITEM_ID)?.NAME ?? "";
                   item.CATEGORY = this.Category.find(x => x.ID == this.ITEMS.find(x => x.ID == item.ITEM_ID)?.CATEGORY)?.NAME ?? "";
                   item.Depart = this.Departs.find(x => x.ID == this.Category.find(cat => cat.ID == this.ITEMS.find(x => x.ID == item.ITEM_ID)?.CATEGORY).DEPART_ID)?.NAME ?? "";
                 })
+                ord.ITEMS.sort((a, b) => a.CATEGORY.localeCompare(b.CATEGORY));
                 this.RenderItem(ord);
               })
             }
@@ -85,5 +89,68 @@ export class RequestPrintComponentComponent implements OnInit, OnDestroy {
   }
   getQRCode(orderId: number): string {
     return this.qrCodes.get(orderId) || 'data:image/png;base64,';
+  }
+  getItemsSummary() {
+    const itemsMap = new Map<string, {
+      name: string;
+      category: string;
+      depart: string;
+      unit: string;
+      departBreakdown: { name: string; qty: number }[];
+      totalQty: number;
+    }>();
+
+    this.orders.forEach(order => {
+      order.ITEMS.forEach(item => {
+        const key = `${item.NAME}|${item.CATEGORY}|${item.Depart}|${item.UNIT}`;
+        if (!itemsMap.has(key)) {
+          itemsMap.set(key, {
+            name: item.NAME,
+            category: item.CATEGORY,
+            depart: item.Depart ?? "",
+            unit: item.UNIT,
+            departBreakdown: [],
+            totalQty: 0
+          });
+        }
+        const itemData = itemsMap.get(key)!;
+        itemData.totalQty += item.COUNT;
+
+        // تحديث breakdown حسب الفرع
+        const deptBreak = itemData.departBreakdown.find(d => d.name === order.PLACE_NAME);
+        if (deptBreak) {
+          deptBreak.qty += item.COUNT;
+        } else {
+          itemData.departBreakdown.push({ name: order.PLACE_NAME || 'Unknown', qty: item.COUNT });
+        }
+      });
+    });
+    let data = Array.from(itemsMap.values());
+    data = data.sort((a, b) =>
+      (a.depart || '').localeCompare(b.depart || '')
+    );
+    return data
+  }
+
+  getDepartmentTotals() {
+    const deptTotals = new Map<string, number>();
+
+    this.orders.forEach(order => {
+      order.ITEMS.forEach(item => {
+        const deptName = order.PLACE_NAME || 'Unknown';
+        deptTotals.set(deptName, (deptTotals.get(deptName) || 0) + item.COUNT);
+      });
+    });
+
+    return Array.from(deptTotals.entries())
+      .map(([name, total]) => ({ name, total }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+
+  getTotalItems() {
+    return this.orders.reduce((total, order) => {
+      return total + order.ITEMS.reduce((sum, item) => sum + item.COUNT, 0);
+    }, 0);
   }
 }
