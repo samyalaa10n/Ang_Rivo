@@ -1,0 +1,59 @@
+<!-- Adress Card -->
+
+<app-dataGrid (onGridLoaded)="GridLoaded($event)" [dataSource]="ItemsInsert" [Columns]="columns"></app-dataGrid>
+<div class="col-12 mt-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-light border-0">
+            <h5 class="mb-0 fw-bold text-secondary">
+                <i class="pi pi-comment me-2"></i>Resson To Effect On Items
+            </h5>
+        </div>
+        <div class="card-body p-3">
+            <div class="form-floating">
+                <textarea [(ngModel)]="Resson" class="form-control" style="height: 120px; resize: vertical;"
+                    placeholder="Write the address here..."></textarea>
+                <label class="text-muted">Write the address here...</label>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mt-4 d-flex justify-content-center">
+    <p-button [raised]="true" [size]="'large'" severity="info" (onClick)="Send()" label="Send" icon="pi pi-send" class="btn-sm fw-bold px-2 "></p-button>
+</div>
+<p-dialog header="Stop Item" [(visible)]="ShowModel" [modal]="true" [style]="{'width':'70%','height':'70%'}">
+    <div class="row my-2">
+        <!-- Place  Selection -->
+        <div class="row mb-4  my-4">
+            <div class="col-12">
+                <div class="form-floating">
+                    <app-comboBox [NormalStyle]="true" [(selected)]="selectedItem" [dataSource]="Items"
+                        optionLabel="NAME" class="form-control "></app-comboBox>
+                    <label class="text-muted">
+                        Select Item
+                    </label>
+                </div>
+            </div>
+        </div>
+        <!-- Adress Card -->
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light border-0">
+                    <h5 class="mb-0 fw-bold text-secondary">
+                        <i class="pi pi-comment me-2"></i>Resson To Effect On Item
+                    </h5>
+                </div>
+                <div class="card-body p-3">
+                    <div class="form-floating">
+                        <textarea [(ngModel)]="selectedItem.Resson" class="form-control"
+                            style="height: 120px; resize: vertical;" placeholder="Write the address here..."></textarea>
+                        <label class="text-muted">Write the address here...</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4 d-flex justify-content-center">
+            <p-button [raised]="true" [size]="'large'" severity="info" (onClick)="Add()" label="Add" icon="pi pi-plus"
+                class="btn-sm fw-bold px-2"></p-button>
+        </div>
+    </div>
+</p-dialog>

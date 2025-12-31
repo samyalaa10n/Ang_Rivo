@@ -45,7 +45,7 @@ export class RequstesComponent implements OnInit {
   AddCompany: boolean = false;
   safeUrl!: SafeResourceUrl;
   OlRequest!: RequestOrder;
-  Request: RequestOrder = { ID: 0, ROW_NUMBER: -1, CUSTOMER_NAME: '', CUSTOMER: 0, DEPOST: 0, DESCOUND_PERCENT: 0, SEND_DATE: new Date(), RESAVE_DATE: new Date(), ITEMS: [], PRICE_AFTER_DESCOUND: 0, NOTS: '', PAYMENT_TYPE: 0, CUSTOMER_BUY_NAME: '', SELLER: '', PHONE: '', PLACE: 0, ADDRESS: "" ,FILES:""};
+  Request: RequestOrder = { ID: 0, ROW_NUMBER: -1, CUSTOMER_NAME: '', CUSTOMER: 0, DEPOST: 0, DESCOUND_PERCENT: 0, SEND_DATE: new Date(), RESAVE_DATE: new Date(), ITEMS: [], PRICE_AFTER_DESCOUND: 0, NOTS: '', PAYMENT_TYPE: 0, CUSTOMER_BUY_NAME: '', SELLER: '', PHONE: '', PLACE: 0, ADDRESS: "", FILES: "", ISCANCELED: false };
   constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _printService: PrintService, private _router: Router, private sanitizer: DomSanitizer) { }
 
   async ngOnInit() {
@@ -145,7 +145,7 @@ export class RequstesComponent implements OnInit {
   TotalAfterDepost(): number {
     return this.TotalAfterDescound() - this.Request.DEPOST;
   }
-  Save() {
+  Save(IS_CANCEL: boolean = false) {
     this.Request.ITEMS = this.InputFastItems.GeneratRequestItems();
     this._tools.Network.putAsync("Requstes/EditMore", [this.Request]).then(async (res: any) => {
       if (res?.ID > 0) {
@@ -153,11 +153,13 @@ export class RequstesComponent implements OnInit {
         this.InputFastItems.oldData = [];
         await this.InputFastItems.UpdateOnSave();
         this._tools.waitExecuteFunction(500, async () => {
-          await this.print();
-          this._tools.waitExecuteFunction(500, () => {
-            this._router.navigate(['Main', 'Requstes'], { queryParams: { ID: `${this.Request.ID}` } });
-            window.location.reload();
-          })
+          if (IS_CANCEL == false) {
+            await this.print();
+            this._tools.waitExecuteFunction(500, () => {
+              this._router.navigate(['Main', 'Requstes'], { queryParams: { ID: `${this.Request.ID}` } });
+              window.location.reload();
+            })
+          }
         })
       }
     })
@@ -188,6 +190,23 @@ export class RequstesComponent implements OnInit {
         });
       }
     })
+  }
+  async CancelRequest() {
+    this._tools.Confermation.show("Are you sure").then(async (r) => {
+      if (r) {
+        this.Request.ISCANCELED = true;
+        await this.Save(true);
+      }
+    })
+  }
+  async ReturnCancelRequest() {
+    this._tools.Confermation.show("Are you sure").then(async (r) => {
+      if (r) {
+        this.Request.ISCANCELED = false;
+        await this.Save(true);
+      }
+    })
+
   }
   async AddInhert() {
     this.somePricies = await this._tools.Confermation.show("Do you want to copy prices as well with quantities?", "Question")

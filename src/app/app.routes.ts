@@ -26,6 +26,11 @@ export const routes: Routes = [
     component: MainComponent,
     children: [
       {
+        path: 'AtivateItems',
+        data: { REQ: '' },
+        loadComponent: () => import('./Modules/Inventory/AtivateItemsControl/AtivateItemsControl.component').then(m => m.AtivateItemsControlComponent)
+      },
+      {
         path: 'RequestPrint',
         data: { REQ: '' },
         title: 'Print Reservations',

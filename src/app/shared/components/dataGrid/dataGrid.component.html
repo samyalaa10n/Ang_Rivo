@@ -145,7 +145,7 @@
                     </ng-container>
                     }
                     @case ("text") {
-                    <input class="inputText" pInputText type="text" #text placeholder="...Type"
+                    <input class="inputText" pInputText type="text" #text placeholder="Type..."
                         [(ngModel)]="item[column.name]" (keydown)="pInputTextKeyDown($event,text,item)"
                         (keyup)="onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})" />
                     }
@@ -156,17 +156,17 @@
                         [binary]="true" />
                     }
                     @case ("date") {
-                    <app-DateTime placeholder="...Type" [(selectedDate)]="item[column.name]"
+                    <app-DateTime placeholder="Type..." [(selectedDate)]="item[column.name]"
                         [maxDate]="column.columnMaxDate" [minDate]="column.columnMinDate"
                         (selectedDateChange)="onSelectColumnData(item,$event,column);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"></app-DateTime>
                     }
                     @case ("date-Time") {
-                    <app-DateTime placeholder="...Type" [(selectedDate)]="item[column.name]" [showTime]="true"
+                    <app-DateTime placeholder="Type..." [(selectedDate)]="item[column.name]" [showTime]="true"
                         [maxDate]="column.columnMaxDate" [minDate]="column.columnMinDate"
                         (selectedDateChange)="onSelectColumnData(item,$event,column);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"></app-DateTime>
                     }
                     @case ("Time") {
-                    <app-DateTime placeholder="...Type" hourFormat="" [(selectedDate)]="item[column.name]"
+                    <app-DateTime placeholder="Type..." hourFormat="" [(selectedDate)]="item[column.name]"
                         [showTimeOnly]="true" [maxDate]="column.columnMaxDate" [minDate]="column.columnMinDate"
                         (selectedDateChange)="onSelectColumnData(item,$event,column);onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})"></app-DateTime>
                     }
@@ -210,7 +210,7 @@
                     @case ("textarea") {
                     <textarea [(ngModel)]="item[column.name]"
                         (keyup)="onGridAction({EVENT:$event,itemEdit:item,ActonType:'KEYUP',COLUMN:column})" pInputText
-                        type="text" placeholder="...Type"></textarea>
+                        type="text" placeholder="Type..."></textarea>
                     }
                     @case ("custom") {
                     <ng-container [ngTemplateOutlet]="column.templateColumn"

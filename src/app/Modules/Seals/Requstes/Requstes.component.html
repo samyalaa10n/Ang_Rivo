@@ -185,8 +185,9 @@
                   </div>
                 </div>
                 <div class="col-12">
-                  <app-file-manager [(FileObjectJson)]="Request.FILES" class="d-block w-100 mt-2" [label]="'Upload Your Files'" urlPath="OrderImage" [fileType]="'image'"
-                    [maxFileSizeMB]="5" [allowMultiple]="true" [mode]="'edit'"
+                  <app-file-manager [(FileObjectJson)]="Request.FILES" class="d-block w-100 mt-2"
+                    [label]="'Upload Your Files'" urlPath="OrderImage" [fileType]="'image'" [maxFileSizeMB]="5"
+                    [allowMultiple]="true" [mode]="'edit'"
                     (onFilesChanged)="handleFilesChanged($event)"></app-file-manager>
                 </div>
 
@@ -294,18 +295,25 @@
           <div class="d-grid gap-2 d-md-flex justify-content-md-center">
             <p-button *ngIf=" this.Request.ID==0" [raised]="true" (onClick)="Save()" severity="success"
               label="Add Reservation & Print" icon="pi pi-save" class="btn-lg p-1 fw-bold shadow-sm"></p-button>
-            <p-button *ngIf=" this.Request.ID>0" [raised]="true" (onClick)="Save()" severity="success"
+            <p-button *ngIf=" this.Request.ID>0 && !this.Request.ISCANCELED" [raised]="true" (onClick)="Save()" severity="success"
               label="Save Reservation Changes & Print" icon="pi pi-save"
               class="btn-lg p-1 fw-bold shadow-sm"></p-button>
             <p-button *ngIf=" this.Request.ID>0" [raised]="true" (onClick)="PrintCleck()" severity="success"
               label="Print Reservation" icon="pi pi-print" class="btn-lg p-1 fw-bold shadow-sm"></p-button>
-            <p-button *ngIf=" this.Request.ID>0" [raised]="true" (onClick)="delete()" severity="danger"
-              label="Delete Reservation" icon="pi pi-trash" class="btn-lg p-1 fw-bold shadow-sm"></p-button>
+            <p-button *ngIf=" this.Request.ID>0 && this.Request.ISCANCELED" [raised]="true" (onClick)="delete()"
+              severity="danger" label="Delete Reservation" icon="pi pi-trash"
+              class="btn-lg p-1 fw-bold shadow-sm"></p-button>
             <p-button *ngIf=" this.Request.ID>0" [raised]="true" (onClick)="AddNew()" severity="info"
               label="New Reservation" icon="pi pi-plus" class="btn-lg p-1 fw-bold shadow-sm"></p-button>
             <p-button *ngIf=" this.Request.ID>0" [raised]="true" (onClick)="AddInhert()" severity="info"
               label="New Reservation with Same Data" icon="pi pi-plus" severity="info"
               class="btn-lg p-1 fw-bold shadow-sm"></p-button>
+            <p-button *ngIf="this.Request.ID>0 && !this.Request.ISCANCELED" [raised]="true" (onClick)="CancelRequest()"
+              severity="info" label="Cancel a reservation" icon="pi pi-undo" severity="danger"
+              class="btn-lg p-1 fw-bold shadow-sm "></p-button>
+            <p-button *ngIf="this.Request.ID>0 && this.Request.ISCANCELED" [raised]="true" (onClick)="ReturnCancelRequest()"
+              severity="info" label="Return the reservation" icon="pi pi-pound" severity="info"
+              class="btn-lg p-1 fw-bold shadow-sm "></p-button>
           </div>
         </div>
       </div>

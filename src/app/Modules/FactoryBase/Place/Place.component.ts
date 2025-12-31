@@ -21,6 +21,6 @@ export class PlaceComponent implements OnInit {
     this.Columns.push(new Column('IS_FACTORY', "Is Factory?", "yes-no", "none", 50))
     this.Columns.push(new Column('IS_BRANCH', "Is Branch?", "yes-no", "none", 50))
     this.Columns.push(new Column('TABLE_COUNT', "Number of Tables", "number", "none", 50))
+    this.Columns.push(new Column('EMAIL', "Email", "text", "text", 200))
   }
-
 }

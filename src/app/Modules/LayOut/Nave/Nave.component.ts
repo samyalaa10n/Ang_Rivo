@@ -95,6 +95,13 @@ export class NaveComponent implements OnInit {
         icon: 'pi pi-database',
         items: [
           {
+            label: 'Enable / Disable Items',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'AtivateItems']);
+            },
+          },
+          {
             label: 'Warehouses',
             icon: 'pi pi-database',
             command: (event) => {
