@@ -1,0 +1,8 @@
+
+<div class="d-flex justify-center">
+      <p-galleria [value]="images" [containerStyle]="{ 'max-width': '640px' }" >
+        <ng-template #thumbnail let-item>
+            <img [src]="item.filePath" />
+        </ng-template>
+    </p-galleria>
+</div>

@@ -59,14 +59,8 @@ export class RequestPrintComponentComponent implements OnInit, OnDestroy {
             }
             // Generate QR codes for all orders
             for (const order of this.orders) {
-              const qrData = JSON.stringify({
-                orderID: order.ID,
-                customer: order.CUSTOMER_NAME,
-                total: order.TOTAL_AFTER_DEPOST,
-                date: order.SEND_DATE
-              });
               try {
-                const qrCode = await QRCode.toDataURL(qrData);
+                const qrCode = await QRCode.toDataURL(order?.QR || "");
                 this.qrCodes.set(order.ID, qrCode);
               } catch (error) {
                 console.error('Error generating QR code:', error);

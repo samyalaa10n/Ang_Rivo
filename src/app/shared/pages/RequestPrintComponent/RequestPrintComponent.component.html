@@ -11,7 +11,7 @@
           <h1 class="company-name">COPPERMELT</h1>
           <p class="tagline">Premium Bakery & Desserts</p>
         </div>
-        <div class="header-qr">
+        <div class="header-qr" *ngIf="order.QR!=''">
           <img [src]="getQRCode(order.ID)" class="qr-code-small" alt="Order QR" />
           <p class="qr-label">Order #{{ order.ID }}</p>
         </div>

@@ -26,6 +26,11 @@ export const routes: Routes = [
     component: MainComponent,
     children: [
       {
+        path: 'ShowImages',
+        data: { Id: '' },
+        loadComponent: () => import('./shared/pages/ShowImages/ShowImages.component').then(m => m.ShowImagesComponent)
+      },
+      {
         path: 'AtivateItems',
         data: { REQ: '' },
         loadComponent: () => import('./Modules/Inventory/AtivateItemsControl/AtivateItemsControl.component').then(m => m.AtivateItemsControlComponent)
