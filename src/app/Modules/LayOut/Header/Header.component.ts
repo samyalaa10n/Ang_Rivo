@@ -4,6 +4,7 @@ import { NaveComponent } from '../Nave/Nave.component';
 import { Tools } from '../../../shared/service/Tools.service';
 import { Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
+import { BehaviorSubject } from 'rxjs';
 
 
 @Component({
@@ -11,9 +12,11 @@ import { NgIf } from '@angular/common';
   templateUrl: './Header.component.html',
   styleUrls: ['./Header.component.css'],
   standalone: true,
-  imports: [ButtonModule, RouterLink,NgIf]
+  imports: [ButtonModule, RouterLink, NgIf]
 })
 export class HeaderComponent implements OnInit {
+
+  SignalMessage: BehaviorSubject<string> = new BehaviorSubject<string>("");
   constructor(public _tools: Tools, private _router: Router) { }
 
   ngOnInit() {
@@ -24,6 +27,12 @@ export class HeaderComponent implements OnInit {
     else {
       this._tools.Network._LoginName = "";
     }
+    this.SignalMessage.subscribe(msg => {
+      if (msg != "") {
+        this._tools.Toaster.showInfo(msg);
+      }
+    })
+
   }
   openNave() {
     this._tools._LinkComponent.next("open")
@@ -33,8 +42,16 @@ export class HeaderComponent implements OnInit {
     this._router.navigate(['Login'])
   }
   LogIn() {
-   this._router.navigate(['Login'])
+    this._router.navigate(['Login'])
   }
-
-
+  connect() {
+    if (!this._tools.transfareSherdData.sherdMood && this._tools.Network.hubConnection == undefined || this._tools.Network.hubConnection?.state == "Disconnected") {
+      this._tools.Network.startConnection();
+      this._tools.Network.addMessageListener("LoadingText", (user: string, message: string) => {
+        // console.log("Loading Message Received:", user, message);
+        this.SignalMessage.next(message)
+        this._tools.Loading.text = message;
+      })
+    }
+  }
 }

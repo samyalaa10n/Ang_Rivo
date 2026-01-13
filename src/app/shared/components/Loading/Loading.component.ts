@@ -14,12 +14,13 @@ export class LoadingComponent implements OnInit {
 
   showLoading: boolean = false;
   Req: number = 0;
+  text: string = "";
   constructor(public _tools: Tools) {
     _tools.Loading = this;
     _tools.Network.Loading = this;
   }
   ngOnInit() {
-
+ 
   }
   startLoading() {
     this.Req++;
@@ -29,13 +30,13 @@ export class LoadingComponent implements OnInit {
     else {
       (window as any)?.chrome?.webview?.postMessage('startLoading');
     }
-
   }
   stopLoading() {
     this.Req--
     if (this.Req <= 0) {
       if ((window as any)?.chrome?.webview == undefined) {
         this.showLoading = false;
+        this.text = "";
       }
       else {
         (window as any)?.chrome?.webview?.postMessage('stopLoading');

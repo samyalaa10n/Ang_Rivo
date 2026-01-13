@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { Router } from "@angular/router";
 import * as signalR from '@microsoft/signalr';
 import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -20,36 +21,18 @@ export class Network {
   _LoginName: string = ""
   Toaster!: ToasterComponent
   // Start the SignalR connection
-  public startConnection(UserData: string): void {
+  public startConnection(UserData: string = ""): void {
     this.hubConnection = new signalR.HubConnectionBuilder().withUrl(`${this.baseUrl}/Connect?UserData=${UserData}`, {
       withCredentials: true // لتأكيد إرسال الـ cookies إذا كان يستخدم
     }).build();
-    this.Loading.startLoading();
     this.hubConnection.start()
       .then(() => {
-        console.log('SignalR Connection Established')
+        console.log('Connection Established')
       })
       .catch(err => {
         this.Loading.stopLoading();
         console.log(err)
       });
-    this.hubConnection.on("OnConnectedData", (response) => {
-      this.Loading.stopLoading();
-      if (response.success) {
-        this._LoginName = response.useR_NAME;
-        localStorage.setItem("logInfo", JSON.stringify(response))
-        this._router.navigate(['Main', 'Home'])
-      }
-      else {
-        this.hubConnection?.stop();
-        this.Toaster.showError(response.message)
-        console.log(response)
-        if (response.logOut) {
-          localStorage.removeItem("logInfo")
-          this._router.navigate(['Login'])
-        }
-      }
-    });
   }
   // Send a message
   public sendMessage(mestod: string, user: string, message: string): void {
@@ -109,10 +92,10 @@ export class Network {
       return undefined;
     }
   }
-  public async putAsync<T>(url: string, data: any, filterHeader: string = ""): Promise<T | undefined> {
+  public async putAsync<T>(url: string, data: any, filterHeader: string = "", headers: any = null): Promise<T | undefined> {
     try {
       this.Loading.startLoading();
-      let response = await this._httpClient.put<T>(this.baseUrlApi + url, data, { headers: { "filter": filterHeader } }).toPromise() as any;
+      let response = await this._httpClient.put<T>(this.baseUrlApi + url, data, { headers: headers == null ? { "filter": filterHeader } : headers }).toPromise() as any;
       this.Loading.stopLoading();
       if (response.SUCCESS == true) {
         response = response.DATA;

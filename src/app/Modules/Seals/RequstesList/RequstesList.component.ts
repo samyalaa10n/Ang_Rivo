@@ -56,8 +56,9 @@ export class RequstesListComponent implements OnInit {
   }
   async GetData() {
     let Req = this._tools.cloneObject(this.Request);
-    Req.START = this._tools.DateTime.EditData(this.Request.START, 3).toLocaleString("en")
-    Req.END = this._tools.DateTime.EditData(this.Request.END, 3).toLocaleString("en")
+    debugger
+    //Req.START = this._tools.DateTime.EditData(this.Request.START, 2).toLocaleString("en")
+    //Req.END = this._tools.DateTime.EditData(this.Request.END, 2).toLocaleString("en")
     this.RequestLest = await this._tools.Network.getAsync<any>('Requstes?filter=' + JSON.stringify(Req))
 
   }

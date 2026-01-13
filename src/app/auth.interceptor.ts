@@ -14,14 +14,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   if (token) {
     const cloned = req.clone({
-      headers: req.headers.set('Authorization', `Bearer ${token}`),
+      headers: req.headers.set('Authorization', `Bearer ${token}`).set('connectionId', _tools.Network.hubConnection?.connectionId || ''),
     });
 
     return next(cloned).pipe(
       tap({
-        next: (res) => {
-          console.log(res)
-        },
         error: (error: any) => {
           if (error?.status == 401) {
             localStorage.removeItem("logInfo")
@@ -32,7 +29,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           const title = error?.error?.title || 'Unknown Error';
           const detail = error?.error?.detail;
           _tools.Toaster.showError(title);
-          console.log(error)
           if (detail) _tools.Toaster.showError(detail);
         },
       })

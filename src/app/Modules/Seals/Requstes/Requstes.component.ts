@@ -91,7 +91,6 @@ export class RequstesComponent implements OnInit {
     })
   };
   handleFilesChanged(files: any[]) {
-    console.log('Files uploaded:', files);
     // اعمل حاجة بـ files
   }
   async UpdetLockep() {
@@ -147,7 +146,7 @@ export class RequstesComponent implements OnInit {
   }
   Save(IS_CANCEL: boolean = false) {
     this.Request.ITEMS = this.InputFastItems.GeneratRequestItems();
-    this._tools.Network.putAsync("Requstes/EditMore", [this.Request]).then(async (res: any) => {
+    this._tools.Network.putAsync("Requstes/EditMore", [this.Request],"").then(async (res: any) => {
       if (res?.ID > 0) {
         this.Request = res;
         this.InputFastItems.oldData = [];

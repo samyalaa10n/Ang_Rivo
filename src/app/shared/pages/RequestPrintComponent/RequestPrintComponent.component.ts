@@ -43,6 +43,7 @@ export class RequestPrintComponentComponent implements OnInit, OnDestroy {
             var data = await this._tools.Network.postAsync<any>(`Report/GetOrdersReservations`, Req);
             if (data != undefined && Array.isArray(data)) {
               this.orders = data;
+              //this.orders.sort((a,b)=>a.RESAVE_DATE>b.RESAVE_DATE);
               this.orders = this.orders.sort((a, b) =>
                 (a.PLACE_NAME || '').localeCompare(b.PLACE_NAME || '')
               );
