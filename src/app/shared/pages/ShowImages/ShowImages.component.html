@@ -1,8 +1,4 @@
 
-<div class="d-flex justify-center">
-      <p-galleria [value]="images" [containerStyle]="{ 'max-width': '640px' }" >
-        <ng-template #thumbnail let-item>
-            <img [src]="item.filePath" />
-        </ng-template>
-    </p-galleria>
-</div>
+<app-file-manager *ngIf="Request" [(FileObjectJson)]="Request.FILES" class="d-block w-100 mt-2" [label]="'Upload Your Files'"
+    urlPath="OrderImage" [fileType]="'image'" [allowMultiple]="true" [mode]="'view'"
+    ></app-file-manager>

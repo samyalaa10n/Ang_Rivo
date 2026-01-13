@@ -7,7 +7,7 @@
         <div class="card border-0 shadow-sm">
           <div class="card-body p-4">
             <!-- Title -->
-            <div class="mb-3">
+            <div class="mb-3" *ngIf="mode != 'view'">
               <label class="form-label fw-bold text-dark">
                 <i class="pi pi-cloud-upload me-2"></i>{{ label }}
               </label>
@@ -18,13 +18,13 @@
 
             <!-- File Input Area -->
             <div class="form-floating mb-3">
-              <div class="file-input-wrapper">
+              <div class="file-input-wrapper" *ngIf="mode != 'view'">
                 <input type="file" #fileInput (change)="onFileSelected($event)" class="form-control d-none"
-                  [attr.accept]="getAcceptAttribute()" [disabled]="isUploading || mode === 'view'" />
+                  [attr.accept]="getAcceptAttribute()" [disabled]="isUploading" />
 
                 <button type="button"
                   class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2 text-black"
-                  (click)="fileInput.click()" [disabled]="isUploading || mode === 'view'">
+                  (click)="fileInput.click()" [disabled]="isUploading">
                   <i class="pi pi-upload"></i>
                   {{ isUploading ? 'Uploading...' : 'Choose File' }}
                 </button>

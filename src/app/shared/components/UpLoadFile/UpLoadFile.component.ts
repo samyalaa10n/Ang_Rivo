@@ -6,7 +6,6 @@ import { FileUploadConfig, FileUploadService } from '../../service/FileUpload.se
   selector: 'app-UpLoadFile',
   templateUrl: './UpLoadFile.component.html',
   styleUrls: ['./UpLoadFile.component.css'],
-  imports: [NgIf]
 })
 export class UpLoadFileComponent {
 
@@ -15,7 +14,6 @@ export class UpLoadFileComponent {
   @Input() pathFile: string | null = null;
   @Output() pathFileChange: EventEmitter<any> = new EventEmitter();
   uploadProgress = 0;
-
   constructor(private uploadService: FileUploadService) { }
 
   async onFileSelected(event: any) {
