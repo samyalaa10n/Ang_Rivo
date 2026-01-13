@@ -3,9 +3,51 @@ import { authGuard } from './shared/Gurd/auth.guard';
 import { MainComponent } from './Modules/LayOut/Main/Main.component';
 import { LoginComponent } from './Modules/Admin/Login/Login.component';
 import { HomeComponent } from './Modules/LayOut/Home/Home.component';
-
-
-
+import { AtivateItemsControlComponent } from './Modules/Inventory/AtivateItemsControl/AtivateItemsControl.component';
+import { RequestPrintComponentComponent } from './shared/pages/RequestPrintComponent/RequestPrintComponent.component';
+import { EffectInSystemComponent } from './Modules/HR/EffectInSystem/EffectInSystem.component';
+import { ColumnEffectComponent } from './Modules/HR/ColumnEffect/ColumnEffect.component';
+import { EmploysRecodesComponent } from './Modules/HR/EmployesRecordies/EmploysRecodes.component';
+import { EmployesComponent } from './Modules/HR/Employes/Employes.component';
+import { CompanyComponent } from './Modules/FactoryBase/Company/Company.component';
+import { DepartComponent } from './Modules/FactoryBase/Depart/Depart.component';
+import { PlaceComponent } from './Modules/FactoryBase/Place/Place.component';
+import { MangementComponent } from './Modules/FactoryBase/Mangement/Mangement.component';
+import { HolidayRecodesComponent } from './Modules/HR/holidayRecords/holidayRecords.component';
+import { ForgatInOutComponent } from './Modules/HR/ForgatInOut/ForgatInOut.component';
+import { EffectRecodesComponent } from './Modules/HR/EffectRecodes/EffectRecodes.component';
+import { EffectComponent } from './Modules/HR/Effect/Effect.component';
+import { UserComponent } from './Modules/Admin/User/User.component';
+import { RuleGroupComponent } from './Modules/Admin/RuleGroup/RuleGroup.component';
+import { AttendanceAndDepartureDevicesComponent } from './Modules/HR/AttendanceAndDepartureDevices/AttendanceAndDepartureDevices.component';
+import { AttendanceRecordComponent } from './Modules/HR/AttendanceRecord/AttendanceRecord.component';
+import { AllowanceComponent } from './Modules/HR/Allowance/Allowance.component';
+import { SomeEmployRuleComponent } from './Modules/HR/SomeEmployRule/SomeEmployRule.component';
+import { ShiftsComponent } from './Modules/HR/Shifts/Shifts.component';
+import { AttendanceCalculatorComponent } from './Modules/HR/AttendanceCalculator/AttendanceCalculator.component';
+import { WareHousesComponent } from './Modules/Inventory/WareHouses/WareHouses.component';
+import { CategoryComponent } from './Modules/Inventory/Category/Category.component';
+import { ItemsComponent } from './Modules/Inventory/Items/Items.component';
+import { UnitsControlComponent } from './Modules/Inventory/UnitsControl/UnitsControl.component';
+import { OperationListComponent } from './Modules/Inventory/OperationList/OperationList.component';
+import { OperationComponent } from './Modules/Inventory/Operation/Operation.component';
+import { RaspyComponent } from './Modules/Inventory/Raspy/Raspy.component';
+import { ItemsInRaspyComponent } from './Modules/Inventory/ItemsInRaspy/ItemsInRaspy.component';
+import { SeasonComponent } from './Modules/Seals/Season/Season.component';
+import { CustomerComponent } from './Modules/Seals/Customer/Customer.component';
+import { SpeciaPriceComponent } from './Modules/Seals/SpeciaPrice/SpeciaPrice.component';
+import { SpecialDescoundComponent } from './Modules/Seals/SpecialDescound/SpecialDescound.component';
+import { InvoiceListComponent } from './Modules/Seals/InvoiceList/InvoiceList.component';
+import { InvoiceComponent } from './Modules/Seals/Invoice/Invoice.component';
+import { RestaurantCashierComponent } from './Modules/Seals/Cashier/Cashier.component';
+import { RequstesComponent } from './Modules/Seals/Requstes/Requstes.component';
+import { RequstesListComponent } from './Modules/Seals/RequstesList/RequstesList.component';
+import { AccountsComponent } from './Modules/Accounts/Accounts/Accounts.component';
+import { AccountTypeOperationsComponent } from './Modules/Accounts/AccountTypeOperations/AccountTypeOperations.component';
+import { AccountOperationListComponent } from './Modules/Accounts/AccountOperationList/AccountOperationList.component';
+import { AccountOperationComponent } from './Modules/Accounts/AccountOperation/AccountOperation.component';
+import { ReportComponent } from './Modules/Report/Report.component';
+import { Show_QR_CodeComponent } from './shared/pages/Show_QR_Code/Show_QR_Code.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'Home', pathMatch: 'full' },
@@ -25,7 +67,7 @@ export const routes: Routes = [
     canActivateChild: [authGuard],
     component: MainComponent,
     children: [
-      {
+       {
         path: 'ShowImages',
         data: { Id: '' },
         loadComponent: () => import('./shared/pages/ShowImages/ShowImages.component').then(m => m.ShowImagesComponent)
@@ -33,271 +75,238 @@ export const routes: Routes = [
       {
         path: 'AtivateItems',
         data: { REQ: '' },
-        loadComponent: () => import('./Modules/Inventory/AtivateItemsControl/AtivateItemsControl.component').then(m => m.AtivateItemsControlComponent)
+        component: AtivateItemsControlComponent
       },
       {
         path: 'RequestPrint',
         data: { REQ: '' },
         title: 'Print Reservations',
-        loadComponent: () => import('./shared/pages/RequestPrintComponent/RequestPrintComponent.component').then(m => m.RequestPrintComponentComponent)
+        component: RequestPrintComponentComponent
       },
       {
         path: 'EffectInSystem',
         title: 'System Effects',
-        loadComponent: () => import('./Modules/HR/EffectInSystem/EffectInSystem.component').then(m => m.EffectInSystemComponent)
+        component: EffectInSystemComponent
       },
       {
         path: 'ColumnEffect',
         title: 'Effect Items',
-        loadComponent: () => import('./Modules/HR/ColumnEffect/ColumnEffect.component').then(m => m.ColumnEffectComponent)
+        component: ColumnEffectComponent
       },
       {
         path: 'Employs',
         title: 'Employees List',
-        loadComponent: () => import('./Modules/HR/EmployesRecordies/EmploysRecodes.component').then(m => m.EmploysRecodesComponent)
+        component: EmploysRecodesComponent
       },
       {
         path: 'Employs/Control',
         title: 'Employee Data',
-        loadComponent: () => import('./Modules/HR/Employes/Employes.component').then(m => m.EmployesComponent)
+        component: EmployesComponent
       },
       {
         path: 'Companies',
         title: 'Companies',
-        loadComponent: () => import('./Modules/FactoryBase/Company/Company.component').then(m => m.CompanyComponent)
+        component: CompanyComponent
       },
       {
         path: 'Departs',
         title: 'Departments',
-        loadComponent: () => import('./Modules/FactoryBase/Depart/Depart.component').then(m => m.DepartComponent)
+        component: DepartComponent
       },
       {
         path: 'Places',
         title: 'Work Places',
-        loadComponent: () => import('./Modules/FactoryBase/Place/Place.component').then(m => m.PlaceComponent)
+        component: PlaceComponent
       },
       {
         path: 'Mangements',
         title: 'Organizational Structure',
-        loadComponent: () => import('./Modules/FactoryBase/Mangement/Mangement.component').then(m => m.MangementComponent)
+        component: MangementComponent
       },
       {
         path: 'Holiday',
         title: 'Holidays Registration',
-        loadComponent: () => import('./Modules/HR/holidayRecords/holidayRecords.component').then(m => m.HolidayRecodesComponent)
+        component: HolidayRecodesComponent
       },
       {
         path: 'ForgatInOut',
         title: 'Attendance Deficiencies',
-        loadComponent: () => import('./Modules/HR/ForgatInOut/ForgatInOut.component').then(m => m.ForgatInOutComponent)
+        component: ForgatInOutComponent
       },
       {
         path: 'Effects',
         title: 'Effects',
-        loadComponent: () => import('./Modules/HR/EffectRecodes/EffectRecodes.component').then(m => m.EffectRecodesComponent)
+        component: EffectRecodesComponent
       },
       {
         path: 'Effects/Add',
         title: 'Add Effect',
-        loadComponent: () => import('./Modules/HR/Effect/Effect.component').then(m => m.EffectComponent)
+        component: EffectComponent
       },
       {
         path: 'Users',
         title: 'Users',
-        loadComponent: () => import('./Modules/Admin/User/User.component').then(m => m.UserComponent)
+        component: UserComponent
       },
       {
         path: 'RuleGroup',
         title: 'User Type',
-        loadComponent: () => import('./Modules/Admin/RuleGroup/RuleGroup.component').then(m => m.RuleGroupComponent)
+        component: RuleGroupComponent
       },
       {
         path: 'AttendanceAndDepartureDevices',
         title: 'Attendance Devices',
-        loadComponent: () => import('./Modules/HR/AttendanceAndDepartureDevices/AttendanceAndDepartureDevices.component').then(m => m.AttendanceAndDepartureDevicesComponent)
+        component: AttendanceAndDepartureDevicesComponent
       },
       {
         path: 'AttendanceRecord',
         title: 'Attendance Records',
-        loadComponent: () => import('./Modules/HR/AttendanceRecord/AttendanceRecord.component').then(m => m.AttendanceRecordComponent)
+        component: AttendanceRecordComponent
       },
       {
         path: 'ALLOWANCES',
         title: 'Allowances',
-        loadComponent: () => import('./Modules/HR/Allowance/Allowance.component').then(m => m.AllowanceComponent)
-      }
-      ,
+        component: AllowanceComponent
+      },
       {
         path: 'SomeEmployRule',
         title: 'Special Schedules',
-        loadComponent: () => import('./Modules/HR/SomeEmployRule/SomeEmployRule.component').then(m => m.SomeEmployRuleComponent)
-      }
-      ,
+        component: SomeEmployRuleComponent
+      },
       {
         path: 'shifts',
         title: 'Work Shifts',
-        loadComponent: () => import('./Modules/HR/Shifts/Shifts.component').then(m => m.ShiftsComponent)
-      }
-      ,
+        component: ShiftsComponent
+      },
       {
         path: 'AttendanceCalculator',
         title: 'Hours Calculator',
-        loadComponent: () => import('./Modules/HR/AttendanceCalculator/AttendanceCalculator.component').then(m => m.AttendanceCalculatorComponent)
-      }
-      ,
+        component: AttendanceCalculatorComponent
+      },
       {
         path: 'WareHouses',
         title: 'Warehouses',
-        loadComponent: () => import('./Modules/Inventory/WareHouses/WareHouses.component').then(m => m.WareHousesComponent)
-      }
-      ,
+        component: WareHousesComponent
+      },
       {
         path: 'Category',
         title: 'Categories',
-        loadComponent: () => import('./Modules/Inventory/Category/Category.component').then(m => m.CategoryComponent)
-      }
-      ,
+        component: CategoryComponent
+      },
       {
         path: 'Items',
         title: 'Items',
-        loadComponent: () => import('./Modules/Inventory/Items/Items.component').then(m => m.ItemsComponent)
-
-      }
-      ,
+        component: ItemsComponent
+      },
       {
         path: 'Units',
         title: 'Units of Measurement',
-        loadComponent: () => import('./Modules/Inventory/UnitsControl/UnitsControl.component').then(m => m.UnitsControlComponent)
-      }
-      ,
+        component: UnitsControlComponent
+      },
       {
         path: 'OperationList',
         title: 'Warehouse Operations',
-        loadComponent: () => import('./Modules/Inventory/OperationList/OperationList.component').then(m => m.OperationListComponent)
-      }
-      ,
+        component: OperationListComponent
+      },
       {
         path: 'Operation',
         data: { ID: 0 },
         title: 'Warehouse Operation',
-        loadComponent: () => import('./Modules/Inventory/Operation/Operation.component').then(m => m.OperationComponent)
-      }
-      ,
+        component: OperationComponent
+      },
       {
         path: 'Raspy',
         data: { ID: 0 },
         title: 'Item Components',
-        loadComponent: () => import('./Modules/Inventory/Raspy/Raspy.component').then(m => m.RaspyComponent)
-      }
-      ,
+        component: RaspyComponent
+      },
       {
         path: 'ItemsInRaspy',
         data: { ItemId: 0, RaspyId: 0 },
         title: 'Item Components',
-        loadComponent: () => import('./Modules/Inventory/ItemsInRaspy/ItemsInRaspy.component').then(m => m.ItemsInRaspyComponent)
-      }
-      ,
+        component: ItemsInRaspyComponent
+      },
       {
         path: 'Season',
         title: 'Seasons',
-        loadComponent: () => import('./Modules/Seals/Season/Season.component').then(m => m.SeasonComponent)
-      }
-      ,
+        component: SeasonComponent
+      },
       {
         path: 'Customer',
         data: { Type: 0 },
         title: 'Customers',
-        loadComponent: () => import('./Modules/Seals/Customer/Customer.component').then(m => m.CustomerComponent)
-      }
-      ,
+        component: CustomerComponent
+      },
       {
         path: 'SpecialPrice',
         title: 'Special Prices',
-        loadComponent: () => import('./Modules/Seals/SpeciaPrice/SpeciaPrice.component').then(m => m.SpeciaPriceComponent)
-      }
-      ,
+        component: SpeciaPriceComponent
+      },
       {
         path: 'SpecialDescound',
         title: 'Special Discounts',
-        loadComponent: () => import('./Modules/Seals/SpecialDescound/SpecialDescound.component').then(m => m.SpecialDescoundComponent)
-      }
-      ,
+        component: SpecialDescoundComponent
+      },
       {
         path: 'InvoiceList',
         title: 'Invoices',
-        loadComponent: () => import('./Modules/Seals/InvoiceList/InvoiceList.component').then(m => m.InvoiceListComponent)
-      }
-      ,
+        component: InvoiceListComponent
+      },
       {
         path: 'Invoice',
         data: { ID: 0 },
         title: 'Invoice',
-        loadComponent: () => import('./Modules/Seals/Invoice/Invoice.component').then(m => m.InvoiceComponent)
-
-      }
-      ,
+        component: InvoiceComponent
+      },
       {
         path: 'Cashier',
         title: 'Cashier',
-        loadComponent: () => import('./Modules/Seals/Cashier/Cashier.component').then(m => m.RestaurantCashierComponent)
-      }
-      ,
-
+        component: RestaurantCashierComponent
+      },
       {
         path: 'Requstes',
         data: { ID: 0 },
         title: 'Orders',
-        loadComponent: () => import('./Modules/Seals/Requstes/Requstes.component').then(m => m.RequstesComponent)
-
-      }
-      ,
+        component: RequstesComponent
+      },
       {
         path: 'RequstesList',
         title: 'Orders List',
-        loadComponent: () => import('./Modules/Seals/RequstesList/RequstesList.component').then(m => m.RequstesListComponent)
-      }
-
-      ,
+        component: RequstesListComponent
+      },
       {
         path: 'Accounts',
         title: 'Accounts',
-        loadComponent: () => import('./Modules/Accounts/Accounts/Accounts.component').then(m => m.AccountsComponent)
-      }
-      ,
+        component: AccountsComponent
+      },
       {
         path: 'AccountTypeOperations',
         title: 'Operation Types',
-        loadComponent: () => import('./Modules/Accounts/AccountTypeOperations/AccountTypeOperations.component').then(m => m.AccountTypeOperationsComponent)
-      }
-      ,
+        component: AccountTypeOperationsComponent
+      },
       {
         path: 'AccountOperationList',
         title: 'Accounting Entries',
-        loadComponent: () => import('./Modules/Accounts/AccountOperationList/AccountOperationList.component').then(m => m.AccountOperationListComponent)
-      }
-      ,
+        component: AccountOperationListComponent
+      },
       {
         path: 'AccountOperation',
         data: { ID: 0 },
         title: 'Accounting Entry',
-        loadComponent: () => import('./Modules/Accounts/AccountOperation/AccountOperation.component').then(m => m.AccountOperationComponent)
-      }
-      ,
+        component: AccountOperationComponent
+      },
       {
         path: 'Report',
         title: 'Reports',
-        loadComponent: () => import('./Modules/Report/Report.component').then(m => m.ReportComponent)
+        component: ReportComponent
       }
-
-
     ]
-  }
-  ,
+  },
   {
     path: 'Show_QR',
     data: { TEXT: '', TYPE: '' },
     title: 'Display',
-    loadComponent: () => import('./shared/pages/Show_QR_Code/Show_QR_Code.component').then(m => m.Show_QR_CodeComponent)
+    component: Show_QR_CodeComponent
   },
   { path: '**', redirectTo: 'Main/Home', pathMatch: 'full' }
 ];
