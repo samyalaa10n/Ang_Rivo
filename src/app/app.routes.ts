@@ -62,16 +62,16 @@ export const routes: Routes = [
     component: HomeComponent
   },
   {
+    path: 'ShowImages',
+    data: { Id: '' },
+    loadComponent: () => import('./shared/pages/ShowImages/ShowImages.component').then(m => m.ShowImagesComponent)
+  },
+  {
     path: 'Main',
     title: 'Dashboard',
     canActivateChild: [authGuard],
     component: MainComponent,
     children: [
-       {
-        path: 'ShowImages',
-        data: { Id: '' },
-        loadComponent: () => import('./shared/pages/ShowImages/ShowImages.component').then(m => m.ShowImagesComponent)
-      },
       {
         path: 'AtivateItems',
         data: { REQ: '' },

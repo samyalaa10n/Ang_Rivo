@@ -20,7 +20,7 @@ export class ShowImagesComponent implements OnInit {
         if (Id == null) {
           return
         }
-        var response = await this._tools.Network.getAsync<RequestOrder>("Requstes/GetById?id=" + Id) as RequestOrder;
+        var response = await this._tools.Network.getAsync<RequestOrder>("Requstes/GetByIdForImageOrder?id=" + Id) as RequestOrder;
         if (response?.ID > 0) {
           this.Request=response;
         }

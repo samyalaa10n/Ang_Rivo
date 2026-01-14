@@ -18,6 +18,9 @@
 
             <!-- File Input Area -->
             <div class="form-floating mb-3">
+              <div class="file-input-wrapper">
+                <ng-content select="[header]"></ng-content>
+              </div>
               <div class="file-input-wrapper" *ngIf="mode != 'view'">
                 <input type="file" #fileInput (change)="onFileSelected($event)" class="form-control d-none"
                   [attr.accept]="getAcceptAttribute()" [disabled]="isUploading" />

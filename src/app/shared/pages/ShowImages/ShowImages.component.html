@@ -1,4 +1,7 @@
+<div class="container-fluid">
 
-<app-file-manager *ngIf="Request" [(FileObjectJson)]="Request.FILES" class="d-block w-100 mt-2" [label]="'Upload Your Files'"
-    urlPath="OrderImage" [fileType]="'image'" [allowMultiple]="true" [mode]="'view'"
-    ></app-file-manager>
+    <app-file-manager *ngIf="Request" [(FileObjectJson)]="Request.FILES" class="d-block w-100 mt-2"
+        [label]="'Upload Your Files'" urlPath="OrderImage" [fileType]="'image'" [allowMultiple]="true" [mode]="'view'">
+        <label header>#{{Request.ID}}</label>
+    </app-file-manager>
+</div>
