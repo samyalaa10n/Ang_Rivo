@@ -5,12 +5,13 @@ import { RequestOrder } from '../../Types/Request';
 import { ActivatedRoute } from '@angular/router';
 import { Tools } from '../../service/Tools.service';
 import { Item } from '../../Types/Item';
+import { Button } from "primeng/button";
 @Component({
   selector: 'app-RequestPrintComponent',
   templateUrl: './RequestPrintComponent.component.html',
   styleUrls: ['./RequestPrintComponent.component.css'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, Button]
 })
 export class RequestPrintComponentComponent implements OnInit, OnDestroy {
   @Input() orders: RequestOrder[] = [];
@@ -147,5 +148,8 @@ export class RequestPrintComponentComponent implements OnInit, OnDestroy {
     return this.orders.reduce((total, order) => {
       return total + order.ITEMS.reduce((sum, item) => sum + item.COUNT, 0);
     }, 0);
+  }
+  print() {
+    window.print();
   }
 }

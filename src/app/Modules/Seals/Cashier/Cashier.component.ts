@@ -117,7 +117,7 @@ export class RestaurantCashierComponent implements OnInit {
   }
   selectDepart(dep: number): void {
     this.selectedDepart = dep;
-    this.selectedCategory=-1;
+    this.selectedCategory = -1;
   }
   getCategoryByDepat() {
     return this.categories.filter(x => x.departId == this.selectedDepart)
@@ -233,7 +233,9 @@ export class RestaurantCashierComponent implements OnInit {
     this.Invoice.TYPE = 1;
     this.Invoice.PRICE_AFTER_DESCOUND = this.TotalAfterDescound()
     this.Invoice.TOTAL_AFTER_PAYMENT = this.TotalAfterPayment()
-    this._myTools.Network.putAsync("Invoices/EditMore", [this.Invoice]).then(async (res: any) => {
+    let req: InvoiceOrder = this._myTools.cloneObject(this.Invoice);
+    req.ITEMS = req.ITEMS.filter(x => x.COUNT > 0);
+    this._myTools.Network.putAsync("Invoices/EditMore", [req]).then(async (res: any) => {
       if (res?.ID > 0) {
         this.Invoice.ID = res.ID;
         let DecreptId: string = await this._myTools.Network.getAsync<string>("Invoices/EncryptText?text=" + res?.ID) as string;

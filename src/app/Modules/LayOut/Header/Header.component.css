@@ -9,6 +9,7 @@
     cursor       : pointer;
     transition   : all 0.3s;
     box-shadow   : 0 4px 15px rgba(212, 165, 116, 0.3);
+
 }
 
 /* Header */
@@ -17,18 +18,22 @@
     backdrop-filter: blur(10%);
     padding        : 20px 0;
     border-bottom  : 1px solid rgba(255, 255, 255, 0.1);
+    position       : sticky;
+    z-index        : 1000;
+    top: 0px;
+    width: 100%;
 }
 
 .header-content {
-    max-width      : 1400px;
-    margin         : 0 auto;
-    padding        : 0 20px;
+    max-width: 1400px;
+    margin   : 0 auto;
+    padding  : 0 20px;
 }
 
 .logo {
     display    : flex;
     align-items: center;
-  
+
 }
 
 .logo-icon {

@@ -1,7 +1,5 @@
 import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-
-import { AccordionModule } from 'primeng/accordion';
 import { StepperComponent } from "../../shared/components/stepper/stepper.component";
 import { StepConfigurationDirective } from '../../shared/components/stepper/Step-Configuration.directive';
 import { ComboBoxComponent } from "../../shared/components/comboBox/comboBox.component";
@@ -11,10 +9,11 @@ import { DateTimeComponent } from "../../shared/components/DateTime/DateTime.com
 import { DataGridComponent } from "../../shared/components/dataGrid/dataGrid.component";
 import { Column } from '../../shared/components/dataGrid/Column';
 import { Tools } from '../../shared/service/Tools.service';
-import { StepConfiguration, StepperConfiguration } from '../../shared/components/stepper/stepper.configuration';
+import { StepperConfiguration } from '../../shared/components/stepper/stepper.configuration';
 import { MultiselectComponent } from "../../shared/components/multiselect/multiselect.component";
 import { RequestOrder } from '../../shared/Types/Request';
 import { Router } from '@angular/router';
+import FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-Report',
@@ -47,10 +46,10 @@ export class ReportComponent implements OnInit {
       this.DATA_LIST = [];
       this.Columns = [];
     }
-    this.StepperConfig.StopControlSaveBtn=true;
-    this.StepperConfig.ShowNextButton=false;
-    this.StepperConfig.ShowPreviousButton=false;
-    this.StepperConfig.disableSave=false;
+    this.StepperConfig.StopControlSaveBtn = true;
+    this.StepperConfig.ShowNextButton = false;
+    this.StepperConfig.ShowPreviousButton = false;
+    this.StepperConfig.disableSave = false;
   }
   async ngOnInit() {
     this.Accounts = await this._tools.Network.getAsync<any>("Accounts");
@@ -188,6 +187,21 @@ export class ReportComponent implements OnInit {
           REQ: JSON.stringify(Req)
         }
       });
+    }
+    dataGrid.exportExcel = async () => {
+      let Req = {
+        PLACES: this.PlacsesSelected,
+        DEPARTS: this.DepartSelected,
+        FROM: this._tools.DateTime.saveWithCorrectTimezone(this.START_DATE),
+        TO: this._tools.DateTime.saveWithCorrectTimezone(this.END_DATE),
+        DEPART_SELECTED_NAME: this.Departs.filter(x => this.DepartSelected.includes(x.ID)).map(z => z.NAME).reduce((name, En) => name + " - " + En, "")
+      }
+      this._tools.Loading.startLoading();
+      var blob: Blob | undefined = await this._tools.Network.downloadExcel(`Report/ExportRequestToExcel`, Req)
+      if (blob) {
+        FileSaver.saveAs(blob, `$exported.xlsx`);
+      }
+      this._tools.Loading.stopLoading();
     }
   }
   GridLoaded(dataGrid: DataGridComponent) {

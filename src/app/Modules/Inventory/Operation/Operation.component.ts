@@ -115,7 +115,9 @@ export class OperationComponent implements OnInit {
   }
   Save() {
     this.Operation.ITEMS = this.InputFastItems.GeneratRequestItems();
-    this._tools.Network.putAsync("Operations/EditMore", [this.Operation]).then(async (res: any) => {
+    let req: OperationOrder = this._tools.cloneObject(this.Operation);
+    req.ITEMS = req.ITEMS.filter(x => x.COUNT > 0);
+    this._tools.Network.putAsync("Operations/EditMore", [req]).then(async (res: any) => {
       if (res?.ID > 0) {
         this.Operation = res;
         this.InputFastItems.oldData = [];

@@ -6,7 +6,7 @@ import _ from 'lodash';
 import { Router } from "@angular/router";
 import * as signalR from '@microsoft/signalr';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -14,8 +14,8 @@ export class Network {
   public hubConnection: signalR.HubConnection | undefined;
   // baseUrl: string = "https://aspnetclusters-200150-0.cloudclusters.net"
   //baseUrl: string = "https://rivo.it.com:262"s
-  //baseUrl: string = "https://localhost:44327"
-  baseUrl: string = "https://rivo.it.com:444"
+  baseUrl: string = "https://localhost:44327"
+  //baseUrl: string = "https://rivo.it.com:444"
   baseUrlApi: string = `${this.baseUrl}/api/`
   constructor(public _httpClient: HttpClient, public _router: Router) { }
   Loading!: LoadingComponent
@@ -132,5 +132,15 @@ export class Network {
       //   this.Toaster?.showErrorAlert(ex.error.title, ex.error.detail)
       return undefined;
     }
+  }
+
+  downloadExcel(url: string, data: any = null): Promise<Blob | undefined> {
+    return this._httpClient.post(
+      `${this.baseUrlApi}${url}`,
+      data,
+      {
+        responseType: 'blob'
+      }
+    ).toPromise() ?? Promise.reject('Failed to download');
   }
 }

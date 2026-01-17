@@ -109,7 +109,7 @@ export class InvoiceComponent implements OnInit {
       if (this.Invoice.ROW_NUMBER < 0) {
         this.Invoice.DESCOUND_PERCENT = desc?.DESCOUND ?? 0;
       }
-      
+
       var data = await this.GetDataRecord();
       this.DataRecordedStock = data;
       this.InputFastItems.ITEMS_INPUT.forEach(item => {
@@ -180,7 +180,9 @@ export class InvoiceComponent implements OnInit {
     this.Invoice.ITEMS = this.InputFastItems.GeneratRequestItems();
     this.Invoice.PRICE_AFTER_DESCOUND = this.TotalAfterDescound()
     this.Invoice.TOTAL_AFTER_PAYMENT = this.TotalAfterPayment()
-    this._tools.Network.putAsync("Invoices/EditMore", [this.Invoice]).then(async (res: any) => {
+    let req: InvoiceOrder = this._tools.cloneObject(this.Invoice);
+    req.ITEMS = req.ITEMS.filter(x => x.COUNT > 0);
+    this._tools.Network.putAsync("Invoices/EditMore", [req]).then(async (res: any) => {
       if (res?.ID > 0) {
         this.Invoice = res;
         let DecreptId: string = await this._tools.Network.getAsync<string>("Invoices/EncryptText?text=" + res?.ID) as string;

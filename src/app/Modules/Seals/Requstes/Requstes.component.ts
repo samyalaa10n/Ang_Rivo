@@ -146,7 +146,9 @@ export class RequstesComponent implements OnInit {
   }
   Save(IS_CANCEL: boolean = false) {
     this.Request.ITEMS = this.InputFastItems.GeneratRequestItems();
-    this._tools.Network.putAsync("Requstes/EditMore", [this.Request],"").then(async (res: any) => {
+    let req:RequestOrder=this._tools.cloneObject(this.Request);
+    req.ITEMS = req.ITEMS.filter(x => x.COUNT > 0);
+    this._tools.Network.putAsync("Requstes/EditMore", [req], "").then(async (res: any) => {
       if (res?.ID > 0) {
         this.Request = res;
         this.InputFastItems.oldData = [];

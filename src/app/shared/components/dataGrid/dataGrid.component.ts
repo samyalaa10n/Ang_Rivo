@@ -3,7 +3,7 @@ import { ButtonModule } from 'primeng/button';
 import { ColumnFilter, Table, TableModule } from 'primeng/table';
 import { PResizableColumnDirective } from './pResizableColumn.directive';
 import { Column } from './Column';
-import { NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgFor, NgIf, NgTemplateOutlet, NgClass } from '@angular/common';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
@@ -40,7 +40,8 @@ import { TooltipModule } from 'primeng/tooltip';
     CheckboxModule,
     InputNumberModule,
     IconField, InputTextModule, NgIf, MultiselectComponent, ComboBoxComponent, NgTemplateOutlet,
-    DateTimeComponent
+    DateTimeComponent,
+    NgClass
   ]
 })
 export class DataGridComponent implements OnInit {
@@ -197,24 +198,7 @@ export class DataGridComponent implements OnInit {
   }
   isPine: boolean = true;
   pinColumn() {
-    if (this.isPine) {
-      let AllTd = Array.from(document.querySelectorAll('.fixed-column')) as Array<HTMLElement>
-      if (AllTd) {
-        AllTd.forEach((td: HTMLElement) => {
-          td.style.position = "static"
-        })
-      }
-      this.isPine = false;
-    }
-    else {
-      let AllTd = Array.from(document.querySelectorAll('.fixed-column')) as Array<HTMLElement>
-      if (AllTd) {
-        AllTd.forEach((td: HTMLElement) => {
-          td.style.position = "sticky"
-        })
-        this.isPine = true;
-      }
-    }
+    this.isPine = !this.isPine;
   }
   onSetItemSource(item: Array<any>) {
 
@@ -396,7 +380,11 @@ export class DataGridComponent implements OnInit {
     let nItem = this._tools.cloneObject(item)
     nItem.ROW_NUMBER = -1;
     nItem.ID = -1;
+    this.el.nativeElement.querySelector('[aria-label="Last Page"]')?.dispatchEvent(new MouseEvent('click'));
     this.dataSource.push(nItem)
+    this._tools.waitExecuteFunction(100, () => {
+      this.el.nativeElement.querySelector('tbody tr:last-child')?.scrollIntoView({ behavior: "smooth" });
+    });
   }
   onGridAction(Action: GridAction) {
     this.GridActionFunc(Action)

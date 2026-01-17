@@ -1,65 +1,100 @@
 <div class="app-grid border border-1 rounded-1 ">
-    <p-table #dt  [rows]="ManyRowsInShow" [paginator]="paginator" columnResizeMode="expand" [dataKey]="dataKey" [scrollable]="true"
-        [value]="dataSource" scrollDirection="both" [tableStyle]="tableStyle" [resizableColumns]="true"
-        [expandedRowKeys]="expandedRows"
+    <p-table #dt [rows]="ManyRowsInShow" [paginator]="paginator" columnResizeMode="expand" [dataKey]="dataKey"
+        [scrollable]="true" [value]="dataSource" scrollDirection="both" [tableStyle]="tableStyle"
+        [resizableColumns]="true" [expandedRowKeys]="expandedRows" responsiveLayout="stack" breakpoint="960px"
         [scrollHeight]="scrollHeight" [rowsPerPageOptions]="rowsPerPageOptions" tableStyleClass="p-datatable-gridlines"
         [globalFilterFields]="globalFilterFields" [showGridlines]="true" [reorderableColumns]="true"
         [(selection)]="selectedItems" (selectionChange)="onSelectAllChange($event)"
         (onRowUnselect)="onUnSelectRow($event);onGridAction({EVENT:$event,itemEdit:$event,ActonType:'UN_SELECT',COLUMN:null});"
         (onRowSelect)="onSelectRow($event);onGridAction({EVENT:$event,itemEdit:$event,ActonType:'SELECT',COLUMN:null})"
-        [columns]="selectedColumns"
-         [reorderableColumns]="true" [selectionMode]="selectionMode"
+        [columns]="selectedColumns" [reorderableColumns]="true" [selectionMode]="selectionMode"
         [metaKeySelection]="singleSelectedMode" paginatorDropdownAppendTo="body">
         <ng-template #caption>
             <div *ngIf="AllowHeaderTemplate">
-                <div>
+                <!-- Header Section -->
+                <div class="caption-header">
                     <ng-content select="[header]"></ng-content>
                     <ng-content select="[btn]"></ng-content>
                 </div>
-                <div class="flex py-1">
-                    <p-iconfield *ngIf="AllowSearch" iconPosition="left" class="ml-auto">
-                        <app-multiselect class="d-inline-block mx-2" [IsInGridMode]="false"
-                            *ngIf="canSelectedSomeColumns && Columns.length>0" [style]="{'width': '250px'}"
-                            display="comma" placeholder="Select Columns" [dataSource]="Columns"
-                            [(dataSelected)]="selectedColumns" optionLabel="header" optionValue="name"
-                            selectedItemsLabel="{0} columns selected"></app-multiselect>
-                        <div class="d-flex justify-content-center align-items-center">
-                            <input class="mx-1 form-control" style="width: unset;" type="text"
-                                (input)="globalFilter(dt,$event)" placeholder="Search" />
-                            <p-button label="" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(dt)" />
-                        </div>
 
+                <!-- Search and Filter Section -->
+                <div class="flex py-1 flex-wrap gap-2 search-section">
+                    <p-iconfield *ngIf="AllowSearch" iconPosition="left" class="search-container">
+                        <!-- Column Selector - Responsive -->
+                        <app-multiselect class="d-inline-block mx-2 column-selector"
+                            *ngIf="canSelectedSomeColumns && Columns.length>0" display="comma"
+                            placeholder="Select Columns" [dataSource]="Columns" [(dataSelected)]="selectedColumns"
+                            optionLabel="header" optionValue="name" selectedItemsLabel="{0} columns selected">
+                        </app-multiselect>
+
+                        <!-- Search Input -->
+                        <div
+                            class="d-flex justify-content-center align-items-center flex-wrap gap-1 search-input-group">
+                            <input class="mx-1 form-control search-input" type="text" (input)="globalFilter(dt,$event)"
+                                placeholder="Search" />
+                            <p-button label="" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(dt)"
+                                [size]="'small'" />
+                        </div>
                     </p-iconfield>
                 </div>
-                <ng-content select="[body]"></ng-content>
-                <div class="my-2">
-                    <p-button *ngIf="IsHasChild" [variant]="'text'" [raised]="true" label="Expand All" icon="pi pi-plus" text (onClick)="expandAll()" />
-                    <p-button *ngIf="IsHasChild" [variant]="'text'" [raised]="true"  label="Collapse All" icon="pi pi-minus" text (onClick)="collapseAll()" />
-                    <p-button *ngIf="AllowUpdate" [variant]="'text'" [raised]="true" [size]="'small'" label="Refresh"
-                        severity="info" class=" font-bold mx-1" icon="pi pi-sync" (click)="onUpdate(dt)" />
-                    <p-button *ngIf="AllowAdd" [variant]="'text'" [raised]="true" [size]="'small'" label="Add"
-                        severity="success" class=" font-bold mx-1" icon="pi pi-plus" (click)="AddNew(dt)" />
-                    <p-button *ngIf="AllowSave" [variant]="'text'" [raised]="true" [size]="'small'" btn class="px-1"
-                        severity="warn" label="Save" icon="pi pi-save" (click)="save()"></p-button>
-                    <p-button *ngIf="AllowDeleteSelected" [variant]="'text'" [raised]="true" [size]="'small'"
-                        severity="danger" label="Delete Selected" class=" font-bold mx-1" icon="pi pi-trash"
-                        (click)="DeleteSelectedData()" />
-                    <p-button *ngIf="AllowExportExcel" [variant]="'text'" [raised]="true" [size]="'small'" label="Export"
-                        class="font-bold mx-1" icon="pi pi-file-excel" (click)="exportExcel()" />
-                    <label *ngIf="AllowImportExcel" id="I_FILE" pButton class="font-bold mx-1" [raised]="true"
-                        [size]="'small'">
-                        <i class="pi pi-file-import" pButtonIcon></i>
-                        <span pButtonLabel>Import File</span>
-                        <input hidden for="I_FILE" type="file" (change)="importExcel($event)">
-                    </label>
-                    <p-button class="mx-2" severity="primary" [variant]="'text'" [raised]="true" [size]="'small'"
-                        *ngIf="AllowPrint" label="Print" icon="pi pi-print" (click)="onPrint(dt)"></p-button>
-                    <ng-content select="[MORE_BUTTON]"></ng-content>
-                    <span *ngIf="AllowCopyPest" class="btn btn-sm p-2" pTooltip="Copy" (click)="Copy()"> <i
-                            class="pi pi-copy position-relative top-50"></i></span>
-                    <span *ngIf="AllowCopyPest" class="btn  btn-sm p-2" pTooltip="Paste" (click)="Pest()"> <i
-                            class="pi pi-clipboard position-relative top-50"></i></span>
 
+                <!-- Body Content -->
+                <ng-content select="[body]"></ng-content>
+
+                <!-- Action Buttons Section -->
+                <div class="my-2 action-buttons">
+                    <!-- Expand/Collapse Row -->
+                    <div class="button-row">
+                        <p-button *ngIf="IsHasChild" [variant]="'text'" [raised]="true" label="Expand All"
+                            icon="pi pi-plus" text [size]="'small'" (onClick)="expandAll()" />
+                        <p-button *ngIf="IsHasChild" [variant]="'text'" [raised]="true" label="Collapse All"
+                            icon="pi pi-minus" text [size]="'small'" (onClick)="collapseAll()" />
+                    </div>
+
+                    <!-- Main Actions Row -->
+                    <div class="button-row">
+                        <p-button *ngIf="AllowUpdate" [variant]="'text'" [raised]="true" [size]="'small'"
+                            label="Refresh" severity="info" icon="pi pi-sync" (click)="onUpdate(dt)" />
+                        <p-button *ngIf="AllowAdd" [variant]="'text'" [raised]="true" [size]="'small'" label="Add"
+                            severity="success" icon="pi pi-plus" (click)="AddNew(dt)" />
+                        <p-button *ngIf="AllowSave" [variant]="'text'" [raised]="true" [size]="'small'" severity="warn"
+                            label="Save" icon="pi pi-save" (click)="save()">
+                        </p-button>
+                    </div>
+
+                    <!-- Delete and Export Row -->
+                    <div class="button-row">
+                        <p-button *ngIf="AllowDeleteSelected" [variant]="'text'" [raised]="true" [size]="'small'"
+                            severity="danger" label="Delete Selected" icon="pi pi-trash"
+                            (click)="DeleteSelectedData()" />
+                        <p-button *ngIf="AllowExportExcel" [variant]="'text'" [raised]="true" [size]="'small'"
+                            label="Export" icon="pi pi-file-excel" (click)="exportExcel()" />
+                    </div>
+
+                    <!-- Import and Print Row -->
+                    <div class="button-row">
+                        <label *ngIf="AllowImportExcel" id="I_FILE" pButton [raised]="true" [size]="'small'">
+                            <i class="pi pi-file-import" pButtonIcon></i>
+                            <span pButtonLabel>Import</span>
+                            <input hidden for="I_FILE" type="file" (change)="importExcel($event)">
+                        </label>
+                        <p-button severity="primary" [variant]="'text'" [raised]="true" [size]="'small'"
+                            *ngIf="AllowPrint" label="Print" icon="pi pi-print" (click)="onPrint(dt)">
+                        </p-button>
+                    </div>
+
+                    <!-- Additional Content -->
+                    <ng-content select="[MORE_BUTTON]"></ng-content>
+
+                    <!-- Copy/Paste Actions -->
+                    <div class="copy-paste-actions">
+                        <span *ngIf="AllowCopyPest" class="btn btn-sm p-2 copy-btn" pTooltip="Copy" (click)="Copy()">
+                            <i class="pi pi-copy"></i>
+                        </span>
+                        <span *ngIf="AllowCopyPest" class="btn btn-sm p-2 paste-btn" pTooltip="Paste" (click)="Pest()">
+                            <i class="pi pi-clipboard"></i>
+                        </span>
+                    </div>
                 </div>
             </div>
         </ng-template>
@@ -107,10 +142,11 @@
                     </div>
                 </th>
                 }
-                <th *ngIf="AllowCurdOperation" class="fixed-column px-2">
+                <th *ngIf="AllowCurdOperation" [ngClass]="isPine ? 'fixed-column' : 'Un-fixed-column'"
+                    class="fixed-column px-2">
                     <div class="d-flex justify-content-center align-items-center">
                         <p-button [text]="!isPine" icon="pi pi-thumbtack" (onClick)="pinColumn()"></p-button>
-                    </div>
+                    </div>-
                 </th>
             </tr>
         </ng-template>
@@ -184,8 +220,7 @@
                     <app-comboBox #comboBox [dataSource]="column.columnComboBoxDataSource"
                         [optionValue]="column.columnComboBoxOptionValue" [apiPathDataSource]="column.apiPathDataSource"
                         [placeholder]="column.columnComboBoxPlaceholder"
-                        [optionLabel]="column.columnComboBoxOptionLabel"
-                        [DefaultClearValue]="column.DefaultClearValue"
+                        [optionLabel]="column.columnComboBoxOptionLabel" [DefaultClearValue]="column.DefaultClearValue"
                         [refreshSource]="{func:column?.columnComboBoxRefreshSource?.func,item:item}"
                         (selectedChange)="column.columnComboBoxChange($event,item,comboBox);onGridAction({EVENT:$event,itemEdit:item,ActonType:'SELECT',COLUMN:column})"
                         [(SelectedValue)]="item[column.name]"></app-comboBox>
@@ -219,18 +254,18 @@
                     }
                 </td>
                 }
-                <td class="text-center fixed-column px-4" *ngIf="AllowCurdOperation">
-                    <span *ngIf="AllowCopyPestItems" pTooltip="Copy" class="btn  btn-sm p-2" (click)="CopyItem(item)"> <i
-                            class="pi pi-copy position-relative top-50"></i></span>
-                    <span *ngIf="AllowCopyPestItems" pTooltip="Paste" class="btn  btn-sm p-2" (click)="PestItem(item)"> <i
-                            class="pi pi-clipboard position-relative top-50"></i></span>
+                <td class="text-center px-4" [ngClass]="isPine ? 'fixed-column' : 'Un-fixed-column'"
+                    *ngIf="AllowCurdOperation">
+                    <span *ngIf="AllowCopyPestItems" pTooltip="Copy" class="btn  btn-sm p-2" (click)="CopyItem(item)">
+                        <i class="pi pi-copy position-relative top-50"></i></span>
+                    <span *ngIf="AllowCopyPestItems" pTooltip="Paste" class="btn  btn-sm p-2" (click)="PestItem(item)">
+                        <i class="pi pi-clipboard position-relative top-50"></i></span>
                     <ng-container [ngTemplateOutlet]="templateBtn"
                         [ngTemplateOutletContext]="{ $implicit:item ,Grid:this}"></ng-container>
                     <p-button severity="danger" [variant]="'text'" [raised]="true" [size]="'small'" *ngIf="AllowDelete"
                         label="Delete" icon="pi pi-trash" (click)="onDeleteItem(item)"></p-button>
                     <p-button class="mx-2" severity="success" [variant]="'text'" [raised]="true" [size]="'small'"
-                        *ngIf="AllowEdit" label="Edit" icon="pi pi-pen-to-square"
-                        (click)="onEditItem(item)"></p-button>
+                        *ngIf="AllowEdit" label="Edit" icon="pi pi-pen-to-square" (click)="onEditItem(item)"></p-button>
                     <p-button class="mx-2 " severity="info" [variant]="'text'" [raised]="true" [size]="'small'"
                         *ngIf="AllowShow" label="View" icon="pi pi-eye" (click)="onShowItem(item)"></p-button>
                     <p-button class="mx-2" severity="success" [variant]="'text'" [raised]="true" [size]="'small'"

@@ -1,4 +1,7 @@
 <div class="print-container">
+  <div class="my-2 PrintBtn">
+    <p-button [raised]="true" (onClick)="print()" label="Print" icon="pi pi-print" class="font-bold mx-1 w-100" />
+  </div>
   <div *ngFor="let order of orders; let last = last" class="page-break">
 
     @if(order.ITEMS.length>0)
@@ -133,7 +136,7 @@
               </td>
             </tr>
           </tbody>
-    
+
         </table>
       </div>
     </div>
