@@ -23,9 +23,9 @@ export class OperationListComponent implements OnInit {
   Columns: Array<Column> = []
   Request: { WAREHOUSE: number, START: Date, END: Date } = { WAREHOUSE: 0, START: new Date(), END: new Date() }
   OperationLest: Array<OperationOrder> = [];
-  constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _printService: PrintService, private _router: Router) { 
+  constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _printService: PrintService, private _router: Router) {
     this.Request.START.setDate(1);
-    this.Request.END =_tools.DateTime.convertDataToMoment(this.Request.START).add(30,"day").toDate();
+    this.Request.END = _tools.DateTime.convertDataToMoment(this.Request.START).add(30, "day").toDate();
   }
 
   async ngOnInit() {
@@ -50,7 +50,7 @@ export class OperationListComponent implements OnInit {
     Req.START = this._tools.DateTime.EditData(this.Request.START, 3).toLocaleString("en")
     Req.END = this._tools.DateTime.EditData(this.Request.END, 3).toLocaleString("en")
     this.OperationLest = await this._tools.Network.getAsync<any>('Operations?filter=' + JSON.stringify(Req))
-    this.OperationLest.forEach(item=>{})
+    this.OperationLest.forEach(item => { })
   }
   RenderItem(e: { item: OperationOrder }) {
     e.item.DATE_TIME = this._tools.DateTime.getDataFromJson(e.item.DATE_TIME as any)
@@ -58,6 +58,7 @@ export class OperationListComponent implements OnInit {
     e.item.WAREHOUSE_GET_NAME = this.WareHouses.find(Z => Z.ID == e.item.WAREHOUSE_2)?.NAME ?? '';
   }
   GridLoaded(dataGrid: DataGridComponent) {
+    dataGrid.GridMode = "EfectInRows"
     dataGrid.AllowUpdate = false;
     dataGrid.AllowDelete = false;
     dataGrid.AllowDeleteSelected = false;

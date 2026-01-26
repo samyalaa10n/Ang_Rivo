@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NaveComponent } from '../Nave/Nave.component';
-import { ActivatedRoute, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterOutlet, RouterLink } from '@angular/router';
 import { HeaderComponent } from "../Header/Header.component";
 import { NgIf } from '@angular/common';
 import { Location } from '@angular/common';
@@ -11,7 +11,7 @@ import { Tools } from '../../../shared/service/Tools.service';
   templateUrl: './Main.component.html',
   styleUrls: ['./Main.component.css'],
   standalone: true,
-  imports: [NaveComponent, RouterOutlet, HeaderComponent, NgIf]
+  imports: [NaveComponent, RouterOutlet, HeaderComponent, NgIf, RouterLink]
 })
 export class MainComponent implements OnInit {
   sideMenu: boolean = true

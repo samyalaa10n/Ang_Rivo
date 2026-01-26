@@ -45,7 +45,7 @@ export class RequstesComponent implements OnInit {
   AddCompany: boolean = false;
   safeUrl!: SafeResourceUrl;
   OlRequest!: RequestOrder;
-  Request: RequestOrder = { ID: 0, ROW_NUMBER: -1, CUSTOMER_NAME: '', CUSTOMER: 0, DEPOST: 0, DESCOUND_PERCENT: 0, SEND_DATE: new Date(), RESAVE_DATE: new Date(), ITEMS: [], PRICE_AFTER_DESCOUND: 0, NOTS: '', PAYMENT_TYPE: 0, CUSTOMER_BUY_NAME: '', SELLER: '', PHONE: '', PLACE: 0, ADDRESS: "", FILES: "", ISCANCELED: false };
+  Request: RequestOrder = { ID: 0, ROW_NUMBER: -1, CUSTOMER_NAME: '', CUSTOMER: 0, DEPOST: 0, DESCOUND_PERCENT: 0, SEND_DATE: new Date(), RESAVE_DATE: new Date(), ITEMS: [], PRICE_AFTER_DESCOUND: 0, NOTS: '', PAYMENT_TYPE: 0, CUSTOMER_BUY_NAME: '', SELLER: '', PHONE: '', PLACE: 0, ADDRESS: "", FILES: "", ISCANCELED: false, FROM_FACTORY: true, DILEVERY_CHARGE: 0 };
   constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _printService: PrintService, private _router: Router, private sanitizer: DomSanitizer) { }
 
   async ngOnInit() {
@@ -67,19 +67,7 @@ export class RequstesComponent implements OnInit {
       this._ActiveRouter.queryParams.subscribe({
         next: async ({ ID }) => {
           if (+ID > 0) {
-
-            var response = await this._tools.Network.getAsync<RequestOrder>("Requstes/GetById?id=" + ID) as RequestOrder;
-            if (response?.ID > 0) {
-              await this.UpdetLockep()
-              this.Request = response;
-              this.OlRequest = this._tools.cloneObject(this.Request)
-              await this.InputFastItems.GetOldData();
-
-            }
-            else {
-              this._tools.Toaster.showError("Reservation has been deleted")
-              this._router.navigate(['Main', 'RequstesList']);
-            }
+            await this.getRequest(ID)
           }
           else {
             this.InputFastItems.OnSelectedItems = () => {
@@ -92,6 +80,20 @@ export class RequstesComponent implements OnInit {
   };
   handleFilesChanged(files: any[]) {
     // اعمل حاجة بـ files
+  }
+  async getRequest(ID: number) {
+    var response = await this._tools.Network.getAsync<RequestOrder>("Requstes/GetById?id=" + ID) as RequestOrder;
+    if (response?.ID > 0) {
+      await this.UpdetLockep()
+      this.Request = response;
+      this.OlRequest = this._tools.cloneObject(this.Request)
+      await this.InputFastItems.GetOldData();
+
+    }
+    else {
+      this._tools.Toaster.showError("Reservation has been deleted")
+      this._router.navigate(['Main', 'RequstesList']);
+    }
   }
   async UpdetLockep() {
     this.Places = await this._tools.Network.getAsync("Place") as Array<any>;
@@ -146,7 +148,7 @@ export class RequstesComponent implements OnInit {
   }
   Save(IS_CANCEL: boolean = false) {
     this.Request.ITEMS = this.InputFastItems.GeneratRequestItems();
-    let req:RequestOrder=this._tools.cloneObject(this.Request);
+    let req: RequestOrder = this._tools.cloneObject(this.Request);
     req.ITEMS = req.ITEMS.filter(x => x.COUNT > 0);
     this._tools.Network.putAsync("Requstes/EditMore", [req], "").then(async (res: any) => {
       if (res?.ID > 0) {
@@ -163,6 +165,9 @@ export class RequstesComponent implements OnInit {
           }
         })
       }
+      else {
+        this.Request.ISCANCELED = this.OlRequest.ISCANCELED
+      }
     })
   }
   async print(InAnotherPage: boolean = true, OnlyPrint: boolean = false) {
@@ -172,7 +177,7 @@ export class RequstesComponent implements OnInit {
     Req.PAYMENT_NAME = this.AccountTypes.find(x => x.ID == Req.PAYMENT_TYPE)?.NAME;
     Req.ITEMS = this.InputFastItems.ITEMS_INPUT;
     Req.ITEMS = Req.ITEMS.filter(x => x.COUNT > 0);
-    await this._printService.printRequest(Req, { Total: this.Total(), TotalAfterDeposit: this.TotalAfterDepost(), TotalAfterDiscount: this.TotalAfterDescound() }, InAnotherPage)
+    await this._printService.printRequest(Req, { Total: this.Total(), TotalAfterDeposit: this.TotalAfterDepost(), TotalAfterDiscount: this.TotalAfterDescound(), DeliveryCharge: Req.DILEVERY_CHARGE }, InAnotherPage)
 
   }
   AddNew() {

@@ -1000,7 +1000,7 @@ export class PrintService {
     }
     async printRequest(
         _Request: RequestOrder,
-        Totals: { Total: number, TotalAfterDiscount: number, TotalAfterDeposit: number },
+        Totals: { Total: number, TotalAfterDiscount: number, TotalAfterDeposit: number, DeliveryCharge: number },
         InSumPage: boolean = false
     ): Promise<void> {
 
@@ -1286,9 +1286,14 @@ export class PrintService {
           <span>-${_Request.DEPOST?.toFixed(2) || '0.00'} EGP</span>
         </div>
         <div class="summary-row">
-          <span class="summary-label">Balance Due:</span>
-          <span>${(Totals.TotalAfterDeposit).toFixed(2)} EGP</span>
+          <span class="summary-label">Delivery Charge:</span>
+          <span>${(Totals.DeliveryCharge).toFixed(2)} EGP</span>
         </div>
+        <div class="summary-row">
+          <span class="summary-label">Balance Due:</span>
+          <span>${(Totals.TotalAfterDeposit+Totals.DeliveryCharge).toFixed(2)} EGP</span>
+        </div>
+   
       </div>
     </div>
     

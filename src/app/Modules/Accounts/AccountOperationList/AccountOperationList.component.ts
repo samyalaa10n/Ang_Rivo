@@ -63,6 +63,7 @@ export class AccountOperationListComponent implements OnInit {
     e.item.DATE_TIME = this._tools.DateTime.getDataFromJson(e.item.DATE_TIME as any)
   }
   GridLoaded(dataGrid: DataGridComponent) {
+    dataGrid.GridMode = "EfectInRows"
     dataGrid.AllowUpdate = false;
     dataGrid.AllowDelete = false;
     dataGrid.AllowDeleteSelected = false;
@@ -74,9 +75,8 @@ export class AccountOperationListComponent implements OnInit {
       this._router.navigate(['Main', 'AccountOperation'], { queryParams: { ID: item.ID } })
     }
   }
-  GetTotal():number
-  {
-    return this.AccountOperationLest.map(x=>x.VALUE).reduce((a,b)=>a+b,0)
+  GetTotal(): number {
+    return this.AccountOperationLest.map(x => x.VALUE).reduce((a, b) => a + b, 0)
   }
 
 }

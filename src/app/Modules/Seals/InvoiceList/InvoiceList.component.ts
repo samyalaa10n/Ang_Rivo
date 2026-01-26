@@ -59,6 +59,7 @@ export class InvoiceListComponent implements OnInit {
     e.item.TOTAL_AFTER_PAYMENT = e.item.PRICE_AFTER_DESCOUND - e.item.PAYMENT;
   }
   GridLoaded(dataGrid: DataGridComponent) {
+    dataGrid.GridMode="EfectInRows"
     dataGrid.AllowUpdate = false;
     dataGrid.AllowDelete = false;
     dataGrid.AllowDeleteSelected = false;

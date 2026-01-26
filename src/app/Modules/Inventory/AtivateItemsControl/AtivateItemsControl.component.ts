@@ -35,7 +35,6 @@ export class AtivateItemsControlComponent implements OnInit {
     await this.start();
   }
   async start() {
-
     this.ItemsInsert = [];
     let Items = await this._myTools.Network.getAsync("Items") as Array<any>
     this.Departs = await this._myTools.Network.getAsync("Depart") as Array<any>
@@ -59,6 +58,7 @@ export class AtivateItemsControlComponent implements OnInit {
   }
   GridLoaded(grid: DataGridComponent) {
     this.grid = grid
+    grid.GridMode="EfectInRows";
     grid.AllowAdd = true;
     grid.AllowDeleteSelected = false;
     grid.AllowUpdate = false;

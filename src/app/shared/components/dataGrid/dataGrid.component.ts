@@ -21,6 +21,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DateTimeComponent } from "../DateTime/DateTime.component";
 import { BehaviorSubject } from 'rxjs';
 import { TooltipModule } from 'primeng/tooltip';
+import { Dialog } from "primeng/dialog";
 @Component({
   selector: 'app-dataGrid',
   templateUrl: './dataGrid.component.html',
@@ -41,17 +42,21 @@ import { TooltipModule } from 'primeng/tooltip';
     InputNumberModule,
     IconField, InputTextModule, NgIf, MultiselectComponent, ComboBoxComponent, NgTemplateOutlet,
     DateTimeComponent,
-    NgClass
+    NgClass,
+    Dialog
   ]
 })
 export class DataGridComponent implements OnInit {
   @Input() RowParent: any
+  _selectedIndex: number = -1
+  _selectedItem: any = {};
+  _eventEffect: "Add" | "Edit" | "Add Inhert" = "Add";
+  _showModel: boolean = false;
   ParentZIndex: number = 50;
   _dataSource!: any[];
   startDataSource: Array<any> = [];
   @Input() public set dataSource(v: any[]) {
     if (v != undefined) {
-
       this._dataSource = v;
       v.forEach((item, index) => {
         this.RenderItemSource.emit({ item, index });
@@ -80,10 +85,40 @@ export class DataGridComponent implements OnInit {
   @Input() set Columns(v: Column[]) {
     this.selectedColumns = v;
     this._Columns = v;
+    if (this.GridMode == "EfectInModel") {
+      this.AllowEdit = true;
+      v.forEach(c => {
+        if (c.columnTypeModelMode == "defult") {
+          c.columnTypeModelMode = c.columnType;
+          c.columnType = "lapel";
+          if (c.name == "ID") {
+            c.columnTypeModelMode = "lapel"
+          }
+        }
+        if (c.columnTypeModelMode == 'date-Time' || c.columnTypeModelMode == 'date') {
+          c.Style_Show = (value) => {
+            return this._tools.DateTime.EditFormateData(value)
+          }
+        }
+        else if (c.columnTypeModelMode == 'yes-no') {
+          c.Style_Show = (value) => {
+            return value == true ? "Active" : value == false ? "Not Active" : ''
+          }
+        }
+        else if (c.columnTypeModelMode == 'comboBox') {
+          c.Style_Show = (value) => {
+            let obj = c.columnComboBoxDataSource.find(x => x[c.columnComboBoxOptionValue] == value);
+            if (obj) {
+              return obj[c.columnComboBoxOptionLabel] ?? ""
+            }
+            else {
+              return "";
+            }
+          }
+        }
+      })
+    }
   }
-
-
-
   @Input() searchValue: string = '';
   prenTitle: Function = () => "";
   @Input() AllowAdd: boolean = true;
@@ -99,6 +134,7 @@ export class DataGridComponent implements OnInit {
   }
 
   expandedRows = {};
+  @Input() GridMode: "EfectInRows" | "EfectInModel" = "EfectInModel";
   @Input() templateBtn!: TemplateRef<any>
   @Input() AllowHeaderTemplate: boolean = true;
   @Input() AllowDelete: boolean = true;
@@ -147,9 +183,16 @@ export class DataGridComponent implements OnInit {
     plus = this.canReOrder ? plus + 1 : plus;
     return this.Columns.length + plus
   }
-
+  pageMode: "Mobile" | "Desktop" = "Desktop";
   constructor(private _tools: Tools, private el: ElementRef<HTMLElement>) { }
   ngOnInit() {
+
+    if (window && window.screen.width > 960) {
+      this.pageMode = "Desktop";
+    }
+    else {
+      this.pageMode = "Mobile";
+    }
     if (this.StopAllButtons) {
       this.AllowAdd = false;
       this.AllowDelete = false;
@@ -331,19 +374,7 @@ export class DataGridComponent implements OnInit {
   onLoadedChildDataGrid(parent: DataGridComponent, ChildGrid: DataGridComponent, RowParentItem: any) {
 
   }
-  async AddNew(table: Table) {
-    if (this.AllowAdd) {
-      if (this.dataSource == undefined) {
-        this.dataSource = [];
-      }
-      if (this.dataSource.find(x => Object.entries(x).length == 0) == null) {
-        this.dataSource.push({ ID: (this.dataSource.length + 1) * -1 })
-        this.IsLoading = true;
-        table.reset();
-        this.selectLastInput();
-      }
-    }
-  }
+
   clear(table: Table) {
     table.clear();
     this.searchValue = ''
@@ -367,14 +398,70 @@ export class DataGridComponent implements OnInit {
       }
     })
   }
+  async Add(table: Table) {
+    switch (this.GridMode) {
+      case "EfectInRows":
+        await this.AddNew(table)
+        break;
+      case "EfectInModel":
+        this._eventEffect = "Add";
+        this._selectedIndex = -1;
+        this._selectedItem = {};
+        this._showModel = true;
+        break;
+    }
+  }
+
+  async AddNew(table: Table) {
+    if (this.AllowAdd) {
+      if (this.dataSource == undefined) {
+        this.dataSource = [];
+      }
+      if (this.dataSource.find(x => Object.entries(x).length == 0) == null) {
+        this.dataSource.push({ ID: (this.dataSource.length + 1) * -1 })
+        this.IsLoading = true;
+        table.reset();
+        this.selectLastInput();
+      }
+    }
+  }
+  EditItem(item: any) {
+    switch (this.GridMode) {
+      case "EfectInRows":
+        this.onEditItem(item)
+        break;
+      case "EfectInModel":
+        this._eventEffect = "Edit";
+        this._selectedIndex = this.dataSource.indexOf(item);
+        this._selectedItem = this._tools.cloneObject(item);
+        this._showModel = true;
+        break;
+    }
+  }
   onEditItem(item: any) {
 
+  }
+  ShowItem(item: any) {
+    this.onShowItem(item)
   }
   onShowItem(item: any) {
 
   }
   onPrintItem(item: any) {
 
+  }
+  AddInert(item: any) {
+    switch (this.GridMode) {
+      case "EfectInRows":
+        this.onAddInert(item)
+        break;
+      case "EfectInModel":
+        this._eventEffect = "Add Inhert";
+        this._selectedIndex = -1;
+        this._selectedItem = this._tools.cloneObject(item);
+        this._showModel = true;
+        break;
+    }
   }
   onAddInert(item: any) {
     let nItem = this._tools.cloneObject(item)
@@ -460,6 +547,23 @@ export class DataGridComponent implements OnInit {
   onUnSelectRow(e: any) {
   }
   onSelectAllChange(e: any) {
+  }
+  async saveTempAdd() {
+    if (this._eventEffect == "Add" || this._eventEffect == "Add Inhert") {
+      this.onAddInert(this._tools.cloneObject(this._selectedItem))
+    }
+    else if (this._eventEffect == "Edit") {
+      let obj = this._tools.cloneObject(this._selectedItem);
+      this.dataSource[this._selectedIndex] = { ...obj }
+      this.onEditItem(obj)
+    }
+    this.HideModel();
+    await this.save()
+  }
+  HideModel() {
+    this._selectedItem = {};
+    this._showModel = false;
+    this._selectedIndex = -1;
   }
 }
 

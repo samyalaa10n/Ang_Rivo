@@ -74,6 +74,21 @@
                   </div>
                 </div>
               </div>
+              <!-- From Factory-->
+              <div class="row mb-4  my-4">
+                <div class="col-12">
+                  <div class="form-floating">
+                    <app-comboBox [NormalStyle]="true"
+                      [dataSource]="[{NAME:'From Factory' , value:true},{NAME:'From Branch' , value:false}]"
+                      optionValue="value" optionLabel="NAME" [(SelectedValue)]="Request.FROM_FACTORY"
+                      class="form-control "></app-comboBox>
+                    <label class="text-muted">
+                      Order From
+                    </label>
+
+                  </div>
+                </div>
+              </div>
               <div class="row">
                 <div class="col-12 col-lg-6">
                   <!-- Date Fields -->
@@ -140,6 +155,24 @@
                         </label>
                       </div>
                     </div>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                  <!-- SELLER name Fields -->
+                  <div class="col-12 mb-3 mb-md-0">
+                    <div class="form-floating">
+                      <p-inputNumber [(ngModel)]="Request.DILEVERY_CHARGE" [minFractionDigits]="0"
+                        [maxFractionDigits]="3" class="form-control" styleClass="w-100"></p-inputNumber>
+                      <label class="text-muted">
+                        <i class="pi pi-money-bill me-2"></i>Delivery Charge
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 col-lg-6">
+                  <!-- Payment & Discount Section -->
+                  <div class="row mb-4">
                     <div class="col-12" *ngIf="Request.DEPOST> 0">
                       <div class="form-floating">
                         <app-comboBox [NormalStyle]="true" [dataSource]="AccountTypes"
@@ -295,8 +328,8 @@
           <div class="d-grid gap-2 d-md-flex justify-content-md-center">
             <p-button *ngIf=" this.Request.ID==0" [raised]="true" (onClick)="Save()" severity="success"
               label="Add Reservation & Print" icon="pi pi-save" class="btn-lg p-1 fw-bold shadow-sm"></p-button>
-            <p-button *ngIf=" this.Request.ID>0 && !this.Request.ISCANCELED" [raised]="true" (onClick)="Save()" severity="success"
-              label="Save Reservation Changes & Print" icon="pi pi-save"
+            <p-button *ngIf=" this.Request.ID>0 && !this.Request.ISCANCELED" [raised]="true" (onClick)="Save()"
+              severity="success" label="Save Reservation Changes & Print" icon="pi pi-save"
               class="btn-lg p-1 fw-bold shadow-sm"></p-button>
             <p-button *ngIf=" this.Request.ID>0" [raised]="true" (onClick)="PrintCleck()" severity="success"
               label="Print Reservation" icon="pi pi-print" class="btn-lg p-1 fw-bold shadow-sm"></p-button>
@@ -311,9 +344,9 @@
             <p-button *ngIf="this.Request.ID>0 && !this.Request.ISCANCELED" [raised]="true" (onClick)="CancelRequest()"
               severity="info" label="Cancel a reservation" icon="pi pi-undo" severity="danger"
               class="btn-lg p-1 fw-bold shadow-sm "></p-button>
-            <p-button *ngIf="this.Request.ID>0 && this.Request.ISCANCELED" [raised]="true" (onClick)="ReturnCancelRequest()"
-              severity="info" label="Return the reservation" icon="pi pi-pound" severity="info"
-              class="btn-lg p-1 fw-bold shadow-sm "></p-button>
+            <p-button *ngIf="this.Request.ID>0 && this.Request.ISCANCELED" [raised]="true"
+              (onClick)="ReturnCancelRequest()" severity="info" label="Return the reservation" icon="pi pi-pound"
+              severity="info" class="btn-lg p-1 fw-bold shadow-sm "></p-button>
           </div>
         </div>
       </div>
@@ -322,6 +355,6 @@
   </div>
 
 </div>
-<p-dialog header="Add New Company" [modal]="true" [style]="{'width':'50%'}" [(visible)]="AddCompany">
+<p-dialog header="Add New Company" [modal]="true" [style]="{'width':'80%'}" [(visible)]="AddCompany">
   <iframe [src]="safeUrl" width="100%" height="600px"></iframe>
 </p-dialog>
