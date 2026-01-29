@@ -1,6 +1,7 @@
 <div class="print-container">
-  <div class="my-2 no-print">
+  <div class="my-2 no-print d-flex justify-center position-fixed" style="width: 300px;">
     <p-button [raised]="true" (onClick)="print()" label="Print" icon="pi pi-print" class="font-bold mx-1 w-100" />
+    <p-button [raised]="true" routerLink="/Main/Report" label="Back" class="font-bold mx-1 w-100 " />
   </div>
   <div *ngFor="let order of orders; let last = last" class="page-break">
 
@@ -25,12 +26,17 @@
           <span class="value">{{ order.ID }}</span>
         </div>
         <div class="info-item">
+          <span class="label">Recive Date:</span>
+          <span class="value">{{ order.RESAVE_DATE | date: 'dd/MM/yyyy hh:mm' }}</span>
+        </div>
+        <div class="info-item">
           <span class="label">Date:</span>
           <span class="value">{{ order.SEND_DATE | date: 'dd/MM/yyyy' }}</span>
         </div>
+
         <div class="info-item">
           <span class="label">Delivery:</span>
-          <span class="value">{{ order.RESAVE_DATE | date: 'dd/MM/yyyy hh:mm' }}</span>
+          <span class="value">{{ order.DELIVERY_DATE | date: 'dd/MM/yyyy hh:mm' }}</span>
         </div>
         <div class="info-item">
           <span class="label">Customer:</span>
@@ -53,8 +59,13 @@
 
       <!-- Order Notes -->
       <div class="order-notes" *ngIf="order.NOTS">
-        <div class="notes-header">Special Instructions:</div>
+        <div class="notes-header">Order Notes:</div>
         <div class="notes-content">{{ order.NOTS }}</div>
+      </div>
+      <!-- Order Notes -->
+      <div class="order-notes mt-1" *ngIf="order.DELIVERYNOTS!=null && order.DELIVERYNOTS!=''">
+        <div class="notes-header">Delivery Nots:</div>
+        <div class="notes-content">{{ order.DELIVERYNOTS }}</div>
       </div>
 
       <!-- Items Table -->

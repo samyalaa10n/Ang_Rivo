@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   selector: 'app-Items',
   templateUrl: './Items.component.html',
   styleUrls: ['./Items.component.css'],
-  imports: [NgIf, GetAddEditDeleteComponent, Button, CustomColumnDirective]
+  imports: [NgIf, GetAddEditDeleteComponent]
 })
 export class ItemsComponent implements OnInit {
   Category: Array<any> = [];

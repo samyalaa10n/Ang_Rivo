@@ -194,6 +194,10 @@
 .action-buttons [pbutton] {
     margin-left: 10px;
 }
+::ng-deep .p-datepicker-input
+{
+    width: unset !important;
+}
 
 /* Tablet (768px and above) */
 @media (max-width: 960px) {

@@ -19,7 +19,7 @@ import FileSaver from 'file-saver';
   selector: 'app-Report',
   templateUrl: './Report.component.html',
   styleUrls: ['./Report.component.css'],
-  imports: [StepperComponent, StepConfigurationDirective, ComboBoxComponent, Button, InputLabelComponent, DateTimeComponent, DataGridComponent, MultiselectComponent, NgIf]
+  imports: [StepperComponent, StepConfigurationDirective, Button, InputLabelComponent, DateTimeComponent, DataGridComponent, MultiselectComponent, NgIf, ComboBoxComponent]
 })
 export class ReportComponent implements OnInit {
   StepperConfig = new StepperConfiguration(this)
@@ -29,6 +29,7 @@ export class ReportComponent implements OnInit {
   Customers: Array<any> = [];
   Columns: Array<Column> = [];
   START_DATE: Date = new Date();
+  From_Factory: number = 0;
   END_DATE: Date = new Date();
   Account: number = 0;
   Departs: Array<any> = [];
@@ -135,6 +136,7 @@ export class ReportComponent implements OnInit {
     let Req = {
       PLACES: this.PlacsesSelected,
       DEPARTS: this.DepartSelected,
+      From_Factory: this.From_Factory,
       FROM: this._tools.DateTime.saveWithCorrectTimezone(this.START_DATE),
       TO: this._tools.DateTime.saveWithCorrectTimezone(this.END_DATE),
     }
@@ -178,6 +180,7 @@ export class ReportComponent implements OnInit {
       let Req = {
         PLACES: this.PlacsesSelected,
         DEPARTS: this.DepartSelected,
+        From_Factory: this.From_Factory,
         FROM: this._tools.DateTime.saveWithCorrectTimezone(this.START_DATE),
         TO: this._tools.DateTime.saveWithCorrectTimezone(this.END_DATE),
         DEPART_SELECTED_NAME: this.Departs.filter(x => this.DepartSelected.includes(x.ID)).map(z => z.NAME).reduce((name, En) => name + " - " + En, "")
@@ -192,6 +195,7 @@ export class ReportComponent implements OnInit {
       let Req = {
         PLACES: this.PlacsesSelected,
         DEPARTS: this.DepartSelected,
+        From_Factory: this.From_Factory,
         FROM: this._tools.DateTime.saveWithCorrectTimezone(this.START_DATE),
         TO: this._tools.DateTime.saveWithCorrectTimezone(this.END_DATE),
         DEPART_SELECTED_NAME: this.Departs.filter(x => this.DepartSelected.includes(x.ID)).map(z => z.NAME).reduce((name, En) => name + " - " + En, "")

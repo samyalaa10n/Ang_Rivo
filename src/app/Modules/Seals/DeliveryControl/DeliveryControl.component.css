@@ -1,0 +1,72 @@
+.delivery-card {
+    background   : #ffffff;
+    border       : 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding      : 20px;
+    max-width    : 100%;
+}
+
+.delivery-title {
+    font-size    : 18px;
+    font-weight  : 600;
+    margin-bottom: 8px;
+    color        : #111827;
+}
+
+.delivery-desc {
+    font-size    : 14px;
+    color        : #6b7280;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display      : block;
+    font-size    : 14px;
+    font-weight  : 500;
+    margin-bottom: 6px;
+    color        : #374151;
+}
+
+.form-group input {
+    width        : 100%;
+    padding      : 10px 12px;
+    border       : 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size    : 14px;
+    transition   : border-color 0.2s;
+}
+
+.form-group input:focus {
+    outline     : none;
+    border-color: #3b82f6;
+}
+
+.form-actions {
+    display        : flex;
+    justify-content: flex-end;
+    margin-top     : 20px;
+}
+
+.btn-save {
+    background-color: #3b82f6;
+    color           : #ffffff;
+    border          : none;
+    border-radius   : 6px;
+    padding         : 10px 22px;
+    font-size       : 14px;
+    font-weight     : 500;
+    cursor          : pointer;
+    transition      : background-color 0.2s, box-shadow 0.2s;
+}
+
+.btn-save:hover {
+    background-color: #2563eb;
+}
+
+.btn-save:active {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}

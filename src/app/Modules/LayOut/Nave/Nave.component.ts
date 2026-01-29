@@ -144,6 +144,13 @@ export class NaveComponent implements OnInit {
         icon: 'pi pi-database',
         items: [
           {
+            label: 'Delivery Control',
+            icon: 'pi pi-database',
+            command: (event) => {
+             this.closeNave(); this._router.navigate(['Main', 'DeliveryControl'])
+            },
+          },
+          {
             label: 'Bookings',
             icon: 'pi pi-database',
             command: (event) => {

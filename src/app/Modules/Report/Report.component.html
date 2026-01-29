@@ -85,16 +85,21 @@
       </div>
     </div>
   </ng-template> -->
-  <ng-template stepConfig Header="Reservations Report" *ngIf="GetPermations(['System Control','Inventory'])" >
-   <div dir="ltr">
+  <ng-template stepConfig Header="Reservations Report" *ngIf="GetPermations(['System Control','Inventory'])">
+    <div dir="ltr">
       <div class="row">
         <div class="col-12 col-lg-3 my-2">
           <app-multiselect [dataSource]="Placses" optionValue="ID" optionLabel="NAME" placeholder="Place"
-            [(dataSelectedValues)]="PlacsesSelected" class="form-control" ></app-multiselect>
+            [(dataSelectedValues)]="PlacsesSelected" class="form-control"></app-multiselect>
         </div>
         <div class="col-12 col-lg-3 my-2">
           <app-multiselect [dataSource]="Departs" optionValue="ID" optionLabel="NAME" placeholder="Depart"
-            [(dataSelectedValues)]="DepartSelected"  class="form-control" ></app-multiselect>
+            [(dataSelectedValues)]="DepartSelected" class="form-control"></app-multiselect>
+        </div>
+        <div class="col-12 col-lg-3 my-2">
+          <app-comboBox placeholder="Order From" [dataSource]="[{NAME:'All' , value:0},{NAME:'From Factory' , value:1},{NAME:'From Branch' , value:2}]"
+            optionValue="value" optionLabel="NAME" [(SelectedValue)]="From_Factory"
+            class="form-control "></app-comboBox>
         </div>
       </div>
       <div class="row d-flex justify-content-center  align-items-center">

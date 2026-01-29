@@ -1,0 +1,29 @@
+<div class="delivery-card my-4">
+  <h3 class="delivery-title">Standard Delivery Information</h3>
+
+  <p class="delivery-desc">
+    This information represents the standard delivery details and will apply unless the order data is changed.
+  </p>
+
+  <div class="form-group">
+    <label>Name</label>
+    <input type="text" placeholder="Enter name" [(ngModel)]="Name" />
+  </div>
+
+  <div class="form-group">
+    <label>Email</label>
+    <input type="email" placeholder="Enter email" [(ngModel)]="Email" />
+  </div>
+
+  <div class="form-group">
+    <label>Hour Needed</label>
+    <input type="text" placeholder="e.g. 2 Hours" [(ngModel)]="DefultHour" />
+  </div>
+  <div class="form-actions">
+    <button (click)="saveStaticData()" class="btn-save">Save</button>
+  </div>
+</div>
+
+<app-dataGrid (onGridLoaded)="ConfigGrid($event)" [Columns]="Columns" [dataSource]="dataSorce">
+  
+</app-dataGrid>

@@ -28,8 +28,7 @@
                         </app-multiselect>
 
                         <!-- Search Input -->
-                        <div
-                            class="d-flex justify-content-center align-items-center flex-wrap gap-1 search-input-group">
+                        <div class="d-flex justify-content-center align-items-center  gap-1 search-input-group">
                             <input class="mx-1 form-control search-input" type="text" (input)="globalFilter(dt,$event)"
                                 placeholder="Search" />
                             <p-button label="" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(dt)"
@@ -169,7 +168,7 @@
                 @for (column of columns; track $index)
                 {
                 <td class="text-center" *ngIf="column.InShow">
-                    <label *ngIf="pageMode=='Mobile'" >{{column.header}}:</label>
+                    <label *ngIf="pageMode=='Mobile'">{{column.header}}:</label>
                     @switch (column.columnType) {
                     @case ("lapel") {
                     <ng-container *ngIf="item[column.name]!=null && item[column.name]!=undefined">
@@ -289,9 +288,10 @@
 <p-dialog [header]="_eventEffect" [(visible)]="_showModel" [modal]="true" [style]="{'min-width':'80%'}"
     (onHide)="HideModel()">
     @for (column of Columns; track $index) {
-    <div class="my-4 d-block">
+    <div class="my-4">
         @switch (column.columnTypeModelMode) {
         @case ("lapel") {
+        <label class="d-block">{{column.header}}:</label>
         <ng-container *ngIf="_selectedItem[column.name]!=null && _selectedItem[column.name]!=undefined">
             {{column.Style_ShowModelMode(_selectedItem[column.name])}}
             {{column.DynamicShowModelMode(_selectedItem)}}
@@ -314,21 +314,20 @@
         }
         @case ("date") {
         <label class="d-block">{{column.header}}:</label>
-        <app-DateTime class="d-block my-3 w-100" placeholder="Type..."
+        <app-DateTime class="d-inline-block my-3 w-100" placeholder="Type..."
             [(selectedDate)]="_selectedItem[column.name]" [maxDate]="column.columnMaxDate"
             [minDate]="column.columnMinDate"
             (selectedDateChange)="onSelectColumnData(_selectedItem,$event,column);onGridAction({EVENT:$event,itemEdit:_selectedItem,ActonType:'KEYUP',COLUMN:column})"></app-DateTime>
         }
         @case ("date-Time") {
-       <label class="d-block">{{column.header}}:</label>
-        <app-DateTime class="d-block my-3 w-100" placeholder="Type..."
-            [(selectedDate)]="_selectedItem[column.name]" [showTime]="true" [maxDate]="column.columnMaxDate"
-            [minDate]="column.columnMinDate"
+        <label class="d-block">{{column.header}}:</label>
+        <app-DateTime class="d-inline-block my-3 " placeholder="Type..." [(selectedDate)]="_selectedItem[column.name]"
+            [showTime]="true" [maxDate]="column.columnMaxDate" [minDate]="column.columnMinDate"
             (selectedDateChange)="onSelectColumnData(_selectedItem,$event,column);onGridAction({EVENT:$event,itemEdit:_selectedItem,ActonType:'KEYUP',COLUMN:column})"></app-DateTime>
         }
         @case ("Time") {
         <label class="d-block">{{column.header}}:</label>
-        <app-DateTime class="d-block my-3 w-100" placeholder="Type..." hourFormat=""
+        <app-DateTime class="d-inline-block my-3" placeholder="Type..." hourFormat=""
             [(selectedDate)]="_selectedItem[column.name]" [showTimeOnly]="true" [maxDate]="column.columnMaxDate"
             [minDate]="column.columnMinDate"
             (selectedDateChange)="onSelectColumnData(_selectedItem,$event,column);onGridAction({EVENT:$event,itemEdit:_selectedItem,ActonType:'KEYUP',COLUMN:column})"></app-DateTime>

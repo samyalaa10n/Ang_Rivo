@@ -4,7 +4,6 @@ import { MainComponent } from './Modules/LayOut/Main/Main.component';
 import { LoginComponent } from './Modules/Admin/Login/Login.component';
 import { HomeComponent } from './Modules/LayOut/Home/Home.component';
 import { AtivateItemsControlComponent } from './Modules/Inventory/AtivateItemsControl/AtivateItemsControl.component';
-import { RequestPrintComponentComponent } from './shared/pages/RequestPrintComponent/RequestPrintComponent.component';
 import { EffectInSystemComponent } from './Modules/HR/EffectInSystem/EffectInSystem.component';
 import { ColumnEffectComponent } from './Modules/HR/ColumnEffect/ColumnEffect.component';
 import { EmploysRecodesComponent } from './Modules/HR/EmployesRecordies/EmploysRecodes.component';
@@ -48,6 +47,8 @@ import { AccountOperationListComponent } from './Modules/Accounts/AccountOperati
 import { AccountOperationComponent } from './Modules/Accounts/AccountOperation/AccountOperation.component';
 import { ReportComponent } from './Modules/Report/Report.component';
 import { Show_QR_CodeComponent } from './shared/pages/Show_QR_Code/Show_QR_Code.component';
+import { RequestPrintComponent } from './shared/pages/RequestPrintComponent/RequestPrint.component';
+import { DeliveryControlComponent } from './Modules/Seals/DeliveryControl/DeliveryControl.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'Home', pathMatch: 'full' },
@@ -68,10 +69,15 @@ export const routes: Routes = [
   },
   {
     path: 'Main',
-    title: 'Dashboard',
+    title: 'Delivery Control',
     canActivateChild: [authGuard],
     component: MainComponent,
     children: [
+      {
+        path: 'DeliveryControl',
+        data: { REQ: '' },
+        component: DeliveryControlComponent
+      },
       {
         path: 'AtivateItems',
         data: { REQ: '' },
@@ -81,7 +87,7 @@ export const routes: Routes = [
         path: 'RequestPrint',
         data: { REQ: '' },
         title: 'Print Reservations',
-        component: RequestPrintComponentComponent
+        component: RequestPrintComponent
       },
       {
         path: 'EffectInSystem',
