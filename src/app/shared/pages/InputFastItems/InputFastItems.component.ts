@@ -77,6 +77,7 @@ export class InputFastItemsComponent implements OnInit {
   onGridLoaded(grid: DataGridComponent) {
     grid.AllowUpdate = true;
     grid.AllowCopyPest = true
+    grid.GridMode="EfectInRows"
     grid.onUpdate = async () => {
       grid.dataSource = this.ITEMS_INPUT;
     }

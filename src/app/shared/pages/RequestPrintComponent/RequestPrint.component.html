@@ -1,8 +1,9 @@
 <div class="print-container">
-  <div class="my-2 no-print d-flex justify-center position-fixed" style="width: 300px;">
+  <div class="my-2 no-print d-flex justify-center position-fixed" style="width: 300px;position: relative; z-index: 50;">
     <p-button [raised]="true" (onClick)="print()" label="Print" icon="pi pi-print" class="font-bold mx-1 w-100" />
     <p-button [raised]="true" routerLink="/Main/Report" label="Back" class="font-bold mx-1 w-100 " />
   </div>
+  @if (onOrder==false) {
   <div *ngFor="let order of orders; let last = last" class="page-break">
 
     @if(order.ITEMS.length>0)
@@ -20,38 +21,38 @@
           <p class="qr-label">Order #{{ order.ID }}</p>
         </div>
       </div>
-      <div class="order-info">
-        <div class="info-item">
-          <span class="label">Order #:</span>
-          <span class="value">{{ order.ID }}</span>
+      <div class=" row">
+        <div class="info-item col-12 col-lg-4 col-sm-4 mt-1">
+          <span class="label col-4 ">Order #:</span>
+          <span class="value col-8 ">{{ order.ID }}</span>
         </div>
-        <div class="info-item">
-          <span class="label">Recive Date:</span>
-          <span class="value">{{ order.RESAVE_DATE | date: 'dd/MM/yyyy hh:mm' }}</span>
+        <div class="info-item col-12 col-lg-8 col-sm-8  mt-1">
+          <span class="label col-4">Recive Date:</span>
+          <span class="value col-8">{{ order.RESAVE_DATE | date: 'dd/MM/yyyy HH:mm' }}</span>
         </div>
-        <div class="info-item">
-          <span class="label">Date:</span>
-          <span class="value">{{ order.SEND_DATE | date: 'dd/MM/yyyy' }}</span>
+        <div class="info-item col-12 col-lg-4 col-sm-4 mt-1">
+          <span class="label col-4">Date:</span>
+          <span class="value col-8">{{ order.SEND_DATE | date: 'dd/MM/yyyy' }}</span>
         </div>
-
-        <div class="info-item">
-          <span class="label">Delivery:</span>
-          <span class="value">{{ order.DELIVERY_DATE | date: 'dd/MM/yyyy hh:mm' }}</span>
+        <div class="info-item col-12 col-lg-8 col-sm-8 mt-1">
+          <span class="label col-4">Delivery:</span>
+          <span class="value col-8">{{ order.DELIVERY_DATE | date: 'dd/MM/yyyy HH:mm' }}</span>
         </div>
-        <div class="info-item">
-          <span class="label">Customer:</span>
-          <span class="value">{{ order.CUSTOMER_NAME }}</span>
+        <div class="info-item col-12 col-lg-6 col-sm-6 mt-1">
+          <span class="label col-4">Customer:</span>
+          <span class="value col-8">{{ order.CUSTOMER_NAME }}</span>
         </div>
-        <div class="info-item">
-          <span class="label">Location:</span>
-          <span class="value" style="font-size: 16px; font-weight: bold; color: #8b6f47;">{{ order.PLACE_NAME }}</span>
+        <div class="info-item col-12 col-lg-6 col-sm-6 mt-1">
+          <span class="label col-3">Location:</span>
+          <span class="value col-9" style="font-size: 16px; font-weight: bold; color: #8b6f47;">{{ order.PLACE_NAME
+            }}</span>
         </div>
-        <div class="info-item full-width">
+        <div class="info-item full-width mt-2">
           <span class="label">Selected Depart:</span>
           <span class="value" style="font-size: 16px; font-weight: bold; color: #8b6f47;">{{ DEPART_SELECTED_NAME
             }}</span>
         </div>
-        <div class="info-item full-width">
+        <div class="info-item full-width mt-2">
           <span class="label">Address:</span>
           <span class="value" style="font-size: 16px; font-weight: bold; color: #8b6f47;">{{ order.ADDRESS }}</span>
         </div>
@@ -85,7 +86,7 @@
           <tbody>
             <tr *ngFor="let item of order.ITEMS; let i = index">
               <td>{{ i + 1 }}</td>
-              <td>{{ item.Depart }}</td>
+              <td>{{ item.DEPART }}</td>
               <td>{{ item.CATEGORY }}</td>
               <td>{{ item.NAME }}</td>
               <td>{{ item.UNIT }}</td>
@@ -102,10 +103,16 @@
         <p>Hotline: 15938 | Thank you!</p>
       </div>
     </div>
+
+    <div class="no-print ">
+      @if(order.FILES != "" && order.FILES != null)
+      {
+      <app-file-manager [(FileObjectJson)]="order.FILES" class="d-block w-100 mt-2" label="Files" urlPath="OrderImage"
+        [fileType]="'image'" [maxFileSizeMB]="30" [allowMultiple]="true" [mode]="'view'"></app-file-manager>
+      }
+    </div>
     }
-
   </div>
-
   <!-- Summary Page -->
   <div class="page-break summary-page">
     <div class="invoice-wrapper">
@@ -129,8 +136,8 @@
           </thead>
           <tbody>
             <tr *ngFor="let item of getItemsSummary()">
-              <td>{{ item.category }}</td>
               <td style="font-weight: bold; color: #8b6f47;">{{ item.depart }}</td>
+              <td>{{ item.category }}</td>
               <td style="font-weight: bold;">{{ item.name }}</td>
               <td style="text-align: start;">{{ item.unit }}</td>
 
@@ -152,5 +159,112 @@
       </div>
     </div>
   </div>
+  }
+  @else {
 
+  <!-- Order Invoice -->
+  <div class="invoice-wrapper">
+    <!-- Header with QR -->
+    <div class="header-top">
+      <div class="header-left">
+        <h1 class="company-name">COPPERMELT</h1>
+        <p class="tagline">Premium Bakery & Desserts</p>
+      </div>
+      <div class="header-qr" *ngIf="order.QR!=''">
+        <img [src]="getQRCode(order.ID)" class="qr-code-small" alt="Order QR" />
+        <p class="qr-label">Order #{{ order.ID }}</p>
+      </div>
+    </div>
+    <div class=" row">
+      <div class="info-item col-12 col-lg-4 col-sm-4 mt-1">
+        <span class="label col-4 ">Order #:</span>
+        <span class="value col-8 ">{{ order.ID }}</span>
+      </div>
+      <div class="info-item col-12 col-lg-8 col-sm-8  mt-1">
+        <span class="label col-4">Recive Date:</span>
+        <span class="value col-8">{{ order.RESAVE_DATE | date: 'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+      <div class="info-item col-12 col-lg-4 col-sm-4 mt-1">
+        <span class="label col-4">Date:</span>
+        <span class="value col-8">{{ order.SEND_DATE | date: 'dd/MM/yyyy' }}</span>
+      </div>
+      <div class="info-item col-12 col-lg-8 col-sm-8 mt-1">
+        <span class="label col-4">Delivery:</span>
+        <span class="value col-8">{{ order.DELIVERY_DATE | date: 'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+      <div class="info-item col-12 col-lg-6 col-sm-6 mt-1">
+        <span class="label col-4">Customer:</span>
+        <span class="value col-8">{{ order.CUSTOMER_NAME }}</span>
+      </div>
+      <div class="info-item col-12 col-lg-6 col-sm-6 mt-1">
+        <span class="label col-3">Location:</span>
+        <span class="value col-9" style="font-size: 16px; font-weight: bold; color: #8b6f47;">{{ order.PLACE_NAME
+          }}</span>
+      </div>
+      <div class="info-item full-width mt-2">
+        <span class="label">Selected Depart:</span>
+        <span class="value" style="font-size: 16px; font-weight: bold; color: #8b6f47;">{{ DEPART_SELECTED_NAME
+          }}</span>
+      </div>
+      <div class="info-item full-width mt-2">
+        <span class="label">Address:</span>
+        <span class="value" style="font-size: 16px; font-weight: bold; color: #8b6f47;">{{ order.ADDRESS }}</span>
+      </div>
+    </div>
+
+    <!-- Order Notes -->
+    <div class="order-notes" *ngIf="order.NOTS">
+      <div class="notes-header">Order Notes:</div>
+      <div class="notes-content">{{ order.NOTS }}</div>
+    </div>
+    <!-- Order Notes -->
+    <div class="order-notes mt-1" *ngIf="order.DELIVERYNOTS!=null && order.DELIVERYNOTS!=''">
+      <div class="notes-header">Delivery Nots:</div>
+      <div class="notes-content">{{ order.DELIVERYNOTS }}</div>
+    </div>
+
+    <!-- Items Table -->
+    <div class="items-section">
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th style="width: 5%">#</th>
+            <th style="width: 10%">Depart</th>
+            <th style="width: 15%">Category</th>
+            <th style="width: 25%">Item</th>
+            <th style="width: 10%">Unit</th>
+            <th style="width: 10%">Qty</th>
+            <th style="width: 30%">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of order.ITEMS; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ item.DEPART }}</td>
+            <td>{{ item.CATEGORY }}</td>
+            <td>{{ item.NAME }}</td>
+            <td>{{ item.UNIT }}</td>
+            <td>{{ item.COUNT }}</td>
+            <td class="notes-cell">{{ item.COMMENTS || '-' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>Hotline: 15938 | Thank you!</p>
+    </div>
+  </div>
+
+  <div class="no-print">
+    @if(order.FILES != "" && order.FILES != null)
+    {
+    <app-file-manager [(FileObjectJson)]="order.FILES" class="d-block w-100 mt-2" label="Files" urlPath="OrderImage"
+      [fileType]="'image'" [maxFileSizeMB]="30" [allowMultiple]="true" [mode]="'view'"></app-file-manager>
+    }
+  </div>
+
+  }
 </div>

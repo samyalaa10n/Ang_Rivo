@@ -90,9 +90,7 @@
 }
 
 .info-item {
-  display        : flex;
-  justify-content: space-between;
-  gap            : 6px;
+  display: flex;
 }
 
 .info-item.full-width {
@@ -110,7 +108,7 @@
 .info-item .value {
   color     : #666;
   text-align: right;
-  flex      : 1;
+  flex      : 0.5;
   font-size : 18px;
 }
 

@@ -1,0 +1,43 @@
+::ng-deep .languageControl .p-select {
+    background: #191a2f !important;
+    border    : none !important;
+    text-align: center !important;
+    min-width : unset !important;
+}
+
+::ng-deep .languageControl .p-select-label {
+    flex : unset !important;
+    width: unset !important;
+    color: #d4a574 !important;
+}
+
+::ng-deep .languageControl .p-select-overlay {
+    background: #191a2f !important;
+    border    : solid 1px #d4a574 !important;
+    color     : #d4a574 !important;
+}
+
+::ng-deep .languageControl .p-select-overlay li {
+    color: #d4a574 !important;
+}
+
+::ng-deep .languageControl .p-select-overlay .p-focus {
+    background: #191a2f !important;
+}
+
+::ng-deep .languageControl .p-select-overlay li:hover {
+    color     : white !important;
+    background: #d4a574 !important;
+}
+
+::ng-deep .languageControl .p-select-overlay .p-select-header {
+    display: none !important;
+}
+
+::ng-deep .languageControl .p-select-option-selected {
+    background: transparent !important;
+}
+
+.languageControl {
+    display: inline;
+}

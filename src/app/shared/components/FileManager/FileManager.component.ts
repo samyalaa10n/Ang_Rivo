@@ -117,7 +117,6 @@ export class FileManagerComponent implements OnInit {
         filePath: result.filePath,
         uploadDate: new Date(),
       };
-      debugger
       if (this.allowMultiple) {
         this.files.push(newFile);
         this.FileObjectJson = JSON.stringify(this.files);
@@ -237,7 +236,7 @@ export class FileManagerComponent implements OnInit {
   EditHint() {
     this.FileObjectJson = JSON.stringify(this.files);
     this.FileObjectJsonChange.emit(this.FileObjectJson)
-    this._myTools.Toaster.showInfo("saved")
+    this._myTools.Toaster.showInfo("hint saved")
   }
   /**
    * Generate unique ID for file

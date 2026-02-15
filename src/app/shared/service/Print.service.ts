@@ -1270,30 +1270,29 @@ export class PrintService {
     <div class="summary">
       <div class="summary-box">
         <div class="summary-row">
-          <span class="summary-label">Subtotal:</span>
+          <span class="summary-label">Reservation Price:</span>
           <span>${Totals.Total.toFixed(2)} EGP</span>
         </div>
         <div class="summary-row">
-          <span class="summary-label">Discount (${_Request.DESCOUND_PERCENT}%):</span>
+          <span class="summary-label">Discount Value:</span>
           <span>-${(Totals.Total - Totals.TotalAfterDiscount).toFixed(2)} EGP</span>
         </div>
         <div class="summary-row">
-          <span class="summary-label">Total After Discount:</span>
+          <span class="summary-label">Price After Discount:</span>
           <span>${Totals.TotalAfterDiscount.toFixed(2)} EGP</span>
         </div>
         <div class="summary-row">
-          <span class="summary-label">Deposit Paid:</span>
-          <span>-${_Request.DEPOST?.toFixed(2) || '0.00'} EGP</span>
-        </div>
-        <div class="summary-row">
           <span class="summary-label">Delivery Charge:</span>
-          <span>${(Totals.DeliveryCharge).toFixed(2)} EGP</span>
+          <span>${Totals.DeliveryCharge.toFixed(2)} EGP</span>
         </div>
         <div class="summary-row">
-          <span class="summary-label">Balance Due:</span>
-          <span>${(Totals.TotalAfterDeposit+Totals.DeliveryCharge).toFixed(2)} EGP</span>
+          <span class="summary-label">Price After Discount And Delivery:</span>
+          <span>${(Totals.TotalAfterDiscount + Totals.DeliveryCharge).toFixed(2)} EGP</span>
         </div>
-   
+        <div class="summary-row">
+          <span class="summary-label">Remaining After Deposit:</span>
+          <span>${(Totals.TotalAfterDiscount + Totals.DeliveryCharge - (_Request.DEPOST || 0)).toFixed(2)} EGP</span>
+        </div>
       </div>
     </div>
     

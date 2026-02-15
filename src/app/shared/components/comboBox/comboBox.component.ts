@@ -19,6 +19,8 @@ export class ComboBoxComponent implements OnInit {
   @Input() optionLabel: string = ''
   @Input() optionValue: string = ''
   @Input() placeholder: string = ''
+  @Input() placeholderOnNormal: string = ''
+  @Input() appendTo: any = "body"
   @Input() IsLoading: boolean = false
   @Input() apiPathDataSource: string = ''
   @Input() Label: string = ''

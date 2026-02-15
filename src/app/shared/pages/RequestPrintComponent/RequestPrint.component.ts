@@ -6,22 +6,25 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Tools } from '../../service/Tools.service';
 import { Item } from '../../Types/Item';
 import { Button } from "primeng/button";
+import { FileManagerComponent } from "../../components/FileManager/FileManager.component";
 @Component({
   selector: 'app-RequestPrint',
   templateUrl: './RequestPrint.component.html',
   styleUrls: ['./RequestPrint.component.css'],
   standalone: true,
-  imports: [CommonModule, Button, RouterLink]
+  imports: [CommonModule, Button, RouterLink, FileManagerComponent]
 })
 export class RequestPrintComponent implements OnInit, OnDestroy {
   @Input() orders: RequestOrder[] = [];
+  order: RequestOrder = { ID: 0, ROW_NUMBER: -1, CUSTOMER_NAME: '', CUSTOMER: 0, DEPOST: 0, DESCOUND_PERCENT: 0, SEND_DATE: new Date(), RESAVE_DATE: new Date(), ITEMS: [], PRICE_AFTER_DESCOUND: 0, NOTS: '', PAYMENT_TYPE: 0, CUSTOMER_BUY_NAME: '', SELLER: '', PHONE: '', PLACE: 0, ADDRESS: "", FILES: "", ISCANCELED: false, FROM_FACTORY: true, DILEVERY_CHARGE: 0 };
+  onOrder: boolean = false;
+  DEPART_SELECTED_NAME: string = '';
+  private qrCodes: Map<number, string> = new Map();
   Customers: Array<any> = [];
   Placses: Array<any> = [];
   Category: Array<any> = [];
   Departs: Array<any> = [];
   ITEMS: Array<Item> = [];
-  DEPART_SELECTED_NAME: string = '';
-  private qrCodes: Map<number, string> = new Map();
   constructor(private _ActiveRouter: ActivatedRoute, private _tools: Tools) {
 
   }
@@ -29,50 +32,69 @@ export class RequestPrintComponent implements OnInit, OnDestroy {
     this._tools.transfareSherdData.sherdMood = false;
   }
   async ngOnInit() {
-    this.Category = await this._tools.Network.getAsync("Category") as Array<any>;
-    this.Departs = await this._tools.Network.getAsync("Depart") as Array<any>;
-    this.ITEMS = await this._tools.Network.getAsync("Items") as Array<any>;
-    this.Placses = await this._tools.Network.getAsync<any>("Place");
-    this.Customers = await this._tools.Network.getAsync<any>("Customer");
     this._tools.waitExecuteFunction(100, () => {
       this._ActiveRouter.queryParams.subscribe({
-        next: async ({ REQ }) => {
+        next: async ({ REQ, TYPE }) => {
           this._tools.transfareSherdData.sherdMood = true;
-          if (REQ != "") {
-            let Req = JSON.parse(REQ)
-            this.DEPART_SELECTED_NAME = Req.DEPART_SELECTED_NAME;
-            var data = await this._tools.Network.postAsync<any>(`Report/GetOrdersReservations`, Req);
-            if (data != undefined && Array.isArray(data)) {
-              this.orders = data;
-              //this.orders.sort((a,b)=>a.RESAVE_DATE>b.RESAVE_DATE);
-              this.orders = this.orders.sort((a, b) =>
-                (a.PLACE_NAME || '').localeCompare(b.PLACE_NAME || '')
-              );
-              this.orders.forEach(ord => {
-                ord.ITEMS.forEach(item => {
-                  item.NAME = this.ITEMS.find(x => x.ID == item.ITEM_ID)?.NAME ?? "";
-                  item.CATEGORY = this.Category.find(x => x.ID == this.ITEMS.find(x => x.ID == item.ITEM_ID)?.CATEGORY)?.NAME ?? "";
-                  item.Depart = this.Departs.find(x => x.ID == this.Category.find(cat => cat.ID == this.ITEMS.find(x => x.ID == item.ITEM_ID)?.CATEGORY).DEPART_ID)?.NAME ?? "";
+          if (TYPE == "Report") {
+            if (REQ != "") {
+              this.Category = await this._tools.Network.getAsync("Category") as Array<any>;
+              this.Departs = await this._tools.Network.getAsync("Depart") as Array<any>;
+              this.ITEMS = await this._tools.Network.getAsync("Items") as Array<any>;
+              this.Placses = await this._tools.Network.getAsync<any>("Place");
+              this.Customers = await this._tools.Network.getAsync<any>("Customer");
+              this.onOrder = false;
+              let Req = JSON.parse(REQ)
+              this.DEPART_SELECTED_NAME = Req.DEPART_SELECTED_NAME;
+              var data = await this._tools.Network.postAsync<any>(`Report/GetOrdersReservations`, Req);
+              if (data != undefined && Array.isArray(data)) {
+                this.orders = data;
+                //this.orders.sort((a,b)=>a.RESAVE_DATE>b.RESAVE_DATE);
+                this.orders = this.orders.sort((a, b) =>
+                  (a.PLACE_NAME || '').localeCompare(b.PLACE_NAME || '')
+                );
+                this.orders.forEach(ord => {
+                  ord.ITEMS.forEach(item => {
+                    item.NAME = this.ITEMS.find(x => x.ID == item.ITEM_ID)?.NAME ?? "";
+                    item.CATEGORY = this.Category.find(x => x.ID == this.ITEMS.find(x => x.ID == item.ITEM_ID)?.CATEGORY)?.NAME ?? "";
+                    item.DEPART = this.Departs.find(x => x.ID == this.Category.find(cat => cat.ID == this.ITEMS.find(x => x.ID == item.ITEM_ID)?.CATEGORY).DEPART_ID)?.NAME ?? "";
+                  })
+                  ord.ITEMS.sort((a, b) => a.CATEGORY.localeCompare(b.CATEGORY));
+                  this.RenderItem(ord);
                 })
-                ord.ITEMS.sort((a, b) => a.CATEGORY.localeCompare(b.CATEGORY));
-                this.RenderItem(ord);
-              })
-            }
-            // Generate QR codes for all orders
-            for (const order of this.orders) {
-              try {
-                const qrCode = await QRCode.toDataURL(order?.QR || "");
-                this.qrCodes.set(order.ID, qrCode);
-              } catch (error) {
-                console.error('Error generating QR code:', error);
+              }
+              // Generate QR codes for all orders
+              for (const order of this.orders) {
+                try {
+                  const qrCode = await QRCode.toDataURL(order?.QR || "");
+                  this.qrCodes.set(order.ID, qrCode);
+                } catch (error) {
+                  console.error('Error generating QR code:', error);
+                }
               }
             }
           }
-
+          else if (TYPE == "Order") {
+            if (REQ != "") {
+              await this.getRequest(this.getREQParameter(window.location.href) ?? "");
+              try {
+                const qrCode = await QRCode.toDataURL(this.order?.QR || "");
+                this.qrCodes.set(this.order.ID, qrCode);
+              } catch (error) {
+                console.error('Error generating QR code:', error);
+              }
+              this.onOrder = true;
+            }
+          }
         }
       })
     })
 
+  }
+  getREQParameter(url: string): string | null {
+    const pattern = /REQ=([^&]+)/;
+    const match = url.match(pattern);
+    return match ? match[1] : null;
   }
   RenderItem(item: RequestOrder) {
     item.SEND_DATE = this._tools.DateTime.getDataFromJson(item.SEND_DATE as any)
@@ -98,12 +120,12 @@ export class RequestPrintComponent implements OnInit, OnDestroy {
 
     this.orders.forEach(order => {
       order.ITEMS.forEach(item => {
-        const key = `${item.NAME}|${item.CATEGORY}|${item.Depart}|${item.UNIT}`;
+        const key = `${item.NAME}|${item.CATEGORY}|${item.DEPART}|${item.UNIT}`;
         if (!itemsMap.has(key)) {
           itemsMap.set(key, {
             name: item.NAME,
             category: item.CATEGORY,
-            depart: item.Depart ?? "",
+            depart: item.DEPART ?? "",
             unit: item.UNIT,
             departBreakdown: [],
             totalQty: 0
@@ -151,5 +173,15 @@ export class RequestPrintComponent implements OnInit, OnDestroy {
   }
   print() {
     window.print();
+  }
+  async getRequest(REQ: string) {
+    var response = await this._tools.Network.getAsync<RequestOrder>("Requstes/GetMorDitiles?REQ=" + REQ) as RequestOrder;
+    if (response?.ID > 0) {
+      this.order = response;
+      this.DEPART_SELECTED_NAME = this._tools.distinctArray(this.order.ITEMS, "DEPART").map(x => x.DEPART).join(",");
+    }
+    else {
+      this._tools.Toaster.showError("Reservation has been deleted")
+    }
   }
 }

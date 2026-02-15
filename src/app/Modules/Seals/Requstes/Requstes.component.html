@@ -143,21 +143,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-12 col-lg-6">
-                  <!-- Payment & Discount Section -->
-                  <div class="row mb-4">
-                    <div class="col-12 mb-3 mb-md-0">
-                      <div class="form-floating">
-                        <p-inputNumber [(ngModel)]="Request.DEPOST" [minFractionDigits]="0" [maxFractionDigits]="3"
-                          class="form-control" styleClass="w-100"></p-inputNumber>
-                        <label class="text-muted">
-                          <i class="pi pi-money-bill me-2"></i>Deposit
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-12 col-lg-6">
+
+                <div class="col-12 col-lg-6 ">
                   <!-- SELLER name Fields -->
                   <div class="col-12 mb-3 mb-md-0">
                     <div class="form-floating">
@@ -166,22 +153,6 @@
                       <label class="text-muted">
                         <i class="pi pi-money-bill me-2"></i>Delivery Charge
                       </label>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-12 col-lg-6">
-                  <!-- Payment & Discount Section -->
-                  <div class="row mb-4">
-                    <div class="col-12" *ngIf="Request.DEPOST> 0">
-                      <div class="form-floating">
-                        <app-comboBox [NormalStyle]="true" [dataSource]="AccountTypes"
-                          [(SelectedValue)]="Request.PAYMENT_TYPE" optionLabel="NAME" optionValue="ID"
-                          placeholder="Payment Method" class="form-control"></app-comboBox>
-                        <label class="text-muted">
-                          <i class="pi pi-credit-card me-2"></i>Payment Method
-                        </label>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -198,6 +169,40 @@
                     </div>
                   </div>
                 </div>
+                <div class="col-12 row my-4">
+                  <div class="col-12 col-lg-6">
+                    <!-- Payment & Discount Section -->
+                    <div class="row mb-4">
+                      <div class="col-12 mb-3 mb-md-0">
+                        <div class="form-floating">
+                          <p-inputNumber [(ngModel)]="Request.DEPOST" [minFractionDigits]="0" [maxFractionDigits]="3"
+                            class="form-control" styleClass="w-100"></p-inputNumber>
+                          <label class="text-muted">
+                            <i class="pi pi-money-bill me-2"></i>Deposit
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-lg-6">
+                    <!-- Payment & Discount Section -->
+                    <div class="row mb-4">
+                      <div class="col-12" *ngIf="Request.DEPOST> 0">
+                        <div class="form-floating">
+                          <app-comboBox [NormalStyle]="true" [dataSource]="AccountTypes"
+                            [(SelectedValue)]="Request.PAYMENT_TYPE" optionLabel="NAME" optionValue="ID"
+                            placeholder="Payment Method" class="form-control"></app-comboBox>
+                          <label class="text-muted">
+                            <i class="pi pi-credit-card me-2"></i>Payment Method
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
                 <div class="col-12">
                   <!-- Adress Card -->
                   <div class="col-12">
@@ -219,7 +224,7 @@
                 </div>
                 <div class="col-12">
                   <app-file-manager [(FileObjectJson)]="Request.FILES" class="d-block w-100 mt-2"
-                    [label]="'Upload Your Files'" urlPath="OrderImage" [fileType]="'image'" [maxFileSizeMB]="5"
+                    [label]="'Upload Your Files'" urlPath="OrderImage" [fileType]="'image'" [maxFileSizeMB]="30"
                     [allowMultiple]="true" [mode]="'edit'"
                     (onFilesChanged)="handleFilesChanged($event)"></app-file-manager>
                 </div>
@@ -272,9 +277,22 @@
                       </div>
                     </div>
                     <div class="col-12">
+                      <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded">
+                        <span class="text-muted">Delivery Charge:</span>
+                        <span class="fw-bold text-warning">{{DeliveryCharge()}}</span>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div
+                        class="d-flex justify-content-between align-items-center p-3 bg-success bg-opacity-10 rounded border border-success border-opacity-25">
+                        <span class="text-success">Price After Discount And Delivery:</span>
+                        <span class="fw-bold text-success">{{TotalAfterDescoundAndDelivery()}}</span>
+                      </div>
+                    </div>
+                    <div class="col-12">
                       <div
                         class="d-flex justify-content-between align-items-center p-3 bg-info bg-opacity-10 rounded border border-info border-opacity-25">
-                        <span class="text-info">Remaining After Deposit:</span>
+                        <span class="text-info">Remaining After Deposit :</span>
                         <span class="fw-bold text-info">{{TotalAfterDepost()}}</span>
                       </div>
                     </div>

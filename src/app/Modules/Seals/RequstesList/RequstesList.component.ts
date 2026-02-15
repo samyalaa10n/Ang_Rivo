@@ -40,16 +40,20 @@ export class RequstesListComponent implements OnInit {
     this.Columns[this.Columns.length - 1].Style_Show = (value) => {
       return this._tools.DateTime.EditFormateData(value);
     }
-    this.Columns.push(new Column('RESAVE_DATE', 'Delivery Date', "lapel", "date"))
+    this.Columns.push(new Column('RESAVE_DATE', 'Resave Date', "lapel", "date"))
     this.Columns[this.Columns.length - 1].Style_Show = (value) => {
       return this._tools.DateTime.EditFormateData(value);
     }
-
-    this.Columns.push(new Column('TOTAL', 'Price', "lapel", "numeric"))
-    this.Columns.push(new Column('DESCOUND_PERCENT', 'Discount %', "lapel", "numeric"))
-    this.Columns.push(new Column('PRICE_AFTER_DESCOUND', 'Price After Discount', "lapel", "numeric"))
-    this.Columns.push(new Column('DEPOST', 'Deposit', "lapel", "numeric"))
-    this.Columns.push(new Column('TOTAL_AFTER_DEPOST', 'Remaining Price', "lapel", "numeric"))
+    this.Columns.push(new Column('DELIVERY_DATE', 'Delivery Date', "lapel", "date"))
+    this.Columns[this.Columns.length - 1].Style_Show = (value) => {
+      return this._tools.DateTime.EditFormateData(value);
+    }
+    this.Columns.push(new Column('DELIVERYNOTS', 'Delivery Nots', "lapel", "date"))
+    // this.Columns.push(new Column('TOTAL', 'Price', "lapel", "numeric"))
+    // this.Columns.push(new Column('DESCOUND_PERCENT', 'Discount %', "lapel", "numeric"))
+    // this.Columns.push(new Column('PRICE_AFTER_DESCOUND', 'Price After Discount', "lapel", "numeric"))
+    // this.Columns.push(new Column('DEPOST', 'Deposit', "lapel", "numeric"))
+    // this.Columns.push(new Column('TOTAL_AFTER_DEPOST', 'Remaining Price', "lapel", "numeric"))
   }
   AddNew() {
     this._router.navigate(['Main', 'Requstes'], { queryParams: { ID: `0` } })
@@ -66,9 +70,6 @@ export class RequstesListComponent implements OnInit {
     e.item.RESAVE_DATE = this._tools.DateTime.getDataFromJson(e.item.RESAVE_DATE as any)
     e.item.CUSTOMER_NAME = this.Customers.find(Z => Z.ID == e.item.CUSTOMER)?.NAME ?? '';
     e.item.PLACE_NAME = this.Plases.find(Z => Z.ID == e.item.PLACE)?.NAME ?? '';
-    e.item.TOTAL = e.item.ITEMS.reduce((num, item) => { return num += (item.COUNT * item.PRICE) }, 0);
-    e.item.PRICE_AFTER_DESCOUND = e.item.TOTAL - (e.item.TOTAL * (e.item.DESCOUND_PERCENT / 100));
-    e.item.TOTAL_AFTER_DEPOST = e.item.PRICE_AFTER_DESCOUND - e.item.DEPOST;
   }
   GridLoaded(dataGrid: DataGridComponent) {
     dataGrid.GridMode = "EfectInRows"

@@ -5,6 +5,7 @@ import { Tools } from '../../../shared/service/Tools.service';
 import { Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
+import { LanguageControlComponent } from "../../../shared/components/LanguageControl/LanguageControl.component";
 
 
 @Component({
@@ -12,7 +13,7 @@ import { BehaviorSubject } from 'rxjs';
   templateUrl: './Header.component.html',
   styleUrls: ['./Header.component.css'],
   standalone: true,
-  imports: [ButtonModule, RouterLink, NgIf]
+  imports: [ButtonModule, RouterLink, NgIf, LanguageControlComponent]
 })
 export class HeaderComponent implements OnInit {
 
@@ -40,6 +41,7 @@ export class HeaderComponent implements OnInit {
   logOut() {
     localStorage.removeItem("logInfo")
     this._router.navigate(['Login'])
+    this._tools.Network.hubConnection?.stop();
   }
   LogIn() {
     this._router.navigate(['Login'])
@@ -54,4 +56,5 @@ export class HeaderComponent implements OnInit {
       })
     }
   }
+
 }

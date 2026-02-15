@@ -305,7 +305,7 @@ export class DataGridComponent implements OnInit {
         this.pInputTextKeyDown(e, { value: "" }, null);
       }
     })
-    this._tools.waitExecuteFunction(100, () => {
+    this._tools.waitExecuteFunction(300, () => {
       this.onGridLoaded.emit(this);
       (this.dt as any).MyGrid = this;
     })

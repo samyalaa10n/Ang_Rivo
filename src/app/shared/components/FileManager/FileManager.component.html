@@ -91,13 +91,14 @@
                       </div>
                       <small class="text-muted">{{ file.filePath }}</small>
                     </td>
-                    <td>
-                      <input type="text" class="form-control form-text" style="width: 150px;"
-                        [(ngModel)]="file.fileHint">
-                      <br>
-                      <button type="button" class="btn btn-outline-info w-100" title="Preview" (click)="EditHint()">
-                        <i class="pi pi-save"></i>
-                      </button>
+                    <td *ngIf="mode=='edit'">
+                      <input #text type="text" class="form-control form-text" style="width: 150px;"
+                        [(ngModel)]="file.fileHint" (blur)="EditHint()"  placeholder="Add a hint">
+                    </td>
+                    <td *ngIf="mode=='view'">
+                      <span class="badge bg-light text-dark">
+                        {{ file.fileHint || 'No hint' }}
+                      </span>
                     </td>
 
                     <!-- File Size -->

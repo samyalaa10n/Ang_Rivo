@@ -7,6 +7,7 @@ import { Tools } from '../../../shared/service/Tools.service';
 import { DrawerModule } from 'primeng/drawer';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { NgIf } from '@angular/common';
+import { LanguageControlComponent } from "../../../shared/components/LanguageControl/LanguageControl.component";
 @Component({
   selector: 'app-Nave',
   templateUrl: './Nave.component.html',
@@ -44,12 +45,21 @@ export class NaveComponent implements OnInit {
             command: (event) => {
              this.closeNave(); this._router.navigate(['Main', 'RuleGroup']);
             },
-          },
+          }
+          ,
           {
             label: 'Users',
             icon: 'pi pi-database',
             command: (event) => {
              this.closeNave(); this._router.navigate(['Main', 'Users']);
+            },
+          }
+          ,
+          {
+            label: 'Logged In Users',
+            icon: 'pi pi-database',
+            command: (event) => {
+             this.closeNave(); this._router.navigate(['Main', 'UsersActives']);
             },
           }
         ]

@@ -138,13 +138,19 @@ export class RequstesComponent implements OnInit {
     return this.InputFastItems?.ITEMS_INPUT?.map(x => x.TOTAL_COUNT)?.reduce((a, b) => a + b, 0);
   }
   TotalAfterDescound(): number {
-    return this.Total() - (this.Total() * (this.Request.DESCOUND_PERCENT / 100));
+    return (this.Total() - (this.Total() * (this.Request.DESCOUND_PERCENT / 100)));
+  }
+  TotalAfterDescoundAndDelivery(): number {
+    return (this.Total() - (this.Total() * (this.Request.DESCOUND_PERCENT / 100)))+this.Request.DILEVERY_CHARGE;
   }
   DescoundValue(): number {
     return (this.Total() * (this.Request.DESCOUND_PERCENT / 100));
   }
+  DeliveryCharge(): number {
+    return this.Request.DILEVERY_CHARGE;
+  }
   TotalAfterDepost(): number {
-    return this.TotalAfterDescound() - this.Request.DEPOST;
+    return this.TotalAfterDescoundAndDelivery() - this.Request.DEPOST;
   }
   Save(IS_CANCEL: boolean = false) {
     this.Request.ITEMS = this.InputFastItems.GeneratRequestItems();

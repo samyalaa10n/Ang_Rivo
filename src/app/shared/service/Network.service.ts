@@ -14,8 +14,9 @@ export class Network {
   public hubConnection: signalR.HubConnection | undefined;
   // baseUrl: string = "https://aspnetclusters-200150-0.cloudclusters.net"
   //baseUrl: string = "https://rivo.it.com:262"s
+  //baseUrl: string = "https://erpstage.runasp.net"
   baseUrl: string = "https://localhost:44327"
- //baseUrl: string = "https://rivo.it.com:444"
+  //baseUrl: string = "https://rivo.it.com:444"
   baseUrlApi: string = `${this.baseUrl}/api/`
   constructor(public _httpClient: HttpClient, public _router: Router) { }
   Loading!: LoadingComponent
@@ -23,7 +24,10 @@ export class Network {
   Toaster!: ToasterComponent
   // Start the SignalR connection
   public startConnection(UserData: string = ""): void {
+    const token = JSON.parse(localStorage.getItem("logInfo") || '{}').TOKEN || 'no-token';
+    console.log(token)
     this.hubConnection = new signalR.HubConnectionBuilder().withUrl(`${this.baseUrl}/Connect?UserData=${UserData}`, {
+      accessTokenFactory: () => token,
       withCredentials: true // لتأكيد إرسال الـ cookies إذا كان يستخدم
     }).build();
     this.hubConnection.start()

@@ -1348,6 +1348,11 @@ export class Tools {
       return 0;
     });
   }
+  distinctArray(array: Array<any>, property: string):Array<any> {
+    return array.filter((value, index, self) =>
+      index === self.findIndex((t) => t[property] === value[property])
+    );
+  }
   saveInputInLabel(key: string, data: any) {
     localStorage.setItem(key, JSON.stringify(data))
   }

@@ -49,6 +49,7 @@ import { ReportComponent } from './Modules/Report/Report.component';
 import { Show_QR_CodeComponent } from './shared/pages/Show_QR_Code/Show_QR_Code.component';
 import { RequestPrintComponent } from './shared/pages/RequestPrintComponent/RequestPrint.component';
 import { DeliveryControlComponent } from './Modules/Seals/DeliveryControl/DeliveryControl.component';
+import { UsersActivesComponent } from './Modules/Admin/UsersActives/UsersActives.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'Home', pathMatch: 'full' },
@@ -68,11 +69,23 @@ export const routes: Routes = [
     loadComponent: () => import('./shared/pages/ShowImages/ShowImages.component').then(m => m.ShowImagesComponent)
   },
   {
+    path: 'Main/RequestPrint',
+    data: { REQ: '' },
+    title: 'Print Reservations',
+    component: RequestPrintComponent
+  },
+  {
     path: 'Main',
-    title: 'Delivery Control',
+    title: 'Main',
     canActivateChild: [authGuard],
     component: MainComponent,
     children: [
+      {
+        path: 'UsersActives',
+        title: 'Logged In Users',
+        data: { REQ: '' },
+        component: UsersActivesComponent
+      },
       {
         path: 'DeliveryControl',
         data: { REQ: '' },
@@ -83,12 +96,7 @@ export const routes: Routes = [
         data: { REQ: '' },
         component: AtivateItemsControlComponent
       },
-      {
-        path: 'RequestPrint',
-        data: { REQ: '' },
-        title: 'Print Reservations',
-        component: RequestPrintComponent
-      },
+
       {
         path: 'EffectInSystem',
         title: 'System Effects',

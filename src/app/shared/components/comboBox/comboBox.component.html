@@ -2,7 +2,7 @@
 {
   <div dir="rtl" class="combo">
     <p-iftalabel dir="rtl">
-      <p-select [id]="placeholder" [placeholder]="'Choose the value ...'"  [loading]="IsLoading" appendTo="body" (onShow)="onShow()"  [(ngModel)]="selected" (ngModelChange)="selectedItem($event)"
+      <p-select [id]="placeholder"  [placeholder]="'Choose the value ...'"  [loading]="IsLoading" appendTo="body" (onShow)="onShow()"  [(ngModel)]="selected" (ngModelChange)="selectedItem($event)"
         (onClear)="clear()" [showClear]="showClear" emptyMessage="No data available" [filter]="optionLabel"
          [optionLabel]="optionLabel" [options]="dataSource" emptyFilterMessage="Not found">
       </p-select>
@@ -12,7 +12,7 @@
 }
 @if(NormalStyle && !ShowMode)
 {
-  <p-select [id]="placeholder" [placeholder]="'Choose the value ...'"  [loading]="IsLoading" appendTo="body" (onShow)="onShow()"  [(ngModel)]="selected" (ngModelChange)="selectedItem($event)"
+  <p-select [id]="placeholder" [placeholder]="placeholderOnNormal"  [loading]="IsLoading" [appendTo]="appendTo" (onShow)="onShow()"  [(ngModel)]="selected" (ngModelChange)="selectedItem($event)"
   (onClear)="clear()" [showClear]="showClear" emptyMessage="No data available" fi [filter]="optionLabel"
    [optionLabel]="optionLabel" [options]="dataSource" emptyFilterMessage="Not found">
   </p-select>

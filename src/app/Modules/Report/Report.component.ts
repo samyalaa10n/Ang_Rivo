@@ -170,6 +170,8 @@ export class ReportComponent implements OnInit {
     dataGrid.AllowAdd = false;
     dataGrid.canSelectRow = false;
     dataGrid.AllowPrint = true;
+    dataGrid.AllowEdit = false;
+    dataGrid.GridMode = "EfectInRows"
     dataGrid.onPrint = async () => {
       this.START_DATE.setHours(0)
       this.START_DATE.setMinutes(0)
@@ -187,7 +189,8 @@ export class ReportComponent implements OnInit {
       }
       this._router.navigate(['Main', "RequestPrint"], {
         queryParams: {
-          REQ: JSON.stringify(Req)
+          REQ: JSON.stringify(Req),
+          TYPE: "Report"
         }
       });
     }
@@ -206,6 +209,14 @@ export class ReportComponent implements OnInit {
         FileSaver.saveAs(blob, `$exported.xlsx`);
       }
       this._tools.Loading.stopLoading();
+    }
+    dataGrid.onShowItem = (item) => {
+      this._router.navigate(['Main', "RequestPrint"], {
+        queryParams: {
+          REQ: JSON.stringify({ ID: item.ID }),
+          TYPE: "Order"
+        }
+      });
     }
   }
   GridLoaded(dataGrid: DataGridComponent) {

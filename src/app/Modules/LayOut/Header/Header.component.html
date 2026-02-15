@@ -1,10 +1,22 @@
-<div *ngIf="!_tools.transfareSherdData.sherdMood" class="Header-App d-flex justify-content-start px-2">
-  <button (click)="openNave()" class="header-btn-Menu mx-2  ">
-    <i class="pi pi-align-justify"></i>
-  </button>
-  <div class="logo-text mx-2" routerLink="/Main" >COPPERMELT</div>
-  <div class="w-100 px-2 d-flex justify-content-end align-items-center">
-    <div class="logo-text fs-6 mx-2 text-end"><i class="pi pi-user"></i> {{this._tools.Network._LoginName}}   </div>
+<div *ngIf="!_tools.transfareSherdData.sherdMood" class="Header-App">
+  <div class="header-content">
+    <div class="header-left">
+      <button (click)="openNave()" class="header-btn-Menu">
+        <i class="pi pi-align-justify"></i>
+      </button>
+      
+      <div class="logo" routerLink="/Main">
+        <div class="logo-text">COPPERMELT</div>
+      </div>
+    </div>
+    
+    <div class="header-right">
+      <app-LanguageControl></app-LanguageControl>
+      <div class="user-info">
+        <i class="pi pi-user"></i>
+        <span class="user-name">{{this._tools.Network._LoginName}}</span>
+      </div>
+    </div>
   </div>
   {{connect()}}
 </div>
