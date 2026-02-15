@@ -25,18 +25,17 @@ export class Network {
   // Start the SignalR connection
   public startConnection(UserData: string = ""): void {
     const token = JSON.parse(localStorage.getItem("logInfo") || '{}').TOKEN || 'no-token';
-    console.log(token)
     this.hubConnection = new signalR.HubConnectionBuilder().withUrl(`${this.baseUrl}/Connect?UserData=${UserData}`, {
       accessTokenFactory: () => token,
       withCredentials: true // لتأكيد إرسال الـ cookies إذا كان يستخدم
     }).build();
     this.hubConnection.start()
       .then(() => {
-        console.log('Connection Established')
+        // console.log('Connection Established')
       })
       .catch(err => {
         this.Loading.stopLoading();
-        console.log(err)
+        // console.log(err)
       });
   }
   // Send a message

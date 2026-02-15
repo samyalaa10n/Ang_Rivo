@@ -10,11 +10,14 @@ import { Tools } from '../../service/Tools.service';
 })
 export class LanguageControlComponent implements OnInit {
   LanguageSoruce: Array<any> = []
+  selectedLang: any = null;
   constructor(private _myTools: Tools) { }
 
   async ngOnInit() {
 
     this.LanguageSoruce = await this._myTools.Network._httpClient.get<any>(`Data/Language.json`).toPromise();
+    this.selectedLang = this.LanguageSoruce.find(x => x.select == true);
+    console.log(this.selectedLang)
   }
   selectLng(event: any) {
  

@@ -1,3 +1,3 @@
 <div class="languageControl" #langControl>
-    <app-comboBox [NormalStyle]="true" se [appendTo]="langControl" placeholderOnNormal="language" [showClear]="false" [dataSource]="LanguageSoruce" optionLabel="name" (selectedChange)="selectLng($event)" ></app-comboBox>
+    <app-comboBox [NormalStyle]="true"    [(selected)]="selectedLang" [appendTo]="langControl" placeholderOnNormal="language" [showClear]="false" [dataSource]="LanguageSoruce" optionLabel="name" (selectedChange)="selectLng($event)" ></app-comboBox>
 </div>
