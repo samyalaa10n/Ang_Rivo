@@ -77,7 +77,7 @@ export class InputFastItemsComponent implements OnInit {
   onGridLoaded(grid: DataGridComponent) {
     grid.AllowUpdate = true;
     grid.AllowCopyPest = true
-    grid.GridMode="EfectInRows"
+    grid.GridMode = "EfectInRows"
     grid.onUpdate = async () => {
       grid.dataSource = this.ITEMS_INPUT;
     }
@@ -118,8 +118,18 @@ export class InputFastItemsComponent implements OnInit {
     // this.Category.forEach(cat => {
     //   cat.NAME = `${cat.NAME}[ ${this.Departs.find(x => x.ID == cat.DEPART_ID)?.NAME}]- `
     // })
-    this.ITEMS_INPUT.forEach(item => { this.oldData.push(this._tools.cloneObject(item)) });
-    this.ITEMS_INPUT = this.ITEMS.filter(z => this.CategorySelected.map(X => X.ID).includes(z.CATEGORY)).map(m_Item => { return { ID: this.ITEMS_INPUT.find(x => x.ITEM_ID == m_Item.ID)?.ID ?? -1, ITEM_ID: m_Item.ID, NAME: m_Item.NAME, UNIT: m_Item.UNIT, TYPE: m_Item.TYPE, MAIN_PRICE: m_Item.PRICE_SEAL, PRICE: this.getLastElemnt(m_Item.ID)?.PRICE ?? m_Item.PRICE_SEAL, COUNT: this.getLastElemnt(m_Item.ID)?.COUNT ?? 0, TOTAL_COUNT: 0, ROW_NUMBER: this.ITEMS_INPUT.find(x => x.ITEM_ID == m_Item.ID) != null ? 1 : -1, CATEGORY: this.Category.find(z => z.ID == m_Item.CATEGORY)?.NAME ?? '', COMMENTS: this.getLastElemnt(m_Item.ID)?.COMMENTS ?? '' } });
+    this.ITEMS_INPUT.forEach(item => {
+      if (item.COUNT > 0) {
+        this.oldData.push(this._tools.cloneObject(item))
+      }
+    });
+    this.ITEMS_INPUT = this.ITEMS.filter(z => this.CategorySelected.map(X => X.ID).includes(z.CATEGORY)).map(m_Item => {
+      let older = this.getLastElemnt(m_Item.ID)
+      if (older) {
+        return { ID: this.ITEMS_INPUT.find(x => x.ITEM_ID == m_Item.ID)?.ID ?? -1, ITEM_ID: m_Item.ID, NAME: m_Item.NAME, UNIT: m_Item.UNIT, TYPE: m_Item.TYPE, MAIN_PRICE: m_Item.PRICE_SEAL, PRICE: older.PRICE ?? m_Item.PRICE_SEAL, COUNT: older.COUNT ?? 0, TOTAL_COUNT: 0, ROW_NUMBER: this.ITEMS_INPUT.find(x => x.ITEM_ID == m_Item.ID) != null ? 1 : -1, CATEGORY: this.Category.find(z => z.ID == m_Item.CATEGORY)?.NAME ?? '', COMMENTS: older.COMMENTS ?? '' }
+      }
+      return { ID: this.ITEMS_INPUT.find(x => x.ITEM_ID == m_Item.ID)?.ID ?? -1, ITEM_ID: m_Item.ID, NAME: m_Item.NAME, UNIT: m_Item.UNIT, TYPE: m_Item.TYPE, MAIN_PRICE: m_Item.PRICE_SEAL, PRICE: m_Item.PRICE_SEAL, COUNT: 0, TOTAL_COUNT: 0, ROW_NUMBER: this.ITEMS_INPUT.find(x => x.ITEM_ID == m_Item.ID) != null ? 1 : -1, CATEGORY: this.Category.find(z => z.ID == m_Item.CATEGORY)?.NAME ?? '', COMMENTS: "" }
+    });
   }
   getLastElemnt(ITEM_ID: number): RealItem | null {
     return this.oldData.filter(x => x.ITEM_ID == ITEM_ID)[this.oldData.filter(x => x.ITEM_ID == ITEM_ID).length - 1]
@@ -144,7 +154,7 @@ export class InputFastItemsComponent implements OnInit {
       this.next(next)
     }
   }
-  async Selected(e: { value: RealItem|Item }) {
+  async Selected(e: { value: RealItem | Item }) {
     let selected = this.ITEMS.find(x => x.ID == e.value.ID);
     if (selected) {
       let NCselected = this.Category.find(cat => cat.ID == selected.CATEGORY);
@@ -168,11 +178,11 @@ export class InputFastItemsComponent implements OnInit {
     let query = event.query;
     this.filteredData = this.suggestionsData.filter(x => x.NAME.includes(query))
   }
-  SetItem(CashItem: CartItem | null = null) {
+  SetItem(CashItem: CartItem | null = null, type: "POS" | "Mobile" = "Mobile") {
     if (CashItem != null) {
       let selectedTarget = this.ITEMS.find(x => x.ID == CashItem.id);
       if (selectedTarget != null) {
-        this.Selected({ value:selectedTarget})
+        this.Selected({ value: selectedTarget })
         this.SelectedItem.ITEM_ID = CashItem.id;
         this.SelectedItem.PRICE = CashItem.price;
         this.SelectedItem.COUNT = CashItem.quantity;
@@ -182,10 +192,14 @@ export class InputFastItemsComponent implements OnInit {
     if (selected) {
       selected.COUNT = this.SelectedItem.COUNT;
       selected.PRICE = this.SelectedItem.PRICE;
-      selected.COMMENTS = this.SelectedItem.COMMENTS;
+      if (selected.COMMENTS == "") {
+        selected.COMMENTS = this.SelectedItem.COMMENTS;
+      }
       this.GridAction({ itemEdit: selected });
-      this._tools.Toaster.showInfo("Item recorded successfully")
-      this.next(1)
+      if (type == "Mobile") {
+        this._tools.Toaster.showInfo("Item recorded successfully")
+        this.next(1)
+      }
     }
   }
   next(number: number) {
@@ -255,7 +269,11 @@ export class InputFastItemsComponent implements OnInit {
     return DataOutPut;
   }
   SelectedByBOS(e: Array<CartItem>) {
-    e.forEach(item => this.SetItem(item))
+    e.forEach(item =>
+      setTimeout(() => {
+        this.SetItem(item, "POS")
+      }, 1000)
+    )
     this.ByPOSMode = false;
   }
 }

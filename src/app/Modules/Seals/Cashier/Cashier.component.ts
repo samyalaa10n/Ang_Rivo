@@ -92,6 +92,10 @@ export class RestaurantCashierComponent implements OnInit {
         UNIT: item.UNIT,
         Tex: item.TEX ?? 0
       })
+      let selected = this.cart.find(x => x.id == item.ITEM_ID);
+      if (selected) {
+        selected.quantity = item.COUNT;
+      }
     })
   }
   ngAftrViewChecked(): void {

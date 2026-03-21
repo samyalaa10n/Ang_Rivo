@@ -9,7 +9,7 @@ import { NgIf } from '@angular/common';
   templateUrl: './Place.component.html',
   styleUrls: ['./Place.component.css'],
   standalone: true,
-  imports: [GetAddEditDeleteComponent,NgIf]
+  imports: [GetAddEditDeleteComponent, NgIf]
 })
 export class PlaceComponent implements OnInit {
   Columns: Array<Column> = [];
@@ -22,5 +22,6 @@ export class PlaceComponent implements OnInit {
     this.Columns.push(new Column('IS_BRANCH', "Is Branch?", "yes-no", "none", 50))
     this.Columns.push(new Column('TABLE_COUNT', "Number of Tables", "number", "none", 50))
     this.Columns.push(new Column('EMAIL', "Email", "text", "text", 200))
+    this.Columns.push(new Column("IMGE", "الصورة", "File"));
   }
 }

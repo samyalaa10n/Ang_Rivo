@@ -26,7 +26,7 @@ export class AppComponent {
   }
   ngOnInit() {
     
-    this.primeng.setTranslation(this._tools.DateTime.Date_Data);
+    //this.primeng.setTranslation(this._tools.DateTime.Date_Data);
 
     this.primeng.zIndex = {
       modal: 1100,    // dialog, sidebar

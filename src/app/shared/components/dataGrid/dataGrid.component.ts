@@ -22,6 +22,7 @@ import { DateTimeComponent } from "../DateTime/DateTime.component";
 import { BehaviorSubject } from 'rxjs';
 import { TooltipModule } from 'primeng/tooltip';
 import { Dialog } from "primeng/dialog";
+import { FileManagerComponent } from '../FileManager/FileManager.component';
 @Component({
   selector: 'app-dataGrid',
   templateUrl: './dataGrid.component.html',
@@ -43,7 +44,8 @@ import { Dialog } from "primeng/dialog";
     IconField, InputTextModule, NgIf, MultiselectComponent, ComboBoxComponent, NgTemplateOutlet,
     DateTimeComponent,
     NgClass,
-    Dialog
+    Dialog,
+    FileManagerComponent
   ]
 })
 export class DataGridComponent implements OnInit {
@@ -90,7 +92,9 @@ export class DataGridComponent implements OnInit {
       v.forEach(c => {
         if (c.columnTypeModelMode == "defult") {
           c.columnTypeModelMode = c.columnType;
-          c.columnType = "lapel";
+          if (c.columnType != "File") {
+            c.columnType = "lapel";
+          }
           if (c.name == "ID") {
             c.columnTypeModelMode = "lapel"
           }

@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { FileUploadConfig, FileUploadService } from '../../service/FileUpload.service';
 import { Tools } from '../../service/Tools.service';
 import { FormsModule } from '@angular/forms';
+import { DialogComponent } from "../Dialog/Dialog.component";
+import { Button } from "primeng/button";
 
 export interface FileItem {
   id: string;
@@ -21,7 +23,7 @@ export interface FileItem {
   selector: 'app-file-manager',
   templateUrl: './FileManager.component.html',
   styleUrls: ['./FileManager.component.css'],
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, DialogComponent, Button]
 })
 export class FileManagerComponent implements OnInit {
   @Input() label: string = 'Upload Files';
@@ -29,6 +31,8 @@ export class FileManagerComponent implements OnInit {
   @Input() maxFileSizeMB: number = 5;
   @Input() urlPath: string = 'Files';
   @Input() allowMultiple: boolean = true;
+  @Input() gridMode: boolean = false;
+  @Input() gridModeLable: boolean = false;
   @Input() mode: 'view' | 'edit' = 'edit'; // view or edit mode
 
   @Output() onFilesChanged = new EventEmitter<FileItem[]>();
@@ -37,7 +41,7 @@ export class FileManagerComponent implements OnInit {
   files: FileItem[] = [];
   uploadProgress = 0;
   isUploading = false;
-
+  showInModel:boolean=false;
   constructor(private fileUploadService: FileUploadService, private _myTools: Tools) { }
 
   ngOnInit() {
@@ -55,6 +59,10 @@ export class FileManagerComponent implements OnInit {
         }
       }
     })
+  }
+  showData()
+  {
+    this.showInModel=true;
   }
   ngOnChanges() {
     this.start()

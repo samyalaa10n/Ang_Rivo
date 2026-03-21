@@ -20,7 +20,7 @@ export class NaveComponent implements OnInit {
   showNave: boolean = false;
   showSmallNave: boolean = false;
   items: MenuItem[] | undefined;
-  constructor(public _tools: Tools, private _router: Router, private el: ElementRef<HTMLElement>,private activeRuter:ActivatedRoute) { }
+  constructor(public _tools: Tools, private _router: Router, private el: ElementRef<HTMLElement>, private activeRuter: ActivatedRoute) { }
 
   ngOnInit() {
     this._tools._LinkComponent.subscribe({
@@ -43,7 +43,7 @@ export class NaveComponent implements OnInit {
             label: 'User Roles',
             icon: 'pi pi-database',
             command: (event) => {
-             this.closeNave(); this._router.navigate(['Main', 'RuleGroup']);
+              this.closeNave(); this._router.navigate(['Main', 'RuleGroup']);
             },
           }
           ,
@@ -51,7 +51,7 @@ export class NaveComponent implements OnInit {
             label: 'Users',
             icon: 'pi pi-database',
             command: (event) => {
-             this.closeNave(); this._router.navigate(['Main', 'Users']);
+              this.closeNave(); this._router.navigate(['Main', 'Users']);
             },
           }
           ,
@@ -59,7 +59,7 @@ export class NaveComponent implements OnInit {
             label: 'Logged In Users',
             icon: 'pi pi-database',
             command: (event) => {
-             this.closeNave(); this._router.navigate(['Main', 'UsersActives']);
+              this.closeNave(); this._router.navigate(['Main', 'UsersActives']);
             },
           }
         ]
@@ -72,14 +72,14 @@ export class NaveComponent implements OnInit {
             label: 'Companies',
             icon: 'pi pi-database',
             command: (event) => {
-             this.closeNave(); this._router.navigate(['Main', 'Companies']);
+              this.closeNave(); this._router.navigate(['Main', 'Companies']);
             },
           },
           {
             label: 'Departments',
             icon: 'pi pi-database',
             command: (event) => {
-             this.closeNave(); this._router.navigate(['Main', 'Departs']);
+              this.closeNave(); this._router.navigate(['Main', 'Departs']);
             },
           },
           {
@@ -87,7 +87,7 @@ export class NaveComponent implements OnInit {
             icon: 'pi pi-database',
             shortcut: '⌘+S',
             command: (event) => {
-             this.closeNave(); this._router.navigate(['Main', 'Places']);
+              this.closeNave(); this._router.navigate(['Main', 'Places']);
             },
           },
           {
@@ -95,7 +95,7 @@ export class NaveComponent implements OnInit {
             icon: 'pi pi-database',
             shortcut: '⌘+S',
             command: (event) => {
-             this.closeNave(); this._router.navigate(['Main', 'Mangements']);
+              this.closeNave(); this._router.navigate(['Main', 'Mangements']);
             },
           }
         ]
@@ -108,7 +108,7 @@ export class NaveComponent implements OnInit {
             label: 'Enable / Disable Items',
             icon: 'pi pi-database',
             command: (event) => {
-             this.closeNave(); this._router.navigate(['Main', 'AtivateItems']);
+              this.closeNave(); this._router.navigate(['Main', 'AtivateItems']);
             },
           },
           // {
@@ -122,14 +122,14 @@ export class NaveComponent implements OnInit {
             label: 'Categories',
             icon: 'pi pi-database',
             command: (event) => {
-             this.closeNave(); this._router.navigate(['Main', 'Category']);
+              this.closeNave(); this._router.navigate(['Main', 'Category']);
             },
           },
           {
             label: 'Items',
             icon: 'pi pi-database',
             command: (event) => {
-             this.closeNave(); this._router.navigate(['Main', 'Items']);
+              this.closeNave(); this._router.navigate(['Main', 'Items']);
             },
           }
           // {
@@ -154,31 +154,38 @@ export class NaveComponent implements OnInit {
         icon: 'pi pi-database',
         items: [
           {
+            label: 'Store',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this.closeNave(); this._router.navigate(['Store']);
+            },
+          },
+          {
             label: 'Delivery Control',
             icon: 'pi pi-database',
             command: (event) => {
-             this.closeNave(); this._router.navigate(['Main', 'DeliveryControl'])
+              this.closeNave(); this._router.navigate(['Main', 'DeliveryControl'])
             },
           },
           {
             label: 'Bookings',
             icon: 'pi pi-database',
             command: (event) => {
-             this.closeNave(); this._router.navigate(['Main', 'RequstesList'])
+              this.closeNave(); this._router.navigate(['Main', 'RequstesList'])
             },
           },
           {
             label: 'POS',
             icon: 'pi pi-database',
             command: (event) => {
-             this.closeNave(); this._router.navigate(['Main', 'Cashier']);
+              this.closeNave(); this._router.navigate(['Main', 'Cashier']);
             },
           },
           {
             label: 'Seasons',
             icon: 'pi pi-database',
             command: (event) => {
-             this.closeNave(); this._router.navigate(['Main', 'Season']);
+              this.closeNave(); this._router.navigate(['Main', 'Season']);
             },
           },
           // {
@@ -192,21 +199,21 @@ export class NaveComponent implements OnInit {
             label: 'Special Pricing',
             icon: 'pi pi-database',
             command: (event) => {
-             this.closeNave(); this._router.navigate(['Main', 'SpecialPrice']);
+              this.closeNave(); this._router.navigate(['Main', 'SpecialPrice']);
             },
           },
           {
             label: 'Customers',
             icon: 'pi pi-database',
             command: (event) => {
-             this.closeNave(); this._router.navigate(['Main', 'Customer']);
+              this.closeNave(); this._router.navigate(['Main', 'Customer']);
             },
           },
           {
             label: 'Invoices',
             icon: 'pi pi-database',
             command: (event) => {
-             this.closeNave(); this._router.navigate(['Main', 'InvoiceList']);
+              this.closeNave(); this._router.navigate(['Main', 'InvoiceList']);
             },
           }
         ]
@@ -219,21 +226,21 @@ export class NaveComponent implements OnInit {
             label: 'Chart of Accounts',
             icon: 'pi pi-database',
             command: (event) => {
-             this.closeNave(); this._router.navigate(['Main', 'Accounts']);
+              this.closeNave(); this._router.navigate(['Main', 'Accounts']);
             },
           },
           {
             label: 'Transaction Types',
             icon: 'pi pi-database',
             command: (event) => {
-             this.closeNave(); this._router.navigate(['Main', 'AccountTypeOperations']);
+              this.closeNave(); this._router.navigate(['Main', 'AccountTypeOperations']);
             },
           },
           {
             label: 'Journal Entries',
             icon: 'pi pi-database',
             command: (event) => {
-             this.closeNave(); this._router.navigate(['Main', 'AccountOperationList']);
+              this.closeNave(); this._router.navigate(['Main', 'AccountOperationList']);
             },
           }
         ]
@@ -242,7 +249,7 @@ export class NaveComponent implements OnInit {
         label: 'Reports',
         icon: 'pi pi-database',
         command: (event) => {
-         this.closeNave(); this._router.navigate(['Main', 'Report']);
+          this.closeNave(); this._router.navigate(['Main', 'Report']);
         },
       },
       {
@@ -250,7 +257,7 @@ export class NaveComponent implements OnInit {
         icon: 'pi pi-power-off',
         command: (event) => {
           localStorage.removeItem("logInfo")
-         this.closeNave(); this._router.navigate(['Login'])
+          this.closeNave(); this._router.navigate(['Login'])
         },
       }
     ]

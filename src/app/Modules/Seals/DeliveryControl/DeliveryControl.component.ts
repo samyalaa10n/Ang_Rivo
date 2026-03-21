@@ -24,11 +24,12 @@ export class DeliveryControlComponent implements OnInit {
   Customers: Array<any> = []
   dataSorce: Array<any> = [];
   constructor(private _myTools: Tools) {
-    
+
     this.Columns.push(new Column('ID', 'Reservation Number', "lapel"))
     this.Columns.push(new Column('PLACE_NAME', 'Branch', "lapel"))
     this.Columns.push(new Column('CUSTOMER_NAME', 'Company Name', "lapel"))
     this.Columns.push(new Column('CUSTOMER_BUY_NAME', 'Customer Name', "lapel"))
+    this.Columns.push(new Column('ADDRESS', 'Address', "lapel"))
     this.Columns.push(new Column('PHONE', 'Phone Number', "lapel"))
     this.Columns.push(new Column('SELLER', 'Sales Representative', "lapel"))
     this.Columns.push(new Column('ItemsCount', 'Count Items', "lapel", "date"))
@@ -97,6 +98,7 @@ export class DeliveryControlComponent implements OnInit {
   async ConfigGrid(grid: DataGridComponent) {
 
     grid.AllowAdd = false;
+    grid.AllowShow = true;
     grid.AllowDeleteSelected = false;
     grid.AllowDelete = false;
     grid.canSelectRow = false;
@@ -104,9 +106,12 @@ export class DeliveryControlComponent implements OnInit {
     grid.onUpdate = async () => {
       this.dataSorce = await this.getOrders();
     }
-    grid.onEditItem = async (req:RequestOrder) => {
+    grid.onShowItem = async (item: RequestOrder) => {
+      window.open(item.QR)
+    }
+    grid.onEditItem = async (req: RequestOrder) => {
       req.ROW_NUMBER = 1;
-      req.DELIVERYEDIT=true;
+      req.DELIVERYEDIT = true;
       this._myTools.Network.putAsync("Requstes/EditMore", [req], "").then(async (res: any) => {
         if (res?.ID > 0) {
           this._myTools.Toaster.showSuccess("Update Successful")

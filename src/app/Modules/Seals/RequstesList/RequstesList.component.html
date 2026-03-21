@@ -1,15 +1,16 @@
 <div dir="ltr">
-  <div class="row" >
-    <p-button  [raised]="true" (onClick)="AddNew()" severity="info"
-      label="New Reservation" icon="pi pi-plus" class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
+  <div class="row">
+    <p-button [raised]="true" (onClick)="AddNew()" severity="info" label="New Reservation" icon="pi pi-plus"
+      class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
     <div class="col-12 col-lg-3 my-2">
-       <app-comboBox  [dataSource]="Customers" optionValue="ID" optionLabel="NAME" placeholder="Customer" apiPathDataSource="Customer" [(SelectedValue)]="Request.CUSTOMER" class="form-control"></app-comboBox>
+      <app-comboBox [dataSource]="Customers" optionValue="ID" optionLabel="NAME" placeholder="Customer"
+        apiPathDataSource="Customer" [(SelectedValue)]="Request.CUSTOMER" class="form-control"></app-comboBox>
     </div>
   </div>
   <div class="row d-flex justify-content-center  align-items-center">
     <div class="col-12 col-lg-2 ">
       <app-InputLabel placeholder="From">
-        <app-DateTime  [(selectedDate)]="Request.START" placeholder="From"></app-DateTime>
+        <app-DateTime [(selectedDate)]="Request.START" placeholder="From"></app-DateTime>
       </app-InputLabel>
     </div>
     <div class="col-12 col-lg-2">
@@ -18,10 +19,16 @@
       </app-InputLabel>
     </div>
     <div class="col-12 col-lg-2">
+      <app-InputLabel placeholder="Book Id">
+        <input class="my-2 form-control" type="number" [(ngModel)]="Request.ID"/>
+      </app-InputLabel>
+    </div>
+    <div class="col-12 col-lg-2">
       <p-button [raised]="true" (onClick)="GetData()" label="Search" class="font-bold mx-1 w-100" />
     </div>
   </div>
   <div class="my-3">
-    <app-dataGrid [(dataSource)]="RequestLest" (onGridLoaded)="GridLoaded($event)" (RenderItemSource)="RenderItem($event)" [Columns]="Columns" ></app-dataGrid>
+    <app-dataGrid [(dataSource)]="RequestLest" (onGridLoaded)="GridLoaded($event)"
+      (RenderItemSource)="RenderItem($event)" [Columns]="Columns"></app-dataGrid>
   </div>
 </div>

@@ -121,7 +121,7 @@ export class RequstesComponent implements OnInit {
       item.PRICE = NewPrice;
     }
     else if (item.ID < 0 && this.somePricies == false && onStart) {
-      item.PRICE = item.MAIN_PRICE;
+      item.PRICE = item.PRICE;
     }
   }
   onSelectCustomer() {

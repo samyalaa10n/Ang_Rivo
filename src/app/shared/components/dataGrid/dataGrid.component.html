@@ -250,6 +250,13 @@
                     <ng-container [ngTemplateOutlet]="column.templateColumn"
                         [ngTemplateOutletContext]="{ $implicit:item ,Grid:this}"></ng-container>
                     }
+                    @case("File")
+                    {
+
+                    <app-file-manager [(FileObjectJson)]="item[column.name]" [gridMode]="true" [gridModeLable]="true" urlPath="ItemImage" [label]="column.header" [maxFileSizeMB]="column.fileOptionType.maxFileSizeMB"
+                        [fileType]="column.fileOptionType.type" [mode]="GridMode=='EfectInRows'?column.fileOptionType.mode:'view'"></app-file-manager>
+
+                    }
                     }
                 </td>
                 }
@@ -379,6 +386,11 @@
         @case ("custom") {
         <ng-container [ngTemplateOutlet]="column.templateColumn"
             [ngTemplateOutletContext]="{ $implicit:_selectedItem ,Grid:this}"></ng-container>
+        }
+        @case("File")
+        {
+        <app-file-manager [(FileObjectJson)]="_selectedItem[column.name]" [gridMode]="true"  urlPath="ItemImage" [label]="column.header" [maxFileSizeMB]="column.fileOptionType.maxFileSizeMB"
+            [fileType]="column.fileOptionType.type" [mode]="column.fileOptionType.mode"></app-file-manager>
         }
         }
     </div>

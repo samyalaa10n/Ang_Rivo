@@ -64,6 +64,11 @@ export const routes: Routes = [
     component: HomeComponent
   },
   {
+    path: 'Store',
+    data: { Id: '' },
+    loadComponent: () => import('./Modules/Seals/Store/Store.component').then(m => m.StoreComponent)
+  },
+  {
     path: 'ShowImages',
     data: { Id: '' },
     loadComponent: () => import('./shared/pages/ShowImages/ShowImages.component').then(m => m.ShowImagesComponent)

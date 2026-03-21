@@ -1,18 +1,80 @@
 <div class="app-date" *ngIf="!ShowMode">
-    <p-datePicker class="d-block w-100"
-    [placeholder]="placeholder"
-    [dateFormat]="dateFormat" 
-    [hourFormat]="hourFormat" 
-    [timeOnly]="showTimeOnly" 
-    [maxDate]="maxDate" 
-    [minDate]="minDate"  
-    [showButtonBar]="true" 
-    [showTime]="showTime" 
-    [view]="view" 
-    [showOnFocus]="showOnFocus"
-    iconDisplay="input" [(ngModel)]="selectedDate"
-    (ngModelChange)="change($event)"  (onClear)="clear()" (onClearClick)="clear()"  dateFormat="dd-mm-yy"  appendTo="body" [showIcon]="true"    ></p-datePicker> 
-</div>  
+    <div class="date-input-wrapper" #wrapperRef>
+        <div class="date-segments">
+
+            <input #dayInput type="text" maxlength="2" placeholder="DD" class="date-segment" inputmode="numeric"
+                (focus)="onSegmentFocus($event,'day')" (input)="onSegmentInput('day', $event, monthInput)"
+                (keydown)="onSegmentKeydown('day', $event, null, monthInput)" (blur)="padSegment('day')"
+                [(ngModel)]="segments.day" />
+
+            <span class="sep">/</span>
+
+            <input #monthInput type="text" maxlength="2" placeholder="MM" class="date-segment" inputmode="numeric"
+                (focus)="onSegmentFocus($event,'month')" (input)="onSegmentInput('month', $event, yearInput)"
+                (keydown)="onSegmentKeydown('month', $event, dayInput, yearInput)" (blur)="padSegment('month')"
+                [(ngModel)]="segments.month" />
+
+            <span class="sep">/</span>
+
+            <input #yearInput type="text" maxlength="4" placeholder="YYYY" class="date-segment year" inputmode="numeric"
+                (focus)="onSegmentFocus($event,'year')" (input)="onSegmentInput('year', $event, hourInput)"
+                (keydown)="onSegmentKeydown('year', $event, monthInput, hourInput)" (blur)="padSegment('year')"
+                [(ngModel)]="segments.year" />
+
+            <ng-container>
+                <span class="sep time-sep" [hidden]="!(showTime || showTimeOnly)">⏱</span>
+
+                <input #hourInput type="text" maxlength="2" placeholder="HH" class="date-segment" inputmode="numeric"
+                    [hidden]="!(showTime || showTimeOnly)" (focus)="onSegmentFocus($event,'hour')"
+                    (input)="onSegmentInput('hour', $event, minuteInput)"
+                    (keydown)="onSegmentKeydown('hour', $event, yearInput, minuteInput)" (blur)="padSegment('hour')"
+                    [(ngModel)]="segments.hour" />
+
+                <span class="sep" [hidden]="!(showTime || showTimeOnly)">:</span>
+
+                <input #minuteInput type="text" maxlength="2" placeholder="MM" class="date-segment" inputmode="numeric"
+                    [hidden]="!(showTime || showTimeOnly)" (focus)="onSegmentFocus($event,'minute')"
+                    (input)="onSegmentInput('minute', $event, null)"
+                    (keydown)="onSegmentKeydown('minute', $event, hourInput, null)" (blur)="padSegment('minute')"
+                    [(ngModel)]="segments.minute" />
+            </ng-container>
+
+            <div class="actions">
+                <button class="action-btn clear-btn" *ngIf="hasValue()" (click)="clear()" title="Clear">
+                    <i class="pi pi-times"></i>
+                </button>
+                <button class="action-btn" *ngIf="hasValue()" (click)="copy()" title="Copy">
+                    <i class="pi pi-copy"></i>
+                </button>
+                <button class="action-btn" (click)="past()" title="Paste">
+                    <i class="pi pi-clipboard"></i>
+                </button>
+                <button class="action-btn calendar-btn" (click)="toggleCalendar()" title="Calendar">
+                    <i class="pi pi-calendar"></i>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- الكالندر بيتحط جوه الـ wrapper مباشرة عشان يظهر صح -->
+    <div class="calendar-anchor">
+        <p-datePicker panelStyleClass="app-datetime-panel"
+            [(ngModel)]="calendarDate"
+            (ngModelChange)="onCalendarSelect($event)"
+            [showTime]="showTime"
+            [timeOnly]="showTimeOnly"
+            [hourFormat]="hourFormat"
+            [maxDate]="maxDate!"
+            [minDate]="minDate!"
+            [showButtonBar]="true"
+            dateFormat="dd-mm-yy"
+            appendTo="body"
+            #calendarRef>
+        </p-datePicker>
+    </div>
+</div>
+
 <ng-container *ngIf="ShowMode">
-    <span>{{_tools.DateTime.EditFormateData(selectedDate,ShowModeFormat)}}</span>
+    <span>{{_tools.DateTime.EditFormateData(selectedDate, ShowModeFormat)}}</span>
 </ng-container>

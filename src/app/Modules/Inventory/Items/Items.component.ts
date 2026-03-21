@@ -41,7 +41,7 @@ export class ItemsComponent implements OnInit {
     this.Columns.push(new Column("NOTS", "Notes", "textarea"))
     this.Columns.push(new Column('EMAIL_IN_REQUEST', "Send Email On Request To", "text", "text"))
     this.Columns.push(new Column('IS_ACTIVATED', "Is Active", "yes-no", "boolean"))
-
+    this.Columns.push(new Column("IMGE","صورة الصنف","File"));
   }
 
   async update() {

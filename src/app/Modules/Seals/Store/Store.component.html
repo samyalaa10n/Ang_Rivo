@@ -1,0 +1,80 @@
+<div class="store">
+
+  <!-- NAVBAR -->
+  <nav class="nav">
+    <h2>Sedra Store</h2>
+    <div>
+      <button (click)="go('home')">Home</button>
+      <button (click)="go('cart')">Cart ({{cart.length}})</button>
+      <button (click)="go('booking')">Booking</button>
+    </div>
+  </nav>
+
+  <!-- HOME -->
+  <div *ngIf="view === 'home'" @fade>
+
+    <!-- Departments -->
+    <div class="departments">
+      <button *ngFor="let d of departments" (click)="selectDepartment(d)" [class.active]="d === selectedDepartment">
+        {{d.DEPART_NAME}}
+      </button>
+    </div>
+
+    <!-- Categories -->
+    <div class="categories" *ngIf="selectedDepartment">
+      <button *ngFor="let c of filteredCategories" (click)="selectCategory(c)" [class.active]="c === selectedCategory">
+        {{c.CATEGORY_NAME}}
+      </button>
+    </div>
+
+    <!-- Items -->
+    <div class="items" *ngIf="selectedCategory">
+      <div class="card" *ngFor="let i of filteredItems" @fade>
+        <img [src]="i.IMGES[0]?.FILE_PATH" />
+        <h4>{{i.ITEM_NAME}}</h4>
+        <p>{{i.ITEM_PRICE}} EGP</p>
+        <button (click)="addToCart(i)">Add to Cart</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CART -->
+  <div *ngIf="view === 'cart'" @fade class="cart">
+    <h2>Your Cart</h2>
+
+    <div *ngFor="let c of cart" class="cart-item">
+      <span>{{c.ITEM_NAME}}</span>
+      <span>{{c.qty}}</span>
+      <span>{{c.ITEM_PRICE * c.qty}} EGP</span>
+      <button (click)="remove(c)">X</button>
+    </div>
+
+    <h3>Total: {{total}} EGP</h3>
+
+    <button (click)="go('checkout')">Checkout</button>
+  </div>
+
+  <!-- CHECKOUT -->
+  <div *ngIf="view === 'checkout'" class="checkout" @fade>
+    <h2>Checkout</h2>
+
+    <input placeholder="Name" />
+    <input placeholder="Phone" />
+    <input placeholder="Address" />
+
+    <button >Confirm Order</button>
+  </div>
+
+  <!-- BOOKING -->
+  <div *ngIf="view === 'booking'" class="booking" @fade>
+    <h2>Book Table</h2>
+
+    <input type="date">
+    <input type="time">
+    <input placeholder="Number of persons">
+
+    <button>Confirm Booking</button>
+  </div>
+
+</div>

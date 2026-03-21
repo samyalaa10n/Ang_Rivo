@@ -9,18 +9,20 @@ import { PrintService } from '../../../shared/service/Print.service';
 import { RequestOrder } from '../../../shared/Types/Request';
 import { InputLabelComponent } from "../../../shared/pages/TextLabel/InputLabel.component";
 import { Column } from '../../../shared/components/dataGrid/Column';
+import { FormsModule } from '@angular/forms';
+import { InputText } from "primeng/inputtext";
 
 @Component({
   selector: 'app-RequstesList',
   templateUrl: './RequstesList.component.html',
   styleUrls: ['./RequstesList.component.css'],
-  imports: [ComboBoxComponent, DateTimeComponent, Button, DataGridComponent, InputLabelComponent]
+  imports: [ComboBoxComponent, DateTimeComponent, Button, DataGridComponent, InputLabelComponent, FormsModule, InputText]
 })
 export class RequstesListComponent implements OnInit {
   Customers: Array<any> = []
   Plases: Array<any> = []
   Columns: Array<Column> = []
-  Request: { CUSTOMER: number, START: Date, END: Date } = { CUSTOMER: 0, START: new Date(), END: new Date() }
+  Request: { CUSTOMER: number, START: Date, END: Date, ID: Number } = { CUSTOMER: 0, START: new Date(), END: new Date(), ID: 0 }
   RequestLest: Array<RequestOrder> = [];
   constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _printService: PrintService, private _router: Router) {
     this.Request.START.setDate(1);

@@ -32,6 +32,7 @@ export class CategoryComponent implements OnInit {
     this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "Select the Department for this Category"
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = Depart;
     this.Columns.push(new Column('REQUEST_MAX_LEMIT', "Maximum Available Quantity per Hour", "text", "text", 400))
+    this.Columns.push(new Column("IMGE", "الصورة", "File"));
   }
   config(dataGrid: DataGridComponent) {
     dataGrid.AllowCopyPest = true;

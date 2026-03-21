@@ -27,6 +27,7 @@ export class DepartComponent implements OnInit {
     this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "ID";
     this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "Select the Company for this Department"
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = companies;
+    this.Columns.push(new Column("IMGE", "صورة القسم", "File"));
   }
   async update() {
     let companies = await this._tools.Network.getAsync("Company") as Array<any>;
