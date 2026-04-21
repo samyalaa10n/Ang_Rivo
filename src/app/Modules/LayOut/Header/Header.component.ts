@@ -39,9 +39,9 @@ export class HeaderComponent implements OnInit {
     this._tools._LinkComponent.next("open")
   }
   logOut() {
+    this._tools.Network.hubConnection?.stop();
     localStorage.removeItem("logInfo")
     this._router.navigate(['Login'])
-    this._tools.Network.hubConnection?.stop();
   }
   LogIn() {
     this._router.navigate(['Login'])

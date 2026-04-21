@@ -111,13 +111,13 @@ export class NaveComponent implements OnInit {
               this.closeNave(); this._router.navigate(['Main', 'AtivateItems']);
             },
           },
-          // {
-          //   label: 'Warehouses',
-          //   icon: 'pi pi-database',
-          //   command: (event) => {
-          //    this.closeNave(); this._router.navigate(['Main', 'WareHouses']);
-          //   },
-          // },
+          {
+            label: 'Warehouses',
+            icon: 'pi pi-database',
+            command: (event) => {
+             this.closeNave(); this._router.navigate(['Main', 'WareHouses']);
+            },
+          },
           {
             label: 'Categories',
             icon: 'pi pi-database',
@@ -131,22 +131,22 @@ export class NaveComponent implements OnInit {
             command: (event) => {
               this.closeNave(); this._router.navigate(['Main', 'Items']);
             },
+          },
+          {
+            label: 'Units',
+            icon: 'pi pi-database',
+            command: (event) => {
+             this.closeNave(); this._router.navigate(['Main', 'Units']);
+            },
           }
-          // {
-          //   label: 'Units',
-          //   icon: 'pi pi-database',
-          //   command: (event) => {
-          //    this.closeNave(); this._router.navigate(['Main', 'Units']);
-          //   },
-          // }
-          // ,
-          // {
-          //   label: 'Stock Transactions',
-          //   icon: 'pi pi-database',
-          //   command: (event) => {
-          //    this.closeNave(); this._router.navigate(['Main', 'OperationList']);
-          //   },
-          // }
+          ,
+          {
+            label: 'Stock Transactions',
+            icon: 'pi pi-database',
+            command: (event) => {
+             this.closeNave(); this._router.navigate(['Main', 'OperationList']);
+            },
+          }
         ]
       },
       {

@@ -25,10 +25,15 @@ export class Network {
   // Start the SignalR connection
   public startConnection(UserData: string = ""): void {
     const token = JSON.parse(localStorage.getItem("logInfo") || '{}').TOKEN || 'no-token';
-    this.hubConnection = new signalR.HubConnectionBuilder().withUrl(`${this.baseUrl}/Connect?UserData=${UserData}`, {
+    const LOG_ID = JSON.parse(localStorage.getItem("logInfo") || '{}').LOG_ID || 'no-token';
+    this.hubConnection = new signalR.HubConnectionBuilder().withUrl(`${this.baseUrl}/Connect?UserData=${UserData}&LOG_ID=${LOG_ID}`, {
       accessTokenFactory: () => token,
+      headers:{LOG_ID:LOG_ID},
       withCredentials: true // لتأكيد إرسال الـ cookies إذا كان يستخدم
     }).build();
+    //  this.hubConnection.on("IsActive",(data)=>{
+
+    //  })
     this.hubConnection.start()
       .then(() => {
         // console.log('Connection Established')
