@@ -1,16 +1,18 @@
 <div class="row my-2" *ngIf="!sharedMode">
   <div class="col-12 col-lg-4 p-1">
     <app-comboBox CashId="Acount_cash" placeholder="Select Restaurant Account" [dataSource]="Customers" optionValue="ID"
-      optionLabel="NAME" [(SelectedValue)]="Invoice.CUSTOMER" class="form-control"></app-comboBox>
+      optionLabel="NAME" [(SelectedValue)]="Invoice.CUSTOMER" (SelectedValueChange)="getTabels()"
+      class="form-control"></app-comboBox>
   </div>
   <div class="col-12 col-lg-4 p-1">
     <app-comboBox CashId="PLACE_REQUEST" placeholder="Select Location" [dataSource]="Places" optionValue="ID"
-      optionLabel="NAME" apiPathDataSource="Place" (selectedChange)="getTabels($event)"></app-comboBox>
+      optionLabel="NAME" apiPathDataSource="Place" [(SelectedValue)]="Invoice.PLACE"
+      (SelectedValueChange)="getTabels()"></app-comboBox>
   </div>
   <div class="col-12 col-lg-4 p-1">
     <app-comboBox CashId="werhouse_cash" placeholder="Select Warehouse" [dataSource]="WareHouses" optionValue="ID"
       optionLabel="NAME" apiPathDataSource="WareHouse" [(SelectedValue)]="Invoice.WAREHOUSE"
-      class="form-control"></app-comboBox>
+      (SelectedValueChange)="getTabels()" class="form-control"></app-comboBox>
   </div>
 </div>
 
@@ -23,11 +25,10 @@
         [class.active]="selectedTable === PayDirect.id" class="table-btn" style="font-size: 14px; padding:0px;">
         Direct Sale
       </button>
-      <button *ngFor="let table of tables" (click)="selectTable(table)" [class.Work]="table.itemsCared.length>0"
+      <button *ngFor="let table of getTables()" (click)="selectTable(table)" [class.Work]="table.itemsCared.length>0"
         [class.active]="selectedTable === table.id" class="table-btn">
         {{ table.id }}
       </button>
-
     </div>
     <div *ngIf="selectedTable" class="selected-table">
       ✓ Table: <strong>{{ selectedTable }}</strong>
@@ -178,6 +179,39 @@
                 [min]="0" class="form-control" styleClass="w-100"></p-inputNumber>
               <label class="text-muted">
                 <i class="pi pi-percentage me-2"></i>Discount %
+              </label>
+            </div>
+          </div>
+        </div>
+        <!-- customer name Fields -->
+        <div class="row mb-4 ">
+          <div class="col-12 ">
+            <div class="form-floating ">
+              <input type="text" [(ngModel)]="Invoice.CUSTOMER_NAME" class="form-control" />
+              <label class="text-muted">
+                Customer Name
+              </label>
+            </div>
+          </div>
+        </div>
+        <!-- customer Phone Fields -->
+        <div class="row mb-4 ">
+          <div class="col-12 ">
+            <div class="form-floating ">
+              <input type="text" [(ngModel)]="Invoice.CUSTOMER_PHONE" class="form-control" />
+              <label class="text-muted">
+                Customer Phone
+              </label>
+            </div>
+          </div>
+        </div>
+        <!-- Delivery name Fields -->
+        <div class="row mb-4 ">
+          <div class="col-12 ">
+            <div class="form-floating ">
+              <input type="text" [(ngModel)]="Invoice.DALAVERY_NAME" class="form-control" />
+              <label class="text-muted">
+                Delivery Name
               </label>
             </div>
           </div>

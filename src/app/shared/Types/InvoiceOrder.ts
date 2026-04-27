@@ -8,6 +8,7 @@ export type InvoiceOrder = {
     CUSTOMER: number,
     WAREHOUSE_NAME: string,
     PRICE_AFTER_DESCOUND: number,
+    DESCOUND_VALUE: number,
     WAREHOUSE: number,
     DESCOUND_PERCENT: number,
     PAYMENT: number,
@@ -19,4 +20,8 @@ export type InvoiceOrder = {
     ITEMS: Array<RealItem>
     PAYMENT_NAME?:string,
     QRImage?:string,
+    PLACE:number,
+    CUSTOMER_PHONE?:string,
+    DALAVERY_NAME?:string
+    TABLE_NUMBER?:string
 }

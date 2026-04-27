@@ -1,13 +1,22 @@
-<div class="container-fluid" dir="rtl">
-  <div class="row">
+<div class="container-fluid" dir="rtl" *ngIf="Recipy">
+
+  <div class="row mt-3">
     <p-button [raised]="true" (onClick)="Back()" routerLinkActive="router-link-active" severity="info"
-      label="رجوع للمكونات" icon="pi pi-arrow-right" class=" btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
+      label="Back to Components" icon="pi pi-arrow-right" class=" btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
     <div class="col-12 p-2">
       <div class="border border-1 rounded-2">
         <app-get-add-edit-delete *ngIf="Columns.length>0" #CurdOperation [Columns]="Columns" (onUpdate)="update()"
-          (onConfigGrid)="onConfigGrid($event)" [GetApiPage]="GetItemsForRaspy()" ApiPage="ResapyItems" header="الوصفات">
+          (onConfigGrid)="onConfigGrid($event)" [GetApiPage]="GetItemsForRaspy()" ApiPage="ResapyItems"
+          header="">
+          <div class="mt-4 mb-3 mx-2 text-center" >{{'Recipes => ' +Recipy?.RESAPY_NAME + ' - '+GetMainItemInfo()?.NAME}}</div>
+          <div class="mb-2  mx-2 text-center">Total  <p dir="ltr"> {{Recipy?.COUNT_OUT_PUT}}  {{getRecipyUnit()}} </p>    </div>
+          <ng-template [appCustomColumn]="GetColumn()" let-item>
+            <app-comboBox [dataSource]="ItemComoBoxItemSource" [(SelectedValue)]="item.UNIT" placeholder="select Unit"
+              optionLabel="NAME" optionValue="ID" (SelectedValueChange)="CalculateCostPrice(item)"></app-comboBox>
+          </ng-template>
         </app-get-add-edit-delete>
       </div>
     </div>
   </div>
+
 </div>

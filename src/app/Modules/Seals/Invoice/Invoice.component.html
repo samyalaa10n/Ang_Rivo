@@ -61,12 +61,25 @@
                 <div class="col-12">
                   <div class="form-floating">
                     <app-comboBox [NormalStyle]="true" [dataSource]="WareHouses" optionValue="ID" optionLabel="NAME"
-                      apiPathDataSource="WareHouse" [(SelectedValue)]="Invoice.WAREHOUSE" (SelectedValueChange)="GetDataRecordedStock()"
-                      class="form-control"></app-comboBox>
+                      apiPathDataSource="WareHouse" [(SelectedValue)]="Invoice.WAREHOUSE"
+                      (SelectedValueChange)="GetDataRecordedStock()" class="form-control"></app-comboBox>
                     <label class="text-muted">
                       <i class="pi pi-database me-2"></i>
                       <span *ngIf="Invoice.TYPE==1">From Warehouse</span>
                       <span *ngIf="Invoice.TYPE==2">To Warehouse</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!-- Place  Selection -->
+              <div class="row mb-4  my-4">
+                <div class="col-12">
+                  <div class="form-floating">
+                    <app-comboBox [NormalStyle]="true" CashId="PLACE_REQUEST" [dataSource]="Places" optionValue="ID"
+                      optionLabel="NAME" apiPathDataSource="Place" [(SelectedValue)]="Invoice.PLACE"
+                      class="form-control "></app-comboBox>
+                    <label class="text-muted">
+                      Place
                     </label>
                   </div>
                 </div>
@@ -76,8 +89,8 @@
                 <div class="col-12">
                   <div class="form-floating">
                     <app-comboBox [NormalStyle]="true" [dataSource]="Customers" optionValue="ID" optionLabel="NAME"
-                      apiPathDataSource="Customer" [(SelectedValue)]="Invoice.CUSTOMER" (SelectedValueChange)="GetDataRecordedStock()"
-                      class="form-control"></app-comboBox>
+                      apiPathDataSource="Customer" [(SelectedValue)]="Invoice.CUSTOMER"
+                      (SelectedValueChange)="GetDataRecordedStock()" class="form-control"></app-comboBox>
                     <label class="text-muted">
                       <i class="pi pi-user me-2"></i>Customer
                     </label>
@@ -110,8 +123,8 @@
                 </div>
                 <div class="col-12 col-md-6" *ngIf="Invoice.PAYMENT">
                   <div class="form-floating">
-                    <app-comboBox [NormalStyle]="true"  [dataSource]="GetAccountTypesActive()"
-                      [(SelectedValue)]="Invoice.PAYMENT_TYPE"  optionLabel="NAME" optionValue="ID"
+                    <app-comboBox [NormalStyle]="true" [dataSource]="GetAccountTypesActive()"
+                      [(SelectedValue)]="Invoice.PAYMENT_TYPE" optionLabel="NAME" optionValue="ID"
                       placeholder="Payment Method" class="form-control"></app-comboBox>
                     <label class="text-muted">
                       <i class="pi pi-credit-card me-2"></i>Payment Method
@@ -119,7 +132,50 @@
                   </div>
                 </div>
               </div>
-
+              <!-- customer name Fields -->
+              <div class="row mb-4 ">
+                <div class="col-12 ">
+                  <div class="form-floating ">
+                    <input type="text" [(ngModel)]="Invoice.CUSTOMER_NAME" class="form-control" />
+                    <label class="text-muted">
+                      Customer Name
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!-- customer Phone Fields -->
+              <div class="row mb-4 ">
+                <div class="col-12 ">
+                  <div class="form-floating ">
+                    <input type="text" [(ngModel)]="Invoice.CUSTOMER_PHONE" class="form-control" />
+                    <label class="text-muted">
+                      Customer Phone
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!-- Delivery name Fields -->
+              <div class="row mb-4 ">
+                <div class="col-12 ">
+                  <div class="form-floating ">
+                    <input type="text" [(ngModel)]="Invoice.DALAVERY_NAME" class="form-control" />
+                    <label class="text-muted">
+                      Delivery Name
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!-- Table name Fields -->
+              <div class="row mb-4 ">
+                <div class="col-12 ">
+                  <div class="form-floating ">
+                    <input type="text" [(ngModel)]="Invoice.TABLE_NUMBER" class="form-control" />
+                    <label class="text-muted">
+                      Table Number
+                    </label>
+                  </div>
+                </div>
+              </div>
               <div class="row mb-4">
                 <div class="col-12 col-md-6">
                   <div class="form-floating">
@@ -212,7 +268,7 @@
               </h5>
             </div>
             <div class="card-body">
-              <app-InputFastItems Header="Invoice Items" #InputFastItems 
+              <app-InputFastItems Header="Invoice Items" #InputFastItems
                 (OnGridLoaded)="GridLoaded($event)"></app-InputFastItems>
             </div>
           </div>
@@ -226,7 +282,8 @@
             <p-button *ngIf=" this.Invoice.ID==0" [raised]="true" (onClick)="Save()" severity="success"
               label="Add Invoice & Print" icon="pi pi-save" class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
             <p-button *ngIf=" this.Invoice.ID>0" [raised]="true" (onClick)="Save()" severity="success"
-              label="Save Invoice Changes & Print" icon="pi pi-save" class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
+              label="Save Invoice Changes & Print" icon="pi pi-save"
+              class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
             <p-button *ngIf=" this.Invoice.ID>0" [raised]="true" (onClick)="delete()" severity="danger"
               label="Delete Invoice" icon="pi pi-trash" class="btn-lg px-5 py-3 fw-bold shadow-sm"></p-button>
             <p-button *ngIf=" this.Invoice.ID>0" [raised]="true" (onClick)="AddNew()" severity="info"

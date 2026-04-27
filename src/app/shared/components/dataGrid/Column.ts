@@ -40,7 +40,7 @@ export class Column {
     columnMultiSelectChange(multiSelect: MultiselectComponent, rowItem: any) {
 
     }
-    Style_Show(value: any): string {
+    Style_Show(value: any, item: any = null): string {
         return value
     }
     Style_ShowModelMode(value: any): string {

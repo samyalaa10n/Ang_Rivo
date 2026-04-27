@@ -3,26 +3,11 @@
   <div class="modern-header">
     <div class="row g-3 align-items-center">
       <div class="col-12 col-lg-9">
-        <p-button 
-          [raised]="true" 
-          (onClick)="AddNew()" 
-          severity="info"
-          label="New Operation" 
-          icon="pi pi-plus" 
+        <p-button [raised]="true" (onClick)="AddNew()" severity="info" label="New Operation" icon="pi pi-plus"
           class="btn-lg px-5 py-3 fw-bold shadow-sm">
         </p-button>
       </div>
-      <div class="col-12 col-lg-3">
-        <app-comboBox 
-          [dataSource]="WareHouses" 
-          optionValue="ID" 
-          optionLabel="NAME" 
-          placeholder="Select Warehouse" 
-          apiPathDataSource="WareHouse" 
-          [(SelectedValue)]="Request.WAREHOUSE" 
-          class="form-control w-100">
-        </app-comboBox>
-      </div>
+
     </div>
   </div>
 
@@ -32,9 +17,7 @@
       <!-- Start Date -->
       <div class="col-12 col-lg-3">
         <app-InputLabel placeholder="Start Date">
-          <app-DateTime 
-            [(selectedDate)]="Request.START" 
-            placeholder="Start Date">
+          <app-DateTime [(selectedDate)]="Request.START" placeholder="Start Date">
           </app-DateTime>
         </app-InputLabel>
       </div>
@@ -42,20 +25,18 @@
       <!-- End Date -->
       <div class="col-12 col-lg-3">
         <app-InputLabel placeholder="End Date">
-          <app-DateTime 
-            [(selectedDate)]="Request.END" 
-            placeholder="End Date">
+          <app-DateTime [(selectedDate)]="Request.END" placeholder="End Date">
           </app-DateTime>
         </app-InputLabel>
       </div>
-
+      <div class="col-12 col-lg-3">
+        <app-comboBox [dataSource]="WareHouses" optionValue="ID" optionLabel="NAME" placeholder="Select Warehouse"
+          apiPathDataSource="WareHouse" [(SelectedValue)]="Request.WAREHOUSE" class="form-control w-100">
+        </app-comboBox>
+      </div>
       <!-- Search Button -->
       <div class="col-12 col-lg-3 d-flex align-items-end">
-        <p-button 
-          [raised]="true" 
-          (onClick)="GetData()" 
-          label="Search" 
-          class="font-bold w-100">
+        <p-button [raised]="true" (onClick)="GetData()" label="Search" class="font-bold w-100">
         </p-button>
       </div>
 
@@ -66,11 +47,8 @@
 
   <!-- Data Grid Section -->
   <div class="modern-grid mt-4">
-    <app-dataGrid 
-      [dataSource]="OperationLest" 
-      (onGridLoaded)="GridLoaded($event)" 
-      (RenderItemSource)="RenderItem($event)" 
-      [Columns]="Columns">
+    <app-dataGrid [dataSource]="OperationLest" (onGridLoaded)="GridLoaded($event)"
+      (RenderItemSource)="RenderItem($event)" [Columns]="Columns">
     </app-dataGrid>
   </div>
 </div>

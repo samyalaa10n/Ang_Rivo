@@ -15,6 +15,7 @@ interface MenuItem {
   Tex: number;
   category: number;
   UNIT: string,
+  Place: number
 }
 
 export interface CartItem extends MenuItem {
@@ -35,6 +36,7 @@ interface AccountType {
 interface ResTable {
   itemsCared: Array<CartItem>
   id: number;
+  PLACE: number,
 }
 
 @Component({
@@ -57,7 +59,7 @@ export class RestaurantCashierComponent implements OnInit {
   SpecialDescound: Array<any> = []
   SpecialItemPrice: Array<any> = []
   SesonActive: number = 0;
-  PayDirect: ResTable = { id: -2, itemsCared: [] }
+  PayDirect: ResTable = { id: -2, itemsCared: [], PLACE: 0 }
   AccountTypes: AccountType[] = [];
   @Input() selectedTable: number = 0;
   Customers: Array<any> = []
@@ -67,9 +69,10 @@ export class RestaurantCashierComponent implements OnInit {
   showPaymentModal = false;
   paymentMethod!: AccountType;
   paidAmount = 0;
-  Invoice: InvoiceOrder = { ID: 0, ROW_NUMBER: -1, CUSTOMER_NAME: '', CUSTOMER: 0, DESCOUND_PERCENT: 0, DATE_TIME: new Date(), ITEMS: [], PRICE_AFTER_DESCOUND: 0, NOTS: '', PAYMENT_TYPE: 0, WAREHOUSE: 0, WAREHOUSE_NAME: '', PAYMENT: 0, TYPE: 0 }
+  Invoice: InvoiceOrder = { ID: 0, ROW_NUMBER: -1, CUSTOMER_NAME: '', DESCOUND_VALUE: 0, CUSTOMER: 0, DESCOUND_PERCENT: 0, DATE_TIME: new Date(), ITEMS: [], PRICE_AFTER_DESCOUND: 0, NOTS: '', PAYMENT_TYPE: 0, WAREHOUSE: 0, WAREHOUSE_NAME: '', PAYMENT: 0, TYPE: 0, PLACE: 0 }
   constructor(private _myTools: Tools) { }
   async ngOnInit(): Promise<void> {
+
     await this.getCategories();
     await this.getItems();
     await this.getPayAway();
@@ -80,17 +83,27 @@ export class RestaurantCashierComponent implements OnInit {
     this.SpecialDescound = await this._myTools.Network.getAsync<any>("SpecialDescound")
     this.SpecialItemPrice = await this._myTools.Network.getAsync<any>("SpecialItemPrice")
     this.SesonActive = (await this._myTools.Network.getAsync<any>("Season/GetActiveSeson") as any)?.SESON ?? 0
+
+    if (this.sharedMode == false) {
+      let CashingString = localStorage.getItem("cachTables");
+      if (CashingString != null) {
+        let Cashing = JSON.parse(CashingString);
+        if (Array.isArray(Cashing) && Cashing.length > 0) {
+          this.tables = Cashing;
+        }
+      }
+    }
   }
   ngOnChanges() {
     this.Items.forEach(item => {
-      console.log(item)
       this.addToCart({
         category: this.categories.find(x => x.name == item.CATEGORY)?.id ?? 0,
         id: item.ITEM_ID,
         name: item.NAME,
         price: item.PRICE,
         UNIT: item.UNIT,
-        Tex: item.TEX ?? 0
+        Tex: item.TEX ?? 0,
+        Place: 0
       })
       let selected = this.cart.find(x => x.id == item.ITEM_ID);
       if (selected) {
@@ -133,6 +146,7 @@ export class RestaurantCashierComponent implements OnInit {
       if (spcialPrice != null) {
         item.price = spcialPrice.PRICE;
       }
+      item.Place = this.Invoice.PLACE
     })
     return selectedMenuItems
   }
@@ -144,6 +158,10 @@ export class RestaurantCashierComponent implements OnInit {
     } else {
       this.cart.push({ ...item, quantity: 1 });
     }
+    this.CahsCart();
+  }
+  CahsCart() {
+    localStorage.setItem("cachTables", JSON.stringify(this.tables))
   }
 
   removeFromCart(itemId: number): void {
@@ -186,6 +204,7 @@ export class RestaurantCashierComponent implements OnInit {
 
   clearCart(): void {
     this.cart.splice(0, this.cart.length);
+    this.CahsCart();
   }
 
   openPaymentModal(): void {
@@ -232,11 +251,14 @@ export class RestaurantCashierComponent implements OnInit {
     }
     this.Invoice.ITEMS = this.cart.map(x => { return { COUNT: x.quantity, ITEM_ID: x.id, CATEGORY: "", PRICE: x.price, ROW_NUMBER: -1, UNIT: x.UNIT, TYPE: "", NAME: x.name, TOTAL_COUNT: x.price * x.quantity, MAIN_PRICE: x.price, COUNT_INVOICE: 0, COUNT_REQUEST: 0, COUNT_STOCK: 0, ID: -1 } })
     this.Invoice.PAYMENT = this.paidAmount;
-    this.Invoice.TOTAL = this.paidAmount;
     this.Invoice.ROW_NUMBER = -1;
     this.Invoice.TYPE = 1;
+    this.Invoice.TOTAL = this.Total()
     this.Invoice.PRICE_AFTER_DESCOUND = this.TotalAfterDescound()
     this.Invoice.TOTAL_AFTER_PAYMENT = this.TotalAfterPayment()
+    this.Invoice.DESCOUND_VALUE = this.DescoundValue()
+    this.Invoice.TABLE_NUMBER = this.selectedTable.toString()
+
     let req: InvoiceOrder = this._myTools.cloneObject(this.Invoice);
     req.ITEMS = req.ITEMS.filter(x => x.COUNT > 0);
     this._myTools.Network.putAsync("Invoices/EditMore", [req]).then(async (res: any) => {
@@ -255,7 +277,6 @@ export class RestaurantCashierComponent implements OnInit {
         this.closePaymentModal();
       }
     })
-
   }
   print(showPrice: boolean = true) {
     let Inv = this._myTools.cloneObject(this.Invoice) as InvoiceOrder;
@@ -264,12 +285,18 @@ export class RestaurantCashierComponent implements OnInit {
     Inv.ITEMS = Inv.ITEMS.filter(x => x.COUNT > 0);
     this._myTools.printService.printInvoice(Inv, false, showPrice)
   }
-  public async getTabels(e: any) {
-    this.tables = [];
-    for (let index = 1; index <= e.TABLE_COUNT; index++) {
-      this.tables.push({ id: index, itemsCared: [] });
+  public async getTabels() {
+    let e = this.Places.find(x => x.ID == this.Invoice.PLACE)
+    if (this.tables.find(x => x.PLACE == this.Invoice.PLACE) == null) {
+      for (let index = 1; index <= e?.TABLE_COUNT || 0; index++) {
+        this.tables.push({ id: index, itemsCared: [], PLACE: this.Invoice.PLACE });
+      }
     }
   }
+  getTables() {
+    return this.tables.filter(x => x.PLACE == this.Invoice.PLACE);
+  }
+
 
 
   // API Calls
@@ -280,7 +307,7 @@ export class RestaurantCashierComponent implements OnInit {
   }
   public async getItems(): Promise<MenuItem[]> {
     const response = await this._myTools.Network.getAsync("Items") as Array<any>;
-    this.menuItems = response.map(item => { return { id: item.ID, name: item.NAME, price: item.PRICE_SEAL, Tex: item.TEX, category: item.CATEGORY, UNIT: item.UNIT } });
+    this.menuItems = response.map(item => { return { id: item.ID, name: item.NAME, price: item.PRICE_SEAL, Tex: item.TEX, category: item.CATEGORY, UNIT: item.UNIT, Place: this.Invoice.PLACE } });
     return this.menuItems;
   }
   public async getPayAway(): Promise<AccountType[]> {

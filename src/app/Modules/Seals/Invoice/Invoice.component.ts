@@ -33,7 +33,8 @@ export class InvoiceComponent implements OnInit {
   SesonActive: number = 0;
   WareHouses: Array<any> = []
   somePricies: boolean = false;
-  Invoice: InvoiceOrder = { ID: 0, ROW_NUMBER: -1, CUSTOMER_NAME: '', CUSTOMER: 0, DESCOUND_PERCENT: 0, DATE_TIME: new Date(), ITEMS: [], PRICE_AFTER_DESCOUND: 0, NOTS: '', PAYMENT_TYPE: 0, WAREHOUSE: 0, WAREHOUSE_NAME: '', PAYMENT: 0, TYPE: 0 }
+  Places: Array<any> = []
+  Invoice: InvoiceOrder = { ID: 0, ROW_NUMBER: -1, CUSTOMER_NAME: '', DESCOUND_VALUE: 0, CUSTOMER: 0, DESCOUND_PERCENT: 0, DATE_TIME: new Date(), ITEMS: [], PRICE_AFTER_DESCOUND: 0, NOTS: '', PAYMENT_TYPE: 0, WAREHOUSE: 0, WAREHOUSE_NAME: '', PAYMENT: 0, TYPE: 0, PLACE: 0 }
   constructor(private _tools: Tools, private _ActiveRouter: ActivatedRoute, private _router: Router) { }
 
   async ngOnInit() {
@@ -95,6 +96,7 @@ export class InvoiceComponent implements OnInit {
     })
   };
   async UpdateLockUp() {
+    this.Places = await this._tools.Network.getAsync("Place") as Array<any>;
     this.Customers = await this._tools.Network.getAsync<any>("Customer")
     this.WareHouses = await this._tools.Network.getAsync<any>("WareHouse")
     this.SpecialDescound = await this._tools.Network.getAsync<any>("SpecialDescound")
@@ -178,13 +180,19 @@ export class InvoiceComponent implements OnInit {
   }
   Save() {
     this.Invoice.ITEMS = this.InputFastItems.GeneratRequestItems();
+    this.Invoice.TOTAL = this.Total()
     this.Invoice.PRICE_AFTER_DESCOUND = this.TotalAfterDescound()
+    this.Invoice.DESCOUND_VALUE = this.DescoundValue()
     this.Invoice.TOTAL_AFTER_PAYMENT = this.TotalAfterPayment()
     let req: InvoiceOrder = this._tools.cloneObject(this.Invoice);
     req.ITEMS = req.ITEMS.filter(x => x.COUNT > 0);
     this._tools.Network.putAsync("Invoices/EditMore", [req]).then(async (res: any) => {
       if (res?.ID > 0) {
         this.Invoice = res;
+        this.Invoice.TOTAL = this.Total()
+        this.Invoice.PRICE_AFTER_DESCOUND = this.TotalAfterDescound()
+        this.Invoice.DESCOUND_VALUE = this.DescoundValue()
+        this.Invoice.TOTAL_AFTER_PAYMENT = this.TotalAfterPayment()
         let DecreptId: string = await this._tools.Network.getAsync<string>("Invoices/EncryptText?text=" + res?.ID) as string;
         let CODED = encodeURIComponent(DecreptId)
         let Http = window.location.href.split(":")[0]
@@ -209,7 +217,7 @@ export class InvoiceComponent implements OnInit {
     Inv.PAYMENT_NAME = this.AccountTypes.find(x => x.ID == Inv.PAYMENT_TYPE)?.NAME;
     Inv.ITEMS = this.InputFastItems.ITEMS_INPUT;
     Inv.ITEMS = Inv.ITEMS.filter(x => x.COUNT > 0);
-    this._tools.printService.printInvoice(Inv, true, showPrice)
+    this._tools.printService.printInvoice(Inv, false, showPrice)
   }
   AddNew() {
     this._router.navigate(['Main', 'Invoice'], { queryParams: { ID: `0` } })

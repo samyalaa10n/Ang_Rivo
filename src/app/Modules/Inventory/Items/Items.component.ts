@@ -13,14 +13,15 @@ import { Router } from '@angular/router';
   selector: 'app-Items',
   templateUrl: './Items.component.html',
   styleUrls: ['./Items.component.css'],
-  imports: [NgIf, GetAddEditDeleteComponent]
+  imports: [NgIf, GetAddEditDeleteComponent, Button, CustomColumnDirective]
 })
 export class ItemsComponent implements OnInit {
   Category: Array<any> = [];
+  Units: Array<any> = [];
   Columns: Array<Column> = [];
   constructor(private _tools: Tools, private _router: Router) { }
   async ngOnInit() {
-    this.Category = await this._tools.Network.getAsync("Category") as Array<any>;
+    this.update()
     this.Columns.push(new Column("ID", "Item Number"))
     this.Columns.push(new Column("NAME", "Name", "text"))
     this.Columns.push(new Column("CATEGORY", "Category", "comboBox"))
@@ -29,6 +30,11 @@ export class ItemsComponent implements OnInit {
     this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "Select Category"
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = this.Category;
     this.Columns.push(new Column("UNIT", "Sales Unit", "text"))
+    this.Columns.push(new Column("UNIT_RESAPY", "Unit Buy", "comboBox"))
+    this.Columns[this.Columns.length - 1].columnComboBoxOptionLabel = "NAME";
+    this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "ID";
+    this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "Select Unit"
+    this.Columns[this.Columns.length - 1].columnComboBoxDataSource = this.Units;
     this.Columns.push(new Column("TYPE", "Item Type", "comboBox"))
     this.Columns[this.Columns.length - 1].columnComboBoxOptionLabel = "NAME";
     this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "NAME";
@@ -36,17 +42,19 @@ export class ItemsComponent implements OnInit {
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = [{ NAME: "Raw Material" }, { NAME: "Finished Product" }, { NAME: "Semi-Finished" }];
     this.Columns.push(new Column("PRICE_GET", "Purchase Price", "numberWithFraction"))
     this.Columns.push(new Column("PRICE_SEAL", "Selling Price", "numberWithFraction"))
-    //this.Columns.push(new Column("TEX", "Tax %", "numberWithFraction"))
+    this.Columns.push(new Column("TEX", "Tax %", "numberWithFraction"))
     //this.Columns.push(new Column("MAX_REQUEST_IN_HOUER", "Maximum Hourly Request Limit", "number"))
     this.Columns.push(new Column("NOTS", "Notes", "textarea"))
     this.Columns.push(new Column('EMAIL_IN_REQUEST', "Send Email On Request To", "text", "text"))
     this.Columns.push(new Column('IS_ACTIVATED', "Is Active", "yes-no", "boolean"))
-    this.Columns.push(new Column("IMGE","صورة الصنف","File"));
+    this.Columns.push(new Column("IMGE", "صورة الصنف", "File"));
   }
 
   async update() {
     this.Category = await this._tools.Network.getAsync("Category") as Array<any>;
+    this.Units = await this._tools.Network.getAsync("Units") as Array<any>;
     this.Columns[2].columnComboBoxDataSource = this.Category
+    this.Columns[4].columnComboBoxDataSource = this.Units
   }
   onConfigGrid(config: DataGridComponent) {
     config.AllowCopyPest = true
@@ -93,9 +101,7 @@ export class ItemsComponent implements OnInit {
     config.AllowImportExcel = true;
     config.IsHasChild = true;
     config.onRenderItemSource = (item) => {
-      if (item.PRICE_SEAL == 0 && item.TYPE != "Finished Product") {
-        item.PRICE_SEAL = item.PRICE_GET
-      }
+
     }
     config.onLoadedChildDataGrid = (pernt, child, row) => {
       child.StopAllButtons = true;
@@ -115,10 +121,10 @@ export class ItemsComponent implements OnInit {
       child.Columns.push(new Column("TYPE", "Item Type", "lapel"))
       child.Columns.push(new Column("PRICE_GET", "Purchase Price", "lapel"))
       child.Columns.push(new Column("PRICE_SEAL", "Selling Price", "lapel"))
-      //child.Columns.push(new Column("TEX", "Tax %", "lapel"))
+      child.Columns.push(new Column("TEX", "Tax %", "lapel"))
       //child.Columns.push(new Column("MAX_REQUEST_IN_HOUER", "Maximum Hourly Request Limit", "lapel"))
       child.Columns.push(new Column("NOTS", "Notes", "lapel"))
-      child.Columns.push(new Column('EMAIL_IN_REQUEST', "Send Email On Request To","lapel"))
+      child.Columns.push(new Column('EMAIL_IN_REQUEST', "Send Email On Request To", "lapel"))
       child.Columns = child.Columns;
       child.dataSource = row?.ITEM_HESTORY ?? [];
       child.dataSource = child.dataSource.sort((Item2, Item1) => {

@@ -36,6 +36,116 @@ export class NaveComponent implements OnInit {
 
     this.items = [
       {
+        label: "الموارد البشرية",
+        icon: "pi pi-user",
+        items: [
+          {
+            label: 'الموظفين',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'Employs']);
+            },
+          },
+          {
+            label: 'المؤثرات الشهرية',
+            items: [
+              {
+                label: 'تعريف مؤثرات للنظام',
+                icon: 'pi pi-database',
+                command: (event) => {
+                  this._router.navigate(['Main', 'EffectInSystem']);
+                },
+              },
+              {
+                label: 'تعريف حقول ادخال للنظام',
+                icon: 'pi pi-database',
+                command: (event) => {
+                  this._router.navigate(['Main', 'ColumnEffect']);
+                },
+              },
+              {
+                label: 'مؤثرات الموظفين',
+                icon: 'pi pi-database',
+                command: (event) => {
+                  this._router.navigate(['Main', 'Effects']);
+                },
+              }
+            ]
+          },
+          {
+            label: 'الحضور و الأنصراف',
+            command: (event) => {
+            },
+            items: [
+              {
+                label: 'أجهزة الحضور و الانصراف',
+                icon: 'pi pi-database',
+                command: (event) => {
+                  this._router.navigate(['Main', 'AttendanceAndDepartureDevices']);
+                },
+              },
+              {
+                label: 'سجل الحضور و الانصراف',
+                icon: 'pi pi-database',
+                command: (event) => {
+                  this._router.navigate(['Main', 'AttendanceRecord']);
+                },
+              },
+              {
+                label: 'ورديات العمل',
+                icon: 'pi pi-database',
+                command: (event) => {
+                  this._router.navigate(['Main', 'shifts']);
+                },
+              },
+              // {
+              //   label: 'مواعيد خاصة',
+              //   icon: 'pi pi-database',
+              //   command: (event) => {
+              //     this._router.navigate(['Main', 'SomeEmployRule']);
+              //   },
+              // },
+              {
+                label: 'الأجازات',
+                icon: 'pi pi-database',
+                command: (event) => {
+                  this._router.navigate(['Main', 'Holiday']);
+                },
+              },
+              {
+                label: 'النواقص',
+                icon: 'pi pi-database',
+                command: (event) => {
+                  this._router.navigate(['Main', 'ForgatInOut']);
+                },
+              },
+              {
+                label: 'حساب ساعات العمل',
+                icon: 'pi pi-database',
+                command: (event) => {
+                  this._router.navigate(['Main', 'AttendanceCalculator']);
+                },
+              }
+            ]
+          },
+          {
+            label: 'البدلات',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'Suits']);
+            },
+          },
+          {
+            label: 'الرواتب الشهرية',
+            icon: 'pi pi-database',
+            command: (event) => {
+              this._router.navigate(['Main', 'Companies']);
+            },
+          }
+        ]
+      }
+      ,
+      {
         label: 'System Control',
         icon: 'pi pi-home',
         items: [
@@ -263,7 +373,7 @@ export class NaveComponent implements OnInit {
     ]
 
     let accseptedPage = JSON.parse(localStorage.getItem("logInfo") ?? '{}').MYPAGESD as Array<any>
-    this.items = this.items.filter(x => accseptedPage.includes(x.label) || x.label == "Logout")
+    this.items = this.items.filter(x => accseptedPage.includes(x.label) || x.label == "Logout" || x.label=="الموارد البشرية")
   }
   closeNave() {
     this.showNave = false

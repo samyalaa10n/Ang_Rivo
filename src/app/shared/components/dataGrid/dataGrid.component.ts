@@ -435,6 +435,7 @@ export class DataGridComponent implements OnInit {
         this.onEditItem(item)
         break;
       case "EfectInModel":
+        this.onShowEditItem(item)
         this._eventEffect = "Edit";
         this._selectedIndex = this.dataSource.indexOf(item);
         this._selectedItem = this._tools.cloneObject(item);
@@ -443,6 +444,9 @@ export class DataGridComponent implements OnInit {
     }
   }
   onEditItem(item: any) {
+
+  }
+  onShowEditItem(item: any) {
 
   }
   ShowItem(item: any) {

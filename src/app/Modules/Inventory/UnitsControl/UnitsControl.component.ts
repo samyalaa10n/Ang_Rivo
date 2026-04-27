@@ -14,15 +14,18 @@ export class UnitsControlComponent implements OnInit {
 
   Columns: Array<Column> = [];
   constructor(private _tools: Tools) { }
+
   async ngOnInit() {
     let Units = await this._tools.Network.getAsync("Units") as Array<any>;
-    this.Columns.push(new Column('ID', "الكود", "lapel", "text"))
-    this.Columns.push(new Column('NAME', "الأسم", "text", "text", 200))
-    this.Columns.push(new Column('COUNT', "الكمية من", "numberWithFraction", "numeric", 100))
-    this.Columns.push(new Column('FROM_UNIT', "الوحدة الأساسية", "comboBox", "comboBox", 200))
+
+    this.Columns.push(new Column('ID', "Code", "lapel", "text"))
+    this.Columns.push(new Column('NAME', "Name", "text", "text", 200))
+    this.Columns.push(new Column('COUNT', "Quantity From", "numberWithFraction", "numeric", 100))
+
+    this.Columns.push(new Column('FROM_UNIT', "Base Unit", "comboBox", "comboBox", 200))
     this.Columns[this.Columns.length - 1].columnComboBoxOptionLabel = "NAME";
     this.Columns[this.Columns.length - 1].columnComboBoxOptionValue = "ID";
-    this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "اختر الوحدة الأساسية"
+    this.Columns[this.Columns.length - 1].columnComboBoxPlaceholder = "Select Base Unit"
     this.Columns[this.Columns.length - 1].columnComboBoxDataSource = Units;
   }
 
@@ -30,4 +33,5 @@ export class UnitsControlComponent implements OnInit {
     let Units = await this._tools.Network.getAsync("Units") as Array<any>;
     this.Columns[3].columnComboBoxDataSource = Units;
   }
+  
 }
